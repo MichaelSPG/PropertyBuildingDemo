@@ -10,7 +10,7 @@ namespace PropertyBuildingDemo.Domain.Interfaces
     /// Repository interface / for implementing Repository pattern
     /// </summary>
     /// <typeparam name="TEntity">The entity (representation of table object) </typeparam>
-    public interface IEntityRepository<TEntity> where TEntity : class, IEntityDB 
+    public interface IGenericEntityRepository<TEntity> where TEntity : class, IEntityDB 
     {
         IQueryable<TEntity> GetAllAsync();        
         Task<TEntity>   AddAsync(TEntity entity);
