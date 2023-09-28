@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PropertyBuildingDemo.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PropertyBuildingDemo.Domain.Specification
 {
-    public class BaseSpecifications<T> : ISpecification<T>
+    public class BaseSpecifications<T> : ISpecifications<T> where T : class, IEntityDB
     {
         public BaseSpecifications() { }
         public Expression<Func<T, bool>>            Criteria {get;}

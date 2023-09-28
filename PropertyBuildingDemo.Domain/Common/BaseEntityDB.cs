@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace PropertyBuildingDemo.Domain.Common
 {
+    /// <summary>
+    /// The base Table entity representation that implements the common columns
+    /// </summary>
     public abstract class BaseEntityDB : IEntityDB
     {
         public BaseEntityDB()

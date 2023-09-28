@@ -21,8 +21,8 @@ namespace PropertyBuildingDemo.Domain.Entities
 
         [ForeignKey(nameof(IdProperty))]
         public long         IdProperty { get; set; }
-        public string?      File { get; set; }
-        public string?      Address { get; set; }
+        public string       File { get; set; }
+        public string       Address { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is PropertyImage.

@@ -13,7 +13,7 @@ namespace PropertyBuildingDemo.Domain.Specification
     /// OR want the result in the form of pagination then you need to add the specification class
     /// </summary>
     /// <typeparam name="T">The entity object type</typeparam>
-    public interface ISpecification<T> where T : class, IEntityDB
+    public interface ISpecifications<T> where T : class, IEntityDB
     {
         Expression<Func<T, bool>>           Criteria { get;}
         List<Expression<Func<T, object>>>   Includes{ get; }

@@ -8,7 +8,7 @@ namespace PropertyBuildingDemo.Domain.Common
 {
     public abstract class BaseAuditableEntityDB : BaseEntityDB
     {
-        public string? CreatedBy{ get; set; }
-        public string? ModifiedBy { get; set; }
+        public string CreatedBy{ get; set; }
+        public string ModifiedBy { get; set; }
     }
 }

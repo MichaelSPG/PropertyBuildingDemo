@@ -18,9 +18,9 @@ namespace PropertyBuildingDemo.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdOwner { get; set; }
-        public string?      Name { get; set; }
-        public string?      Address { get; set; }
-        public string?      Photo { get; set; }
+        public string       Name { get; set; }
+        public string       Address { get; set; }
+        public string       Photo { get; set; }
         public DateTime?    BirthDay { get; set; }
 
         /// <summary>

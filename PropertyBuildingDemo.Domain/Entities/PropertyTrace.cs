@@ -19,8 +19,10 @@ namespace PropertyBuildingDemo.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdPropertyTrace { get; set; }
         public DateTime?    DateSale{ get; set; }
-        public string?      Name { get; set; }
+        public string       Name { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal?     Value { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal?     Tax{ get; set; }
 
         /// <summary>
@@ -28,6 +30,9 @@ namespace PropertyBuildingDemo.Domain.Entities
         /// </summary>
         [ForeignKey(nameof(IdProperty))]
         public long IdProperty { get; set; }
+
+
+       // public Property Property { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdOwner.
