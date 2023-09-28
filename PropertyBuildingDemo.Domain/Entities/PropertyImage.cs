@@ -1,0 +1,36 @@
+﻿using PropertyBuildingDemo.Domain.Common;
+using PropertyBuildingDemo.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PropertyBuildingDemo.Domain.Entities
+{
+    public class PropertyImage : BaseAuditableEntityDB
+    {
+        /// <summary>
+        /// The primary key of this table (PropertyImage)
+        /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long         IdPropertyImage { get; set; }
+
+        [ForeignKey(nameof(IdProperty))]
+        public long         IdProperty { get; set; }
+        public string?      File { get; set; }
+        public string?      Address { get; set; }
+
+        /// <summary>
+        /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is PropertyImage.
+        /// </summary>
+        /// <returns>the Id of this property</returns>
+        public override long GetId()
+        {
+            return IdPropertyImage;
+        }
+    }
+}
