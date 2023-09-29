@@ -1,43 +1,46 @@
-using Microsoft.AspNetCore.Mvc;
-using PropertyBuildingDemo.Api.Middleware;
-using PropertyBuildingDemo.Application.Extensions;
-using PropertyBuildingDemo.Infrastructure;
-
 namespace PropertyBuildingDemo.Api
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
+    using PropertyBuildingDemo.Api.Middleware;
+    using PropertyBuildingDemo.Application.Extensions;
+    using PropertyBuildingDemo.Domain.Entities.Enums;
+    using PropertyBuildingDemo.Domain.Entities.Identity;
+    using PropertyBuildingDemo.Domain.Interfaces;
+    using PropertyBuildingDemo.Infrastructure;
+    using PropertyBuildingDemo.Infrastructure.Data;
+
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var host = CreateHostBuilder(args).Build();
 
-            // Add intrastrucure services to the container.
-            builder.Services.RegisterIntrastrucureServices(builder.Configuration);
-            builder.Services.AddApplicationServices();
-            builder.Services.AddControllers();
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddApiVersioning(options =>
+            using (var scope = host.Services.CreateScope())
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-            });
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                var services = scope.ServiceProvider;
+                var systemLogger = scope.ServiceProvider.GetService<ISystemLogger>();
+                try
+                {
+                    var context = services.GetRequiredService<PropertyBuildingContext>();
+                    await context.Database.MigrateAsync();
+                }
+                catch (Exception ex)
+                {
+                    systemLogger.LogExceptionMessage(ELogginLevel.Level_Error,"main startup", ex);
+                }
             }
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
-            app.Run();
+            host.Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
