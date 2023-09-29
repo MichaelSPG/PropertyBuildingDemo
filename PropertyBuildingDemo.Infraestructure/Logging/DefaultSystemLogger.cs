@@ -5,50 +5,68 @@ using System.Reflection;
 
 namespace PropertyBuildingDemo.Infrastructure.Logging
 {
+    /// <summary>
+    /// Represents a default system logger implementation using log4net.
+    /// </summary>
     public class DefaultSystemLogger : ISystemLogger
     {
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-        protected static Lazy<DefaultSystemLogger> _defaultSystemLoggerInstance = new Lazy<DefaultSystemLogger>(() => new DefaultSystemLogger());
+        protected static Lazy<DefaultSystemLogger> DefaultSystemLoggerInstance = new Lazy<DefaultSystemLogger>(() => new DefaultSystemLogger());
 
-        public static DefaultSystemLogger Instance => _defaultSystemLoggerInstance.Value;
+        /// <summary>
+        /// Gets the singleton instance of the <see cref="DefaultSystemLogger"/>.
+        /// </summary>
+        public static DefaultSystemLogger Instance => DefaultSystemLoggerInstance.Value;
 
-        public void LogExceptionMessage(ELogginLevel inLogLevel, object inMessage, Exception inException)
+        /// <summary>
+        /// Logs an exception message with the specified logging level.
+        /// </summary>
+        /// <param name="inLogLevel">The logging level.</param>
+        /// <param name="inMessage">The message to log.</param>
+        /// <param name="inException">The exception to log.</param>
+        public void LogExceptionMessage(ELoggingLevel inLogLevel, object inMessage, Exception inException)
         {
             switch (inLogLevel)
             {
-                case ELogginLevel.Level_Info:
+                case ELoggingLevel.Info:
                     if (Logger.IsInfoEnabled)
                         Logger.Info(inMessage, inException);
                     break;
-                case ELogginLevel.Level_Warn:
+                case ELoggingLevel.Warn:
                     if (Logger.IsWarnEnabled)
                         Logger.Warn(inMessage, inException);
                     break;
-                case ELogginLevel.Level_Error:
+                case ELoggingLevel.Error:
                     Logger.Error(inMessage, inException);
                     break;
-                case ELogginLevel.Level_Fatal:
+                case ELoggingLevel.Fatal:
                     Logger.Fatal(inMessage, inException);
                     break;
             }
         }
-        public void LogMessage(ELogginLevel inLogLevel, object inMessage)
+
+        /// <summary>
+        /// Logs a message with the specified logging level.
+        /// </summary>
+        /// <param name="inLogLevel">The logging level.</param>
+        /// <param name="inMessage">The message to log.</param>
+        public void LogMessage(ELoggingLevel inLogLevel, object inMessage)
         {
             switch (inLogLevel)
             {
-                case ELogginLevel.Level_Info:
+                case ELoggingLevel.Info:
                     if (Logger.IsInfoEnabled)
                         Logger.Info(inMessage);
                     break;
-                case ELogginLevel.Level_Warn:
+                case ELoggingLevel.Warn:
                     if (Logger.IsWarnEnabled)
                         Logger.Warn(inMessage);
                     break;
-                case ELogginLevel.Level_Error:
+                case ELoggingLevel.Error:
                     Logger.Error(inMessage);
                     break;
-                case ELogginLevel.Level_Fatal:
+                case ELoggingLevel.Fatal:
                     Logger.Fatal(inMessage);
                     break;
             }

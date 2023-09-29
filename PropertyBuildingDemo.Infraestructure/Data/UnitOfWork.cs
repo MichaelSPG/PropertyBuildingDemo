@@ -16,13 +16,13 @@ namespace PropertyBuildingDemo.Infrastructure.Data
     public class UnitOfWork : IUnitOfWork
     {        
         private readonly PropertyBuildingContext    _context;
-        private readonly ISystemLogger              systemLogger;
+        private readonly ISystemLogger              _systemLogger;
         private Hashtable                           _repositories;
         private IDbContextTransaction               _transaction;
         public UnitOfWork(PropertyBuildingContext context, ISystemLogger systemLogger)
         {
             _context = context;
-            this.systemLogger = systemLogger;
+            this._systemLogger = systemLogger;
         }
 
         public async Task BeginTransaction(CancellationToken cancellationToken = default)
@@ -43,7 +43,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data
             }
             catch (Exception exc)
             {
-                systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, this, exc);
+                _systemLogger.LogExceptionMessage(ELoggingLevel.Error, this, exc);
                 if (_transaction != null)
                     await _transaction.RollbackAsync(cancellationToken);
                 throw exc.InnerException?? exc;
@@ -67,14 +67,14 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         IGenericEntityRepository<TEntity> IUnitOfWork.GetRepository<TEntity>()
         {
             if (_repositories == null) _repositories = new Hashtable();
-            var Type = typeof(TEntity).Name;
-            if (!_repositories.ContainsKey(Type))
+            var type = typeof(TEntity).Name;
+            if (!_repositories.ContainsKey(type))
             {
                 var repositiryType = typeof(BaseEntityRepository<>);
                 var repositoryInstance = Activator.CreateInstance( repositiryType.MakeGenericType(typeof(TEntity)), _context);
-                _repositories.Add(Type, repositoryInstance);
+                _repositories.Add(type, repositoryInstance);
             }
-            return (IGenericEntityRepository<TEntity>)_repositories[Type];
+            return (IGenericEntityRepository<TEntity>)_repositories[type];
         }
     }
 }
