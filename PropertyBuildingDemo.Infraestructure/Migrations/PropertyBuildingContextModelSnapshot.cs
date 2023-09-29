@@ -100,7 +100,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdatedTime")
@@ -186,15 +186,13 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Tax")
-                        .IsRequired()
+                    b.Property<decimal>("Tax")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("Value")
-                        .IsRequired()
+                    b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdPropertyTrace");

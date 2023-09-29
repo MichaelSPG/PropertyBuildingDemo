@@ -8,9 +8,7 @@ namespace PropertyBuildingDemo.Api
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-        public Startup(IConfiguration configuration)
+        public static void ConfigureServices(IServiceCollection services, IConfiguration Configuration)
         {
             Configuration = configuration;
         }
@@ -32,9 +30,9 @@ namespace PropertyBuildingDemo.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static  void Configure(WebApplication app)
         {
-            if (env.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
@@ -42,11 +40,7 @@ namespace PropertyBuildingDemo.Api
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-            
+            app.MapControllers();
         }
     }
 }

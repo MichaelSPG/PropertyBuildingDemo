@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using PropertyBuildingDemo.Domain.Entities.Enums;
+using PropertyBuildingDemo.Domain.Interfaces;
+using PropertyBuildingDemo.Infrastructure.Data;
+
 namespace PropertyBuildingDemo.Api
 {
     using Microsoft.AspNetCore.Hosting;
@@ -17,9 +22,13 @@ namespace PropertyBuildingDemo.Api
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var builder = WebApplication.CreateBuilder(args);
 
-            using (var scope = host.Services.CreateScope())
+            Startup.ConfigureServices(builder.Services, builder.Configuration);
+
+            var app = builder.Build();
+            Startup.Configure(app);
+            using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var systemLogger = scope.ServiceProvider.GetService<ISystemLogger>();
@@ -30,10 +39,10 @@ namespace PropertyBuildingDemo.Api
                 }
                 catch (Exception ex)
                 {
-                    systemLogger.LogExceptionMessage(ELogginLevel.Level_Error,"main startup", ex);
+                    systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, "main startup", ex);
                 }
             }
-            host.Run();
+            app.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
