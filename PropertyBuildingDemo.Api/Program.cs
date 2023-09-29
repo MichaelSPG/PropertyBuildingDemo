@@ -1,22 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using PropertyBuildingDemo.Domain.Entities.Enums;
-using PropertyBuildingDemo.Domain.Interfaces;
-using PropertyBuildingDemo.Infrastructure.Data;
-
 namespace PropertyBuildingDemo.Api
 {
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
-    using PropertyBuildingDemo.Api.Middleware;
-    using PropertyBuildingDemo.Application.Extensions;
     using PropertyBuildingDemo.Domain.Entities.Enums;
     using PropertyBuildingDemo.Domain.Entities.Identity;
     using PropertyBuildingDemo.Domain.Interfaces;
-    using PropertyBuildingDemo.Infrastructure;
     using PropertyBuildingDemo.Infrastructure.Data;
+    using PropertyBuildingDemo.Infrastructure.Data.Identity;
 
     public class Program
     {
@@ -36,20 +26,14 @@ namespace PropertyBuildingDemo.Api
                 {
                     var context = services.GetRequiredService<PropertyBuildingContext>();
                     await context.Database.MigrateAsync();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    await SeedIdentetyDbContext.SeedUserData(userManager);
                 }
                 catch (Exception ex)
                 {
                     systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, "main startup", ex);
                 }
             }
-            app.Run();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

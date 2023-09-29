@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Application.Mappings;
 using PropertyBuildingDemo.Application.PropertyServices;
 using PropertyBuildingDemo.Application.Services;
@@ -15,10 +11,16 @@ namespace PropertyBuildingDemo.Application.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(typeof(EntityAndDtoMapping));
             services.AddScoped<IPropertyBuildingService, PropertyService>();
             services.AddScoped<IPropertyImageService, PropertyImageService>();
             services.AddScoped<IPropertyTraceService, PropertyTraceService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserAccountService, UsertAccountService>();
+           
+            //services.AddTransient<ICurrentUserService, CurentUserService>();
+            //services.AddHttpContextAccessor();
             return services;
         }
     }

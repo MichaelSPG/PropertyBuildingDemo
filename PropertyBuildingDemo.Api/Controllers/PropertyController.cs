@@ -10,6 +10,7 @@ using TEntityBuildingDemo.Api.Controllers;
 namespace PropertyBuildingDemo.Api.Controllers
 {
     [ApiVersion("1.0")]
+
     public class PropertyController : GenericEntityController<Property>
     {
         public PropertyController(IUnitOfWork unitOfWork, ISystemLogger systemLogger) : base(unitOfWork, systemLogger)

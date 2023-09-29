@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Application.Services;
 using PropertyBuildingDemo.Domain.Common;
@@ -11,6 +12,7 @@ namespace PropertyBuildingDemo.Api.Controllers
     /// <summary>
     /// The main requested API controller
     /// </summary>
+    [Authorize(AuthenticationSchemes = "JwtClient")]
     public class PropertyBuildingController : BaseController
     {
         private readonly IPropertyBuildingService _propertyBuildingService;

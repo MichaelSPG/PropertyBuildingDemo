@@ -11,12 +11,10 @@ namespace PropertyBuildingDemo.Api.Middleware
     {
         private readonly ISystemLogger          _systemLogger;
         private readonly RequestDelegate        _next;
-        private readonly IHostEnvironment       _hostEnvironment;
         public ExceptionMiddleware(ISystemLogger InSystemLogger, RequestDelegate next, IHostEnvironment hostEnvironment)
         {
             _systemLogger = InSystemLogger;
             _next = next;
-            _hostEnvironment = hostEnvironment;
         }
 
         public async Task InvokeAsync(HttpContext context) 

@@ -26,7 +26,7 @@ namespace PropertyBuildingDemo.Domain.Entities
         public byte[]       File { get; set; }
         public bool         Enabled{ get; set; }
 
-        public Property     Property { get; set; }
+        public virtual Property     Property { get; set; }
         /// <summary>
         /// Implementation of GetId(), due to difference of names of columns ([Key]). for this is PropertyImage.
         /// </summary>

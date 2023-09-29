@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PropertyBuildingDemo.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using PropertyBuildingDemo.Infrastructure.Data;
 namespace PropertyBuildingDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(PropertyBuildingContext))]
-    partial class PropertyBuildingContextModelSnapshot : ModelSnapshot
+    [Migration("20230929062316_PropertyBuilding01")]
+    partial class PropertyBuilding01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +107,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -423,7 +425,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasKey("IdOwner");
 
-                    b.ToTable("Owner", (string)null);
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.Property", b =>
@@ -474,7 +476,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdOwner");
 
-                    b.ToTable("Property", (string)null);
+                    b.ToTable("Property");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyImage", b =>
@@ -514,7 +516,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyImage", (string)null);
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyTrace", b =>
@@ -560,7 +562,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyTrace", (string)null);
+                    b.ToTable("PropertyTrace");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

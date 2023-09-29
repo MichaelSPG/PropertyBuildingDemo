@@ -1,4 +1,5 @@
-﻿using PropertyBuildingDemo.Domain.Interfaces;
+﻿using PropertyBuildingDemo.Domain.Common;
+using PropertyBuildingDemo.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,6 @@ namespace PropertyBuildingDemo.Domain.Common
             if(string.IsNullOrWhiteSpace(InMessage))
                 return new ApiResult<TData> { Data = data, Success = true };
 
-
             return new ApiResult<TData> { Success = true, Data = data, Message = new List<string> { InMessage } };
         }
         public static ApiResult<TData> SuccessResult(string InMessage)
@@ -68,7 +68,6 @@ namespace PropertyBuildingDemo.Domain.Common
         {
             return new ApiResult<TData> { Success = true };
         }
-
         public static ApiResult<TData> FailedResult(int InCode, string InMessage)
         {
 
@@ -81,6 +80,39 @@ namespace PropertyBuildingDemo.Domain.Common
         public static ApiResult<TData> FailedResult()
         {
             return new ApiResult<TData> { Success = false };
+        }
+
+        
+        public static Task<ApiResult<TData>> SuccessResultAsync(TData data, string InMessage = null)
+        {
+            if (string.IsNullOrWhiteSpace(InMessage))
+                return Task.FromResult(new ApiResult<TData> { Data = data, Success = true });
+
+            return Task.FromResult(new ApiResult<TData> { Success = true, Data = data, Message = new List<string> { InMessage } });
+        }
+        public static Task<ApiResult<TData>> SuccessResultAsync(string InMessage)
+        {
+            return Task.FromResult(new ApiResult<TData> { Success = true, Message = new List<string> { InMessage } });
+        }
+        public static Task<ApiResult<TData>> SuccessResultAsync()
+        {
+            return Task.FromResult(new ApiResult<TData> { Success = true });
+        }
+        public static Task<ApiResult<TData>> FailedResultAsync(int InCode, string InMessage) {
+
+            return Task.FromResult(new ApiResult<TData> { Success = false, Message = new List<string> { InMessage }, ResultCode = InCode });
+        }
+        public static Task<ApiResult<TData>> FailedResultAsync(string InMessage)
+        {
+            return Task.FromResult(new ApiResult<TData> { Success = false, Message = new List<string> { InMessage } });
+        }
+        public static Task<ApiResult<TData>> FailedResultAsync(List<string> InMessages)
+        {
+            return Task.FromResult(new ApiResult<TData> { Success = false, Message = InMessages });
+        }
+        public static Task<ApiResult<TData>> FailedResultAsync()
+        {
+            return Task.FromResult(new ApiResult<TData> { Success = false });
         }
     }
 }

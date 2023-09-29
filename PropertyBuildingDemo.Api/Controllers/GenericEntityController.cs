@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyBuildingDemo.Api.Controllers;
 using PropertyBuildingDemo.Domain.Common;
@@ -7,6 +8,7 @@ using PropertyBuildingDemo.Domain.Interfaces;
 
 namespace TEntityBuildingDemo.Api.Controllers
 {
+    [Authorize(AuthenticationSchemes = "JwtClient")]
     public class GenericEntityController <TEntity> : BaseController where TEntity : BaseEntityDB
     {
         readonly IUnitOfWork _unitOfWork;

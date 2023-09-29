@@ -37,7 +37,7 @@ namespace PropertyBuildingDemo.Domain.Entities
         [ForeignKey(nameof(Property))]
         public long IdProperty { get; set; }
 
-        public Property Property { get; set; }
+        public virtual Property Property { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdOwner.

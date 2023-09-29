@@ -1,16 +1,22 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities;
+using PropertyBuildingDemo.Domain.Entities.Identity;
+using PropertyBuildingDemo.Domain.Interfaces;
 using System.Reflection;
 
 namespace PropertyBuildingDemo.Infrastructure.Data
 {
-    public class PropertyBuildingContext : IdentityDbContext
+    public class PropertyBuildingContext : ApiAuthorizationDbContext<AppUser>
     {
-        public PropertyBuildingContext(DbContextOptions<PropertyBuildingContext> options)
-            : base(options)
+        //private readonly ICurrentUserService _currentUserService;
+        public PropertyBuildingContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions/*, ICurrentUserService currentUserService*/)
+            : base(options, operationalStoreOptions)
         {
+            //_currentUserService = currentUserService;
         }
 
         public DbSet<Property> Property { get; set; }
@@ -30,11 +36,9 @@ namespace PropertyBuildingDemo.Infrastructure.Data
             //    switch (entry.State)
             //    {
             //        case EntityState.Added:
-            //            //entry.Entity.Created = DateTime.Now;
             //            entry.Entity.CreatedBy = _currentUserService?.UserName ?? "System";
             //            break;
             //        case EntityState.Modified:
-            //            //entry.Entity.LastModified = DateTime.Now;
             //            entry.Entity.ModifiedBy = _currentUserService?.UserName ?? "System";
             //            break;
             //    }

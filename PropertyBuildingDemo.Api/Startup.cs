@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Middleware;
 using PropertyBuildingDemo.Application.Extensions;
 using PropertyBuildingDemo.Infrastructure;
+using System.Globalization;
 
 namespace PropertyBuildingDemo.Api
 {
@@ -23,6 +23,16 @@ namespace PropertyBuildingDemo.Api
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
             });
+            //For API CONTROLLERS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithExposedHeaders("*"));
+            });
+            services.AddLocalization();
         }
 
         public static  void Configure(WebApplication app)
@@ -32,10 +42,17 @@ namespace PropertyBuildingDemo.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
+            app.UseMiddleware<AuthorizarionMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+            app.UseRequestLocalization("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.DefaultThreadCurrentCulture;
         }
     }
 }
