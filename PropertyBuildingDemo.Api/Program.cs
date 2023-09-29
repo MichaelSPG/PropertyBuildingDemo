@@ -5,11 +5,24 @@ using PropertyBuildingDemo.Infrastructure.Data;
 
 namespace PropertyBuildingDemo.Api
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
+    using PropertyBuildingDemo.Api.Middleware;
+    using PropertyBuildingDemo.Application.Extensions;
+    using PropertyBuildingDemo.Domain.Entities.Enums;
+    using PropertyBuildingDemo.Domain.Entities.Identity;
+    using PropertyBuildingDemo.Domain.Interfaces;
+    using PropertyBuildingDemo.Infrastructure;
+    using PropertyBuildingDemo.Infrastructure.Data;
+
     public class Program
     {
         public static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var host = CreateHostBuilder(args).Build();
 
             Startup.ConfigureServices(builder.Services, builder.Configuration);
 

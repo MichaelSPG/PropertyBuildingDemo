@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities;
 using System.Reflection;
 
 namespace PropertyBuildingDemo.Infrastructure.Data
 {
-    public class PropertyBuildingContext : DbContext
+    public class PropertyBuildingContext : IdentityDbContext
     {
         public PropertyBuildingContext(DbContextOptions<PropertyBuildingContext> options)
             : base(options)
