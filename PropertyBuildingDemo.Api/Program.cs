@@ -1,43 +1,41 @@
-using Microsoft.AspNetCore.Mvc;
-using PropertyBuildingDemo.Api.Middleware;
-using PropertyBuildingDemo.Application.Extensions;
-using PropertyBuildingDemo.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using PropertyBuildingDemo.Domain.Entities.Enums;
+using PropertyBuildingDemo.Domain.Interfaces;
+using PropertyBuildingDemo.Infrastructure.Data;
 
 namespace PropertyBuildingDemo.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add intrastrucure services to the container.
-            builder.Services.RegisterIntrastrucureServices(builder.Configuration);
-            builder.Services.AddApplicationServices();
-            builder.Services.AddControllers();
+            Startup.ConfigureServices(builder.Services, builder.Configuration);
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-            });
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            Startup.Configure(app);
+            using (var scope = app.Services.CreateScope())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                var services = scope.ServiceProvider;
+                var systemLogger = scope.ServiceProvider.GetService<ISystemLogger>();
+                try
+                {
+                    var context = services.GetRequiredService<PropertyBuildingContext>();
+                    await context.Database.MigrateAsync();
+                }
+                catch (Exception ex)
+                {
+                    systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, "main startup", ex);
+                }
             }
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
             app.Run();
         }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
