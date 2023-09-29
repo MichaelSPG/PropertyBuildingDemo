@@ -1,4 +1,11 @@
-﻿using PropertyBuildingDemo.Domain.Interfaces;
+﻿using PropertyBuildingDemo.Domain.Common;
+using PropertyBuildingDemo.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace PropertyBuildingDemo.Domain.Common
 {
@@ -120,7 +127,7 @@ namespace PropertyBuildingDemo.Domain.Common
         /// </summary>
         /// <param name="inMessage">The success message.</param>
         /// <returns>A successful API result with the specified message.</returns>
-        public static ApiResult<TData> SuccessResult(string inMessage)
+        public new static ApiResult<TData> SuccessResult(string inMessage)
         {
             return new ApiResult<TData> { Success = true, Message = new List<string> { inMessage } };
         }
@@ -129,7 +136,7 @@ namespace PropertyBuildingDemo.Domain.Common
         /// Creates a successful API result without a message.
         /// </summary>
         /// <returns>A successful API result.</returns>
-        public static ApiResult<TData> SuccessResult()
+        public new static ApiResult<TData> SuccessResult()
         {
             return new ApiResult<TData> { Success = true };
         }
@@ -140,7 +147,7 @@ namespace PropertyBuildingDemo.Domain.Common
         /// <param name="inCode">The error code.</param>
         /// <param name="inMessage">The error message.</param>
         /// <returns>A failed API result with the specified code and message.</returns>
-        public static ApiResult<TData> FailedResult(int inCode, string inMessage)
+        public new static ApiResult<TData> FailedResult(int inCode, string inMessage)
         {
             return new ApiResult<TData> { Success = false, Message = new List<string> { inMessage }, ResultCode = inCode };
         }
@@ -150,7 +157,7 @@ namespace PropertyBuildingDemo.Domain.Common
         /// </summary>
         /// <param name="inMessage">The error message.</param>
         /// <returns>A failed API result with the specified message.</returns>
-        public static ApiResult<TData> FailedResult(string inMessage)
+        public new static ApiResult<TData> FailedResult(string inMessage)
         {
             return new ApiResult<TData> { Success = false, Message = new List<string> { inMessage } };
         }
@@ -159,7 +166,7 @@ namespace PropertyBuildingDemo.Domain.Common
         /// Creates a failed API result without a message.
         /// </summary>
         /// <returns>A failed API result.</returns>
-        public static ApiResult<TData> FailedResult()
+        public new static ApiResult<TData> FailedResult()
         {
             return new ApiResult<TData> { Success = false };
         }
