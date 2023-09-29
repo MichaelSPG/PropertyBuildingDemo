@@ -22,7 +22,7 @@ namespace PropertyBuildingDemo.Api
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var builder = WebApplication.CreateBuilder(args);
 
             Startup.ConfigureServices(builder.Services, builder.Configuration);
 
@@ -44,11 +44,5 @@ namespace PropertyBuildingDemo.Api
             }
             app.Run();
         }
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

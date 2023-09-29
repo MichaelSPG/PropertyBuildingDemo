@@ -8,8 +8,8 @@ using PropertyBuildingDemo.Infrastructure.Repositories;
 using PropertyBuildingDemo.Infrastructure.Logging;
 using log4net.Config;
 using PropertyBuildingDemo.Domain.Entities.Identity;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Builder;
+//using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
