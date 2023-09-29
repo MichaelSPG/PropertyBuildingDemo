@@ -44,7 +44,6 @@ namespace PropertyBuildingDemo.Api
             }
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
-            app.UseMiddleware<AuthorizarionMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthentication();

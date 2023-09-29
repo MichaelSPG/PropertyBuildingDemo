@@ -34,6 +34,7 @@ namespace PropertyBuildingDemo.Api
                     systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, "main startup", ex);
                 }
             }
+            app.Run();
         }
     }
 }
