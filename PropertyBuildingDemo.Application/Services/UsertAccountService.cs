@@ -68,12 +68,12 @@ namespace PropertyBuildingDemo.Application.Services
         public async Task<ApiResult<UserDto>> FindByEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return ApiResult<UserDto>.SuccessResult(new UserDto
+            return user != null ?  ApiResult<UserDto>.SuccessResult(new UserDto
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 IdentityNumber = user.IdentityNumber
-            });
+            }) : ApiResult<UserDto>.FailedResult();
         }
 
         /// <summary>
