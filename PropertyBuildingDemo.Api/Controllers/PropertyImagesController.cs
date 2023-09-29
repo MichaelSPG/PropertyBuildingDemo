@@ -1,4 +1,4 @@
-﻿// <copyright file="PropertyController.cs" company="PlaceholderCompany">
+﻿// <copyright file="PropertyImagesController.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -9,12 +9,12 @@ using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Interfaces;
 
 /// <summary>
-/// Represents the API controller for managing properties in API version 1.0.
+/// Represents the API controller for managing property images in API version 1.0.
 /// </summary>
 [ApiVersion("1.0")]
-public class PropertyController : GenericEntityController<Property>
+public class PropertyImageController : GenericEntityController<PropertyImage>
 {
-    public PropertyController(IUnitOfWork unitOfWork, ISystemLogger systemLogger)
+    public PropertyImageController(IUnitOfWork unitOfWork, ISystemLogger systemLogger)
         : base(unitOfWork, systemLogger)
     {
     }
