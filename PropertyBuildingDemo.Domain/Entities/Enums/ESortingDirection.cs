@@ -1,7 +1,18 @@
-﻿namespace PropertyBuildingDemo.Domain.Entities.Enums;
-
-public enum ESortingDirection
+﻿namespace PropertyBuildingDemo.Domain.Entities.Enums
 {
-    DirectionAsc,
-    DirectionDesc,
+    /// <summary>
+    /// Represents a sorting direction enum.
+    /// </summary>
+    public enum ESortingDirection
+    {
+        /// <summary>
+        /// Represents an ascending sorting direction.
+        /// </summary>
+        Ascending,
+
+        /// <summary>
+        /// Represents a descending sorting direction.
+        /// </summary>
+        Descending,
+    }
 }

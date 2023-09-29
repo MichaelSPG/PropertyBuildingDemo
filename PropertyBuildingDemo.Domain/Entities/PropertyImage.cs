@@ -1,36 +1,47 @@
 ﻿using PropertyBuildingDemo.Domain.Common;
-using PropertyBuildingDemo.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PropertyBuildingDemo.Domain.Entities
 {
-    public class PropertyImage : BaseAuditableEntityDB
+    /// <summary>
+    /// Represents a property image entity with audit and image information.
+    /// </summary>
+    public class PropertyImage : BaseAuditableEntityDb
     {
         /// <summary>
-        /// The primary key of this table (PropertyImage)
+        /// Gets or sets the primary key of this table (PropertyImage).
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long         IdPropertyImage { get; set; }
+        public long IdPropertyImage { get; set; }
 
-        [ForeignKey(nameof(Property))]
-        public long         IdProperty { get; set; }
-
-        [Required]
-        public byte[]       File { get; set; }
-        public bool         Enabled{ get; set; }
-
-        public virtual Property     Property { get; set; }
         /// <summary>
-        /// Implementation of GetId(), due to difference of names of columns ([Key]). for this is PropertyImage.
+        /// Gets or sets the foreign key to the associated property.
         /// </summary>
-        /// <returns>the Id of this property</returns>
+        [ForeignKey(nameof(Property))]
+        public long IdProperty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the binary data of the image file.
+        /// </summary>
+        [Required]
+        public byte[] File { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the image is enabled.
+        /// </summary>
+        public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property to the associated property.
+        /// </summary>
+        public virtual Property Property { get; set; }
+
+        /// <summary>
+        /// Implementation of the GetId() method, considering the different column name ([Key]) for this entity.
+        /// </summary>
+        /// <returns>The Id of this property image.</returns>
         public override long GetId()
         {
             return IdPropertyImage;

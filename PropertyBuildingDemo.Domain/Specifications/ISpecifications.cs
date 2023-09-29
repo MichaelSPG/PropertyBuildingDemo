@@ -1,29 +1,62 @@
 ﻿using PropertyBuildingDemo.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PropertyBuildingDemo.Domain.Specification
+namespace PropertyBuildingDemo.Domain.Specifications
 {
-    /// <summary>
-    /// INTERFACE: Used for applying filters with specific criteria, orderings and pagination
-    /// OR want the result in the form of pagination then you need to add the specification class
-    /// </summary>
-    /// <typeparam name="TEntity">The entity object type</typeparam>
-    public interface ISpecifications<TEntity> where TEntity : class, IEntityDB
-    {
-        Expression<Func<TEntity, bool>>           Criteria { get;}
-        List<Expression<Func<TEntity, object>>>   Includes{ get; }
-        Expression<Func<TEntity, object>>         OrderBy { get; }
-        Expression<Func<TEntity, object>>         OrderByDescending{ get; }
-        Expression<Func<TEntity, bool>>           And(Expression<Func<TEntity, bool>> query);
-        Expression<Func<TEntity, bool>>           Or(Expression<Func<TEntity, bool>> query);
-        int                                       Take { get; }
-        int                                       Skip { get; }
-        bool                                      IsPagingEnabled { get; }
 
+    /// <summary>
+    /// Represents an interface for specifying criteria, orderings, and pagination for querying entities.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of entity for the specification.</typeparam>
+    public interface ISpecifications<TEntity> where TEntity : class, IEntityDb
+    {
+        /// <summary>
+        /// Gets the criteria expression for the specification.
+        /// </summary>
+        Expression<Func<TEntity, bool>> Criteria { get; }
+
+        /// <summary>
+        /// Gets a list of include expressions for related entities.
+        /// </summary>
+        List<Expression<Func<TEntity, object>>> Includes { get; }
+
+        /// <summary>
+        /// Gets the order by expression.
+        /// </summary>
+        Expression<Func<TEntity, object>> OrderBy { get; }
+
+        /// <summary>
+        /// Gets the order by descending expression.
+        /// </summary>
+        Expression<Func<TEntity, object>> OrderByDescending { get; }
+
+        /// <summary>
+        /// Combines the current specification with an AND operation.
+        /// </summary>
+        /// <param name="query">The query to combine with.</param>
+        /// <returns>The combined specification.</returns>
+        Expression<Func<TEntity, bool>> And(Expression<Func<TEntity, bool>> query);
+
+        /// <summary>
+        /// Combines the current specification with an OR operation.
+        /// </summary>
+        /// <param name="query">The query to combine with.</param>
+        /// <returns>The combined specification.</returns>
+        Expression<Func<TEntity, bool>> Or(Expression<Func<TEntity, bool>> query);
+
+        /// <summary>
+        /// Gets the number of records to take (for paging).
+        /// </summary>
+        int Take { get; }
+
+        /// <summary>
+        /// Gets the number of records to skip (for paging).
+        /// </summary>
+        int Skip { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether paging is enabled.
+        /// </summary>
+        bool IsPagingEnabled { get; }
     }
 }

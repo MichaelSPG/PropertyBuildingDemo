@@ -1,38 +1,48 @@
 ﻿using PropertyBuildingDemo.Domain.Common;
-using PropertyBuildingDemo.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PropertyBuildingDemo.Domain.Entities
 {
-    public class Owner : BaseAuditableEntityDB
+    /// <summary>
+    /// Represents an owner entity with audit and property information.
+    /// </summary>
+    public class Owner : BaseAuditableEntityDb
     {
         /// <summary>
-        /// The primary key of this table (Owner)
+        /// Gets or sets the primary key of this table (Owner).
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long         IdOwner { get; set; }
-
-        [Required]
-        public string       Name { get; set; }
-
-        [Required]
-        public string       Address { get; set; }
-
-        [Required]
-        public byte[]       Photo { get; set; }
-        public DateTime     BirthDay { get; set; }
+        public long IdOwner { get; set; }
 
         /// <summary>
-        /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdOwner.
+        /// Gets or sets the name of the owner.
         /// </summary>
-        /// <returns>the Id of this property</returns>
+        [Required]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the address of the owner.
+        /// </summary>
+        [Required]
+        public string Address { get; set; }
+
+        /// <summary>
+        /// Gets or sets the photo of the owner as a byte array.
+        /// </summary>
+        [Required]
+        public byte[] Photo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the birth date of the owner.
+        /// </summary>
+        public DateTime BirthDay { get; set; }
+
+        /// <summary>
+        /// Implementation of the GetId() method, considering the different column name ([Key]) for this entity.
+        /// </summary>
+        /// <returns>The Id of this owner.</returns>
         public override long GetId()
         {
             return IdOwner;

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PropertyBuildingDemo.Domain.Entities;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using PropertyBuildingDemo.Domain.Entities;
-using PropertyBuildingDemo.Domain.Entities.Enums;
-using PropertyBuildingDemo.Domain.Specification;
 
 namespace PropertyBuildingDemo.Domain.Specifications
 {
+    /// <summary>
+    /// Represents a specification for querying properties with specific criteria, orderings, and pagination.
+    /// </summary>
     public class PropertySpecification : BaseSpecifications<Property>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertySpecification"/> class with a filter based on owner ID.
+        /// </summary>
+        /// <param name="inIdOwner">The owner ID to filter by.</param>
         public PropertySpecification(long inIdOwner)
             : base(x => x.IdOwner == inIdOwner)
         {
@@ -19,12 +19,21 @@ namespace PropertyBuildingDemo.Domain.Specifications
             AddOrderByDescending(od => od.IdProperty);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertySpecification"/> class with multiple filters.
+        /// </summary>
+        /// <param name="inFilters">A list of filter expressions.</param>
         public PropertySpecification(List<Expression<Func<Property, bool>>> inFilters)
             : base(x => true)
         {
             foreach (var filter in inFilters)
                 And(filter);
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertySpecification"/> class with a single filter.
+        /// </summary>
+        /// <param name="inFilter">The filter expression.</param>
         public PropertySpecification(Expression<Func<Property, bool>> inFilter)
             : base(x => true)
         {

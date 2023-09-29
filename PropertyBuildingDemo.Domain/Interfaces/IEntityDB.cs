@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PropertyBuildingDemo.Domain.Interfaces
+﻿namespace PropertyBuildingDemo.Domain.Interfaces
 {
     /// <summary>
     /// The interface representation the common columns in a table object
     /// </summary>
-    public interface IEntityDB
+    public interface IEntityDb
     {
         /// <summary>
         /// Gets the id of current table object (Entity)
