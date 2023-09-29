@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PropertyBuildingDemo.Application.Dto
+﻿namespace PropertyBuildingDemo.Application.Dto
 {
-    public  class UserDto
+    /// <summary>
+    /// Data transfer object (DTO) for user information.
+    /// </summary>
+    public class UserDto
     {
+        /// <summary>
+        /// Gets or sets the identity number of the user.
+        /// </summary>
         public string IdentityNumber { get; set; }
-        public string DisplayName { get; set; }
-        public string Email { get; set; }
 
+        /// <summary>
+        /// Gets or sets the display name of the user.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email address of the user.
+        /// </summary>
+        public string Email { get; set; }
     }
 }

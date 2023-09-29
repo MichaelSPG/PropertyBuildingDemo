@@ -1,34 +1,44 @@
-﻿using PropertyBuildingDemo.Application.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using PropertyBuildingDemo.Application.Dto;
-using PropertyBuildingDemo.Domain.Common;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using PropertyBuildingDemo.Application.Extensions;
+using Microsoft.EntityFrameworkCore;
+using PropertyBuildingDemo.Application.Dto;
+using PropertyBuildingDemo.Application.IServices;
+using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Identity;
-using static Duende.IdentityServer.Models.IdentityResources;
+using System.Security.Claims;
 
 namespace PropertyBuildingDemo.Application.Services
 {
-    public class UsertAccountService : IUserAccountService
+    /// <summary>
+    /// Service for user account-related operations.
+    /// </summary>
+    public class UserAccountService : IUserAccountService
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
-        public UsertAccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserAccountService"/> class.
+        /// </summary>
+        /// <param name="userManager">The UserManager for managing users.</param>
+        /// <param name="signInManager">The SignInManager for user sign-in.</param>
+        public UserAccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        /// <summary>
+        /// Registers a new user with the provided registration information.
+        /// </summary>
+        /// <param name="registerDto">The registration information.</param>
+        /// <returns>An <see cref="ApiResult{T}"/> with user registration results.</returns>
         public async Task<ApiResult<UserDto>> RegisterUser(UserRegisterDto registerDto)
         {
             var user = await FindByEmail(registerDto.Email);
             if (user.Success && user.Data != null)
             {
-                return ApiResult<UserDto>.FailedResult("Email has been taken");
+                return await ApiResult<UserDto>.FailedResultAsync("Email has been taken");
             }
             var appUser = new AppUser
             {
@@ -42,7 +52,7 @@ namespace PropertyBuildingDemo.Application.Services
             {
                 return await ApiResult<UserDto>.FailedResultAsync(result.Errors.Select(x => x.Description).ToList());
             }
-            return ApiResult<UserDto>.SuccessResult(new UserDto
+            return await ApiResult<UserDto>.SuccessResultAsync(new UserDto
             {
                 DisplayName = appUser.DisplayName,
                 Email = appUser.Email,
@@ -50,9 +60,14 @@ namespace PropertyBuildingDemo.Application.Services
             });
         }
 
-        public async Task<ApiResult<UserDto>> GetCurrentUser(HttpContext httpContext)
+        /// <summary>
+        /// Finds a user by their email address.
+        /// </summary>
+        /// <param name="email">The email address of the user to find.</param>
+        /// <returns>An <see cref="ApiResult{T}"/> with user information if found.</returns>
+        public async Task<ApiResult<UserDto>> FindByEmail(string email)
         {
-            var user = await _userManager.FindByEmailFromClaimPrincipal(httpContext.User);
+            var user = await _userManager.FindByEmailAsync(email);
             return ApiResult<UserDto>.SuccessResult(new UserDto
             {
                 DisplayName = user.DisplayName,
@@ -61,9 +76,25 @@ namespace PropertyBuildingDemo.Application.Services
             });
         }
 
-        public async Task<ApiResult<UserDto>> FindByEmail(string email)
+        /// <summary>
+        /// Finds a user by their email address from a ClaimsPrincipal.
+        /// </summary>
+        /// <param name="user">The ClaimsPrincipal containing user claims.</param>
+        /// <returns>The user with matching email address.</returns>
+        public async Task<AppUser> FindByEmailFromClaimPrincipal(ClaimsPrincipal user)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var email = user?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            return await _userManager.Users.SingleOrDefaultAsync(x => x.Email == email);
+        }
+
+        /// <summary>
+        /// Gets the current user from an HTTP context.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context.</param>
+        /// <returns>An <see cref="ApiResult{T}"/> with the current user's information.</returns>
+        public async Task<ApiResult<UserDto>> GetCurrentUser(HttpContext httpContext)
+        {
+            var user = await FindByEmailFromClaimPrincipal(httpContext.User);
             return ApiResult<UserDto>.SuccessResult(new UserDto
             {
                 DisplayName = user.DisplayName,

@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
 using PropertyBuildingDemo.Application.Dto;
-using PropertyBuildingDemo.Application.Services;
+using PropertyBuildingDemo.Application.Helpers;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Domain.Specifications;
-using System.Linq.Expressions;
-using PropertyBuildingDemo.Application.Helpers;
 
-namespace PropertyBuildingDemo.Application.PropertyServices
+namespace PropertyBuildingDemo.Application.Services
 {
+    /// <summary>
+    /// Service for managing properties.
+    /// </summary>
     public class PropertyService : IPropertyBuildingService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -18,6 +19,13 @@ namespace PropertyBuildingDemo.Application.PropertyServices
         private readonly IPropertyImageService _inImageService;
         private readonly IPropertyTraceService _inPropertyTraceService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyService"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">The unit of work used for data access.</param>
+        /// <param name="mapper">The AutoMapper instance.</param>
+        /// <param name="inImageService">The property image service.</param>
+        /// <param name="inPropertyTraceService">The property trace service.</param>
         public PropertyService(IUnitOfWork unitOfWork, IMapper mapper, IPropertyImageService inImageService, IPropertyTraceService inPropertyTraceService)
         {
             _unitOfWork = unitOfWork;
@@ -26,6 +34,11 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             _inPropertyTraceService = inPropertyTraceService;
         }
 
+        /// <summary>
+        /// Creates a new property building.
+        /// </summary>
+        /// <param name="inPropertyDto">The property DTO.</param>
+        /// <returns>The created property.</returns>
         public async Task<Property> CreatePropertyBuilding(PropertyDto inPropertyDto)
         {
             Owner owner = await _unitOfWork.GetRepository<Owner>().GetAsync(inPropertyDto.IdOwner);
@@ -39,7 +52,7 @@ namespace PropertyBuildingDemo.Application.PropertyServices
 
             Property newProperty = _mapper.Map<Property>(inPropertyDto);
             newProperty = await _unitOfWork.GetRepository<Property>().AddAsync(newProperty);
-            await _unitOfWork.Complete(inFinishTransaction:false);
+            await _unitOfWork.Complete(inFinishTransaction: false);
             // Add images if any
             if (inPropertyDto.PropertyImages.Any())
             {
@@ -63,10 +76,14 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             }
 
             await _unitOfWork.Complete();
-
             return newProperty;
         }
 
+        /// <summary>
+        /// Adds an image to a property.
+        /// </summary>
+        /// <param name="inImageDto">The property image DTO.</param>
+        /// <returns>The added property image.</returns>
         public async Task<PropertyImage> AddImageFromProperty(PropertyImageDto inImageDto)
         {
             PropertyImage newPropertyImage = _mapper.Map<PropertyImage>(inImageDto);
@@ -75,6 +92,12 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             return newPropertyImage;
         }
 
+        /// <summary>
+        /// Changes the price of a property.
+        /// </summary>
+        /// <param name="inPropertyId">The ID of the property.</param>
+        /// <param name="inNewPrice">The new price.</param>
+        /// <returns>The updated property.</returns>
         public async Task<Property> ChangePrice(long inPropertyId, decimal inNewPrice)
         {
             Property property = await _unitOfWork.GetRepository<Property>().GetAsync(inPropertyId);
@@ -88,6 +111,11 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             return property;
         }
 
+        /// <summary>
+        /// Updates a property building.
+        /// </summary>
+        /// <param name="inPropertyDto">The updated property DTO.</param>
+        /// <returns>The updated property.</returns>
         public async Task<Property> UpdatePropertyBuilding(PropertyDto inPropertyDto)
         {
             Property property = _mapper.Map<Property>(inPropertyDto);
@@ -96,9 +124,14 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             return property;
         }
 
+        /// <summary>
+        /// Filters property buildings based on query filter arguments.
+        /// </summary>
+        /// <param name="inFilterArgs">The query filter arguments.</param>
+        /// <returns>The filtered properties.</returns>
         public async Task<IEnumerable<Property>> FilterPropertyBuildings(DefaultQueryFilterArgs inFilterArgs)
         {
-            IEnumerable<Property> properties = new List<Property>();
+            IEnumerable<Property> properties;
             if (inFilterArgs == null)
                 return _unitOfWork.GetRepository<Property>().Entities.ToList();
 
@@ -106,7 +139,7 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             {
                 inFilterArgs.SortingParameters.ToList().Add(new SortingParameters
                 {
-                    Direction = ESortingDirection.DirectionAsc,
+                    Direction = ESortingDirection.Ascending,
                     TargetField = "IdProperty",
                     Priority = 0
                 });
@@ -116,8 +149,6 @@ namespace PropertyBuildingDemo.Application.PropertyServices
             properties = await _unitOfWork.GetRepository<Property>().ListByAsync(propertySpecification);
 
             return properties;
-
-
         }
     }
 }

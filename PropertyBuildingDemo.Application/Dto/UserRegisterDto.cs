@@ -1,29 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PropertyBuildingDemo.Application.Dto
 {
-    public  class UserRegisterDto
+    /// <summary>
+    /// Data transfer object (DTO) for registering a new user.
+    /// </summary>
+    public class UserRegisterDto
     {
+        /// <summary>
+        /// Gets or sets the unique identifier for the user.
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the identification number for the user.
+        /// </summary>
         [Required]
         public int IdentificationNumber { get; set; }
 
+        /// <summary>
+        /// Gets or sets the display name for the user.
+        /// </summary>
         [Required]
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email address for the user.
+        /// </summary>
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password for the user.
+        /// </summary>
         [PasswordPropertyText]
         [RegularExpression("(?=^.{6,10}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$",
-            ErrorMessage = "Passord Must have Atleast 1 Lower 1 Uppera nd 1 Special Character")]
+            ErrorMessage = "Password Must have At least 1 Lowercase, 1 Uppercase, and 1 Special Character")]
         public string Password { get; set; }
-
     }
 }
