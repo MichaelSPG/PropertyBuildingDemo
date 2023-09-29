@@ -8,14 +8,9 @@ namespace PropertyBuildingDemo.Api
 {
     public class Startup
     {
-        public static void ConfigureServices(IServiceCollection services, IConfiguration Configuration)
+        public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            Configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.RegisterIntrastrucureServices(Configuration);
+            services.RegisterIntrastrucureServices(configuration);
             services.AddApplicationServices();
             services.AddControllers();
 
