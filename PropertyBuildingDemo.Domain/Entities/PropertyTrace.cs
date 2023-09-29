@@ -19,20 +19,25 @@ namespace PropertyBuildingDemo.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdPropertyTrace { get; set; }
         public DateTime?    DateSale{ get; set; }
+
+        [Required]
         public string       Name { get; set; }
+
+        [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal?     Value { get; set; }
+        public decimal     Value { get; set; }
+
+        [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal?     Tax{ get; set; }
+        public decimal     Tax{ get; set; }
 
         /// <summary>
         /// The property Id
         /// </summary>
-        [ForeignKey(nameof(IdProperty))]
+        [ForeignKey(nameof(Property))]
         public long IdProperty { get; set; }
 
-
-       // public Property Property { get; set; }
+        public Property Property { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdOwner.

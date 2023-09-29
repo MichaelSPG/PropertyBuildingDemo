@@ -19,13 +19,16 @@ namespace PropertyBuildingDemo.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdPropertyImage { get; set; }
 
-        [ForeignKey(nameof(IdProperty))]
+        [ForeignKey(nameof(Property))]
         public long         IdProperty { get; set; }
-        public string       File { get; set; }
-        public string       Address { get; set; }
 
+        [Required]
+        public byte[]       File { get; set; }
+        public bool         Enabled{ get; set; }
+
+        public Property     Property { get; set; }
         /// <summary>
-        /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is PropertyImage.
+        /// Implementation of GetId(), due to difference of names of columns ([Key]). for this is PropertyImage.
         /// </summary>
         /// <returns>the Id of this property</returns>
         public override long GetId()

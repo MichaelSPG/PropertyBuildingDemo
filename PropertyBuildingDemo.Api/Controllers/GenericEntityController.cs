@@ -30,7 +30,7 @@ namespace TEntityBuildingDemo.Api.Controllers
             catch (Exception ex)
             {
                 apiResult = ApiResult< IEnumerable<TEntity>>.FailedResult(ex.Message);
-                _systemLogger.LogExceptionMessage(eLogginLevel.Level_Error, $"{nameof(TEntity)}/Index failed!", ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, $"{nameof(TEntity)}/Index failed!", ex);
             }
 
             return Ok(apiResult);
@@ -48,7 +48,7 @@ namespace TEntityBuildingDemo.Api.Controllers
             catch (Exception ex)
             {
                 apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
-                _systemLogger.LogExceptionMessage(eLogginLevel.Level_Error, $"{nameof(TEntity)}/GetById failed!", ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, $"{nameof(TEntity)}/GetById failed!", ex);
             }
 
             return Ok(apiResult);
@@ -67,7 +67,7 @@ namespace TEntityBuildingDemo.Api.Controllers
             catch (Exception ex)
             {
                 apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
-                _systemLogger.LogExceptionMessage(eLogginLevel.Level_Error, $"{nameof(TEntity)}/Insert failed!", ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, $"{nameof(TEntity)}/Insert failed!", ex);
             }
 
             return Ok(apiResult);
@@ -86,13 +86,18 @@ namespace TEntityBuildingDemo.Api.Controllers
             catch (Exception ex)
             {
                 apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
-                _systemLogger.LogExceptionMessage(eLogginLevel.Level_Error, $"{nameof(TEntity)}/Update failed!", ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, $"{nameof(TEntity)}/Update failed!", ex);
             }
 
             return Ok(apiResult);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("Delete")]
+
         public async Task<IActionResult> Delete([FromBody] long id)
         {
             ApiResult<TEntity> apiResult = null;
@@ -113,7 +118,7 @@ namespace TEntityBuildingDemo.Api.Controllers
             catch (Exception ex)
             {
                 apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
-                _systemLogger.LogExceptionMessage(eLogginLevel.Level_Error, $"{nameof(TEntity)}/Update failed!", ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, $"{nameof(TEntity)}/Update failed!", ex);
             }
 
             return Ok(apiResult);

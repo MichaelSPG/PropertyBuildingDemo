@@ -18,10 +18,16 @@ namespace PropertyBuildingDemo.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdOwner { get; set; }
+
+        [Required]
         public string       Name { get; set; }
+
+        [Required]
         public string       Address { get; set; }
-        public string       Photo { get; set; }
-        public DateTime?    BirthDay { get; set; }
+
+        [Required]
+        public byte[]       Photo { get; set; }
+        public DateTime     BirthDay { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdOwner.

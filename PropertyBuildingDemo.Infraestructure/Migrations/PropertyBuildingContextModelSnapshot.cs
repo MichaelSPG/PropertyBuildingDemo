@@ -31,9 +31,10 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("IdOwner"), 1L, 1);
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("BirthDay")
+                    b.Property<DateTime>("BirthDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
@@ -49,17 +50,19 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Photo")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdOwner");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.Property", b =>
@@ -71,6 +74,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("IdProperty"), 1L, 1);
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
@@ -83,6 +87,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("InternalCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -92,6 +97,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
@@ -100,12 +106,14 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<short?>("Year")
+                    b.Property<short>("Year")
                         .HasColumnType("smallint");
 
                     b.HasKey("IdProperty");
 
-                    b.ToTable("Properties");
+                    b.HasIndex("IdOwner");
+
+                    b.ToTable("Property");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyImage", b =>
@@ -116,17 +124,18 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("IdPropertyImage"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("File")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<byte[]>("File")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<long>("IdProperty")
                         .HasColumnType("bigint");
@@ -142,7 +151,9 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasKey("IdPropertyImage");
 
-                    b.ToTable("PropertyImages");
+                    b.HasIndex("IdProperty");
+
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyTrace", b =>
@@ -172,20 +183,58 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Tax")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("Value")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdPropertyTrace");
 
-                    b.ToTable("PropertyTraces");
+                    b.HasIndex("IdProperty");
+
+                    b.ToTable("PropertyTrace");
+                });
+
+            modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.Property", b =>
+                {
+                    b.HasOne("PropertyBuildingDemo.Domain.Entities.Owner", "Owner")
+                        .WithMany()
+                        .HasForeignKey("IdOwner")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyImage", b =>
+                {
+                    b.HasOne("PropertyBuildingDemo.Domain.Entities.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("IdProperty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyTrace", b =>
+                {
+                    b.HasOne("PropertyBuildingDemo.Domain.Entities.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("IdProperty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
                 });
 #pragma warning restore 612, 618
         }

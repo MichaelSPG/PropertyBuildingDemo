@@ -9,6 +9,8 @@ namespace PropertyBuildingDemo.Domain.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IGenericEntityRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IEntityDB;
-        Task<bool> Complete(CancellationToken cancellationToken = default);
+
+        Task BeginTransaction(CancellationToken cancellationToken = default);
+        Task<bool> Complete(CancellationToken cancellationToken = default, bool inFinishTransaction = true);
     }
 }

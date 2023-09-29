@@ -9,7 +9,7 @@ namespace PropertyBuildingDemo.Domain.Interfaces
 {
     public interface ISystemLogger
     {
-        void LogMessage(eLogginLevel InLogLevel, object InMessage);
-        void LogExceptionMessage(eLogginLevel InLogLevel, object InMessage, Exception InException);
+        void LogMessage(ELogginLevel InLogLevel, object InMessage);
+        void LogExceptionMessage(ELogginLevel InLogLevel, object InMessage, Exception InException);
     }
 }

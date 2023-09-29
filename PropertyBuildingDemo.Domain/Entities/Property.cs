@@ -18,17 +18,24 @@ namespace PropertyBuildingDemo.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long         IdProperty { get; set; }
-        public string       Name { get; set; }
-        public string       Address { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal?     Price { get; set; }
-        public string       InternalCode { get; set; }
-        public short?       Year { get; set; }
 
-        [ForeignKey(nameof(IdOwner))]
+        [Required]
+        public string       Name { get; set; }
+
+        [Required]
+        public string       Address { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal      Price { get; set; }
+
+        [Required]
+        public string       InternalCode { get; set; }
+        public short        Year { get; set; }
+
+        [ForeignKey(nameof(Owner))]
         public long         IdOwner { get; set; }
 
-        //public Owner        Owner { get; set; }
+        public Owner        Owner { get; set; }
 
         /// <summary>
         /// Implementation of GetId(), due to diferent names of columns ([Key]). for this is IdProperty.

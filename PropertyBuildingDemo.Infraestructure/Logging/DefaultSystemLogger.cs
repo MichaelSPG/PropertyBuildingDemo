@@ -7,52 +7,49 @@ namespace PropertyBuildingDemo.Infrastructure.Logging
 {
     public class DefaultSystemLogger : ISystemLogger
     {
-        private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-        protected static Lazy<DefaultSystemLogger> _defaultSystemLogger = new Lazy<DefaultSystemLogger>(() => new DefaultSystemLogger());
+        protected static Lazy<DefaultSystemLogger> _defaultSystemLoggerInstance = new Lazy<DefaultSystemLogger>(() => new DefaultSystemLogger());
 
-        public static DefaultSystemLogger Instance
+        public static DefaultSystemLogger Instance => _defaultSystemLoggerInstance.Value;
+
+        public void LogExceptionMessage(ELogginLevel inLogLevel, object inMessage, Exception inException)
         {
-            get { return _defaultSystemLogger.Value; }
-        }
-
-        public void LogExceptionMessage(eLogginLevel InLogLevel, object InMessage, Exception InException)
-        {
-            switch (InLogLevel)
+            switch (inLogLevel)
             {
-                case eLogginLevel.Level_Info:
-                    if (_logger.IsInfoEnabled)
-                        _logger.Info(InMessage, InException);
+                case ELogginLevel.Level_Info:
+                    if (Logger.IsInfoEnabled)
+                        Logger.Info(inMessage, inException);
                     break;
-                case eLogginLevel.Level_Warn:
-                    if (_logger.IsWarnEnabled)
-                        _logger.Warn(InMessage, InException);
+                case ELogginLevel.Level_Warn:
+                    if (Logger.IsWarnEnabled)
+                        Logger.Warn(inMessage, inException);
                     break;
-                case eLogginLevel.Level_Error:
-                    _logger.Error(InMessage, InException);
+                case ELogginLevel.Level_Error:
+                    Logger.Error(inMessage, inException);
                     break;
-                case eLogginLevel.Level_Fatal:
-                    _logger.Fatal(InMessage, InException);
+                case ELogginLevel.Level_Fatal:
+                    Logger.Fatal(inMessage, inException);
                     break;
             }
         }
-        public void LogMessage(eLogginLevel InLogLevel, object InMessage)
+        public void LogMessage(ELogginLevel inLogLevel, object inMessage)
         {
-            switch (InLogLevel)
+            switch (inLogLevel)
             {
-                case eLogginLevel.Level_Info:
-                    if (_logger.IsInfoEnabled)
-                        _logger.Info(InMessage);
+                case ELogginLevel.Level_Info:
+                    if (Logger.IsInfoEnabled)
+                        Logger.Info(inMessage);
                     break;
-                case eLogginLevel.Level_Warn:
-                    if (_logger.IsWarnEnabled)
-                        _logger.Warn(InMessage);
+                case ELogginLevel.Level_Warn:
+                    if (Logger.IsWarnEnabled)
+                        Logger.Warn(inMessage);
                     break;
-                case eLogginLevel.Level_Error:
-                    _logger.Error(InMessage);
+                case ELogginLevel.Level_Error:
+                    Logger.Error(inMessage);
                     break;
-                case eLogginLevel.Level_Fatal:
-                    _logger.Fatal(InMessage);
+                case ELogginLevel.Level_Fatal:
+                    Logger.Fatal(inMessage);
                     break;
             }
         }

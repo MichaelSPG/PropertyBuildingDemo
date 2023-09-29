@@ -30,6 +30,17 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
             return entity;
         }
 
+        public async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entity)
+        {
+            IEnumerable<TEntity> entities = entity as TEntity[] ?? entity.ToArray();
+            foreach (var baseEntityDb in entities)
+            {
+                baseEntityDb.CreatedTime = baseEntityDb.UpdatedTime = DateTime.Now;
+            }
+            await _context.Set<TEntity>().AddRangeAsync(entities);
+            return entities;
+        }
+
         public Task DeleteAsync(TEntity entity)
         {
             entity.UpdatedTime = DateTime.Now;
@@ -38,16 +49,14 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public IQueryable<TEntity> GetAllAsync()
+        public IQueryable<TEntity> GetAll()
         {
             return _context.Set<TEntity>().AsQueryable();
         }
-
         public async Task<TEntity> GetAsync(long id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
-
         public async Task<TEntity> FindBy(ISpecifications<TEntity> specification)
         {
             return await ApplySpecification(specification).FirstOrDefaultAsync();

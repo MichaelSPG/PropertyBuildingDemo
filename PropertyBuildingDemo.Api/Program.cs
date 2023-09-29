@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Middleware;
+using PropertyBuildingDemo.Application.Extensions;
 using PropertyBuildingDemo.Infrastructure;
+
 namespace PropertyBuildingDemo.Api
 {
     public class Program
@@ -11,6 +13,7 @@ namespace PropertyBuildingDemo.Api
 
             // Add intrastrucure services to the container.
             builder.Services.RegisterIntrastrucureServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

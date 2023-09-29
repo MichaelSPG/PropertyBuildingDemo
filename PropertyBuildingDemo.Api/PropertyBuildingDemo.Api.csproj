@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PropertyBuildingDemo.Application\PropertyBuildingDemo.Application.csproj" />
     <ProjectReference Include="..\PropertyBuildingDemo.Infraestructure\PropertyBuildingDemo.Infrastructure.csproj" />
   </ItemGroup>
 
@@ -29,10 +30,6 @@
     <Content Update="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTO\" />
   </ItemGroup>
 
 </Project>

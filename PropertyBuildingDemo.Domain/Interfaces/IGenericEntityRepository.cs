@@ -14,14 +14,15 @@ namespace PropertyBuildingDemo.Domain.Interfaces
     public interface IGenericEntityRepository<TEntity> where TEntity : class, IEntityDB 
     {
         IQueryable<TEntity>             Entities { get; }
-        IQueryable<TEntity>             GetAllAsync();        
+        IQueryable<TEntity>             GetAll();        
         Task<TEntity>                   AddAsync(TEntity entity);
+        Task<IEnumerable<TEntity>>      AddRangeAsync(IEnumerable<TEntity> entity);
         Task<TEntity>                   UpdateAsync(TEntity entity);
         Task<TEntity>                   GetAsync(long id);
         Task                            DeleteAsync(TEntity entity);
 
         Task<TEntity>                   FindBy(ISpecifications<TEntity> specification);
-        Task<IEnumerable<TEntity>>    ListByAsync(ISpecifications<TEntity> specification);
+        Task<IEnumerable<TEntity>>      ListByAsync(ISpecifications<TEntity> specification);
         Task<int>                       CountAsync(ISpecifications<TEntity> specifications);
     }
 }

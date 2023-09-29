@@ -5,29 +5,36 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using LinqKit;
 
 namespace PropertyBuildingDemo.Domain.Specification
 {
-    public class BaseSpecifications<T> : ISpecifications<T> where T : class, IEntityDB
+    public class BaseSpecifications<TEntity> : ISpecifications<TEntity> where TEntity : class, IEntityDB
     {
         public BaseSpecifications() { }
-        public Expression<Func<T, bool>>            Criteria {get;}
-        public List<Expression<Func<T, object>>>    Includes { get; } = new List<Expression<Func<T, object>>>();
-        public Expression<Func<T, object>>          OrderBy {get; private set;}
-        public Expression<Func<T, object>>          OrderByDescending {get; private set; }
+
+        public BaseSpecifications(Expression<Func<TEntity, bool>> inCriteria)
+        {
+            this.Criteria = inCriteria;
+        }
+        
+        public Expression<Func<TEntity, bool>>            Criteria {get; set; }
+        public List<Expression<Func<TEntity, object>>>    Includes { get; } = new List<Expression<Func<TEntity, object>>>();
+        public Expression<Func<TEntity, object>>          OrderBy {get; private set;}
+        public Expression<Func<TEntity, object>>          OrderByDescending {get; private set; }
         public int                                  Take {get; private set; }
         public int                                  Skip {get; private set; }
         public bool                                 IsPagingEnabled {get; private set; }
 
-        protected void  AddIncludes(Expression<Func<T, object>> InIncludeExpression)
+        protected void  AddInclude(Expression<Func<TEntity, object>> InIncludeExpression)
         {
             Includes.Add(InIncludeExpression);
         }
-        public void     AddOrderBy(Expression<Func<T, object>> InOrderByExpression)
+        public void     AddOrderBy(Expression<Func<TEntity, object>> InOrderByExpression)
         {
             OrderBy = InOrderByExpression;
         }
-        public void     AddOrderByDescending(Expression<Func<T, object>> InOrderByDescendingExpression)
+        public void     AddOrderByDescending(Expression<Func<TEntity, object>> InOrderByDescendingExpression)
         {
             OrderByDescending = InOrderByDescendingExpression;
         }
@@ -36,6 +43,16 @@ namespace PropertyBuildingDemo.Domain.Specification
         {
             this.Take = InTake;
             this.Skip = InSkip;
+        }
+
+        public Expression<Func<TEntity, bool>> And(Expression<Func<TEntity, bool>> inQuery)
+        {
+            return Criteria = Criteria == null ? inQuery : Criteria.And(inQuery);
+        }
+
+        public Expression<Func<TEntity, bool>> Or(Expression<Func<TEntity, bool>> inQuery)
+        {
+            return Criteria = Criteria == null ? inQuery : Criteria.Or(inQuery);
         }
     }
 }

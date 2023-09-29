@@ -12,10 +12,10 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         {
         }
 
-        public DbSet<Property> Properties { get; set; }
-        public DbSet<Owner> Owners { get; set; }
-        public DbSet<PropertyImage> PropertyImages { get; set; }
-        public DbSet<PropertyTrace> PropertyTraces { get; set; }
+        public DbSet<Property> Property { get; set; }
+        public DbSet<Owner> Owner { get; set; }
+        public DbSet<PropertyImage> PropertyImage { get; set; }
+        public DbSet<PropertyTrace> PropertyTrace { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

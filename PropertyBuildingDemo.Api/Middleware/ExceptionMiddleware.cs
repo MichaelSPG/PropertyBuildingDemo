@@ -3,6 +3,7 @@ using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Interfaces;
 using System.Net;
 using System.Text.Json;
+using PropertyBuildingDemo.Domain.Entities.Enums;
 
 namespace PropertyBuildingDemo.Api.Middleware
 {
@@ -26,7 +27,7 @@ namespace PropertyBuildingDemo.Api.Middleware
             }
             catch (Exception ex)
             {                
-                _systemLogger.LogExceptionMessage(Domain.Entities.Enums.eLogginLevel.Level_Error, ex.Message, ex);
+                _systemLogger.LogExceptionMessage(ELogginLevel.Level_Error, ex.Message, ex);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
