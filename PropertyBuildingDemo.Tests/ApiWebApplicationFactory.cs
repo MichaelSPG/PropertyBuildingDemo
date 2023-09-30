@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using PropertyBuildingDemo.Infrastructure.Data;
 using System.Data.Common;
-using System.Xml.Linq;
-using Microsoft.Extensions.Logging;
+using PropertyBuildingDemo.Api;
 
 namespace PropertyBuildingDemo.Tests
 {
-    public class TestWebApplicationFactory<TProgram>
-        : WebApplicationFactory<TProgram> where TProgram : class
+    public class ApiWebApplicationFactory
+        : WebApplicationFactory<Program>
     {
         private DbConnection _connection;
         private string _dbName;

@@ -1,41 +1,25 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using PropertyBuildingDemo.Api;
 using PropertyBuildingDemo.Application.Dto;
-using PropertyBuildingDemo.Domain.Common;
-using PropertyBuildingDemo.Tests.Helpers;
-using System.Net;
-using System.Net.Http.Json;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Tests.Factories;
+using PropertyBuildingDemo.Tests.Helpers;
 using PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities;
+using System.Net;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
 {
-    public class SecurityTests : IDisposable
+    [TestFixture]
+    public class SecurityTests : BaseTest
     {
-        private HttpApiClient _client;
-        private TestWebApplicationFactory<Program> _factory;
         private TokenResponse _tokenResponse;
         private UserRegisterDto _userRegisterDto;
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _factory = new TestWebApplicationFactory<Program>();
-            _client = new HttpApiClient(_factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false }));
-        }
-
+        
         [SetUp]
         public void Setup()
         {
         }
-
-        public void Dispose()
-        {
-            _client?.Dispose();
-            _factory?.Dispose();
-        }
-
+        
         // SECURITY TESTS
 
         [Test(Description = "Test if we don't have access to any endpoint")]
@@ -46,14 +30,14 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
         [TestCase(TestConstants.AccountEnpoint.CurrentUser)]
         public async Task Should_ReturnUnauthorizedResponse_When_AnonymousUserConnectsToService(string url)
         {
-            await _client.MakeGetRequestAsync<object>($"{url}", Is.EqualTo(HttpStatusCode.Unauthorized));
+            await ApiClient.MakeGetRequestAsync<object>($"{url}", Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test(Description = "Test user account creation specifying bad password, expected to return BadRequest")]
         public async Task Should_ReturnBadRequestResponse_When_AnonymousUserCreatesUserWithInvalidPassword()
         {
             _userRegisterDto = AccountUserDataFactory.CreateInvalidUserPasswordFoRegister();
-            await _client.MakePostRequestAsync<object> ($"{TestConstants.AccountEnpoint.Register}", _userRegisterDto, Is.EqualTo(HttpStatusCode.BadRequest));
+            await ApiClient.MakePostRequestAsync<object> ($"{TestConstants.AccountEnpoint.Register}", _userRegisterDto, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test]
@@ -63,7 +47,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
             _userRegisterDto = AccountUserDataFactory.CreateValidUserFoRegister();
 
             // Act: Make the HTTP request to create an anonymous user
-            var result = await _client.MakePostRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.Register}", _userRegisterDto, Is.EqualTo(HttpStatusCode.OK));
+            var result = await ApiClient.MakePostRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.Register}", _userRegisterDto, Is.EqualTo(HttpStatusCode.OK));
 
             // Validate the API result data using a utility method
             Utilities.ValidateApiResultData(result);
@@ -76,21 +60,21 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
         [Test()]
         public async Task Should_ReturnBadRequestResponse_When_UserRequestTokenWithNullData()
         {
-            await _client.MakePostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", null, Is.EqualTo(HttpStatusCode.BadRequest));
+            await ApiClient.MakePostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", null, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test()]
         public async Task Should_ReturnUnauthorizedResponse_When_UsingExpiredToken()
         {
-            await _client.SetTokenAuthorizationHeader(TokenDataFactory.CreateExpiredTokenResponse());
-            await _client.MakeGetRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
+            await ApiClient.SetTokenAuthorizationHeader(TokenDataFactory.CreateExpiredTokenResponse());
+            await ApiClient.MakeGetRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
         }
         [Test]
         public async Task Should_ReturnUnauthorizedResponse_When_UsingInvalidTokenData()
         {
             // Act: Make the HTTP request with an invalid access token
-            await _client.SetTokenAuthorizationHeader(TokenDataFactory.CreateCorruptedTokenResponse());
-            await _client.MakeGetRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
+            await ApiClient.SetTokenAuthorizationHeader(TokenDataFactory.CreateCorruptedTokenResponse());
+            await ApiClient.MakeGetRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
         }
 
         [Test()]
@@ -99,7 +83,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
             TokenRequest request = TokenDataFactory.CreateTokenRequestCustom(AccountUserDataFactory.CreateValidUserFoRegister().Email,
                     "NotValidPassword");
 
-            var result = await _client.MakePostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", request, Is.EqualTo(HttpStatusCode.OK));
+            var result = await ApiClient.MakePostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", request, Is.EqualTo(HttpStatusCode.OK));
 
             Utilities.ValidateApiResult_ExpectedNotOk(result);
             Assert.IsTrue(
@@ -108,42 +92,37 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
             );
         }
 
-        //[Test()]
-        //public async Task Should_ReturnAuthorizedResponse_When_ValidatingUserToken()
-        //{
 
-        //    _client.DefaultRequestHeaders.Add("access_token", _tokenResponse.Token);
+        [Test()]
+        public async Task Should_ReturnOkResponseWithTokenData_When_RequestingUserToken()
+        {
+            var validUserRegistration = AccountUserDataFactory.CreateValidUserFoRegister();
 
-        //    await _client.SetTokenAuthorizationHeader(TokenDataFactory.CreateCorruptedTokenResponse());
+            TokenRequest request =
+                TokenDataFactory.CreateTokenRequestCustom(validUserRegistration.Email, validUserRegistration.Password);
 
-        //    var response = await _client.GetAsync($"{TestConstants.AccountEnpoint.CurrentUser}");
+            var result = await ApiClient.MakePostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", request, Is.EqualTo(HttpStatusCode.OK));
 
-        //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Response must be {HttpStatusCode.OK}");
-        //    ApiResult<UserDto> result = await response.Content.ReadFromJsonAsync<ApiResult<UserDto>>();
-        //    Utilities.ValidateApiResultData(result);
-        //}
-        //[Test()]
-        //public async Task Should_ReturnOkResponseWithTokenData_When_RequestingUserToken()
-        //{
-        //    var validUserRegistration = AccountUserDataFactory.CreateValidUserFoRegister();
+            Utilities.ValidateApiResultData(result);
 
-        //    TokenRequest request =
-        //        TokenDataFactory.CreateTokenRequestCustom(validUserRegistration.Email, validUserRegistration.Password);
+            _tokenResponse = result.Data;
 
-        //    var response = await _client.PostAsJsonAsync($"{TestConstants.AccountEnpoint.Login}", request);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_tokenResponse.Token), $"Token must not be null/empty");
 
-        //    ApiResult<TokenResponse> result = await response.Content.ReadFromJsonAsync<ApiResult<TokenResponse>>();
+            Assert.Less(DateTime.UtcNow, _tokenResponse.TokenExpiryTime, $"Token expiration time must be greater than actual date/time");
+        }
 
-        //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Status code must be {HttpStatusCode.OK}");
+        [Test()]
+        public async Task Should_ReturnAuthorizedResponse_When_ValidatingUserToken()
+        {
+            Assert.NotNull(_tokenResponse);
 
-        //    Utilities.ValidateApiResultData(result);
+            await ApiClient.SetTokenAuthorizationHeader(_tokenResponse);
 
-        //    _tokenResponse = result.Data;
+            var result = await ApiClient.MakeGetRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.OK));
 
-        //    Assert.IsFalse(string.IsNullOrWhiteSpace(_tokenResponse.Token), $"Token must not be null/empty");
-
-        //    Assert.Less(DateTime.UtcNow, _tokenResponse.TokenExpiryTime, $"Token expiration time must be greater than actual date/time");
-        //}
+            Utilities.ValidateApiResultData(result);
+        }
 
     }
 }
