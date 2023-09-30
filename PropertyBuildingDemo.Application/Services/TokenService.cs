@@ -60,14 +60,14 @@ namespace PropertyBuildingDemo.Application.Services
             {
                 return await ApiResult<TokenResponse>.FailedResultAsync("User is not active!.");
             }
-            if (!appUser.EmailConfirmed)
-            {
-                return await ApiResult<TokenResponse>.FailedResultAsync("User email is not confirmed!.");
-            }
+            //if (!appUser.EmailConfirmed)
+            //{
+            //    return await ApiResult<TokenResponse>.FailedResultAsync("User email is not confirmed!.");
+            //}
             var passwordValidator = await _userManager.CheckPasswordAsync(appUser, tokenRequest.Password);
             if (!passwordValidator)
             {
-                return await ApiResult<TokenResponse>.FailedResultAsync("User/pasword invalid credentials!.");
+                return await ApiResult<TokenResponse>.FailedResultAsync("User/Password invalid credentials!.");
             }
 
             var claims = GetClaimsAsync(appUser);

@@ -19,7 +19,7 @@ namespace PropertyBuildingDemo.Tests.Factories
             };
         }
 
-        public static TokenResponse CreateCorruptedTokenResponseValue() 
+        public static TokenResponse CreateCorruptedTokenResponse() 
         {
             return new TokenResponse()
             {

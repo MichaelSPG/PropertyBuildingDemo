@@ -252,5 +252,19 @@ namespace PropertyBuildingDemo.Domain.Common
         {
             return Task.FromResult(new ApiResult<TData> { Success = false });
         }
+        /// <summary>
+        ///  Gets the messages and join them in one string and return the result
+        /// </summary>
+        /// <param name="separator">the separator of the joined string</param>
+        /// <returns>The joined message as a single string</returns>
+        public string GetJoinedMessages(string separator = ", ")
+        {
+            string description = "";
+
+            if (Message == null || !Message.Any())
+                return description;
+
+            return string.Join(separator, Message);
+        }
     }
 }
