@@ -44,7 +44,7 @@ public class AccountController : BaseController
     /// <param name="inTokenRequest">The token request data.</param>
     /// <returns>An IActionResult containing the token response or an error message.</returns>
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] TokenRequest inTokenRequest)
     {
         ApiResult<TokenResponse> apiResult = null;

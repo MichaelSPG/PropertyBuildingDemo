@@ -34,11 +34,12 @@ public class Startup
         {
             options.Filters.Add(typeof(DtoModelValidationFilter));
         });
+
         // Configure Swagger/OpenAPI for API documentation
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddSwaggerDocumentation();
-        //services.AddScoped<ValidateModelAttribute>();
+
         // Configure API versioning
         services.AddApiVersioning(options =>
         {
@@ -57,10 +58,15 @@ public class Startup
                 .WithExposedHeaders("*"));
         });
 
+        // Configure the behavior options for API controllers
         services.Configure<ApiBehaviorOptions>(options =>
         {
+            // Suppress the automatic ModelStateInvalidFilter
+            // This prevents ASP.NET Core from automatically returning
+            // BadRequest responses for invalid model states.
             options.SuppressModelStateInvalidFilter = true;
         });
+
         // Add localization support
         services.AddLocalization();
     }
