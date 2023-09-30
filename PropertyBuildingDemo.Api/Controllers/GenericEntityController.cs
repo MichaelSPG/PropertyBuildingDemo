@@ -37,7 +37,7 @@ public class GenericEntityController<TEntity> : BaseController
     /// Retrieves a list of entities of type TEntity.
     /// </summary>
     /// <returns>An IActionResult containing the list of entities or an error message.</returns>
-    [HttpGet("list")]
+    [HttpGet("List")]
     public async Task<IActionResult> Index()
     {
         ApiResult<IEnumerable<TEntity>> apiResult = null;

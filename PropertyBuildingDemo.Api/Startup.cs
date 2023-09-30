@@ -7,6 +7,7 @@ namespace PropertyBuildingDemo.Api;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Extensions;
+using PropertyBuildingDemo.Api.Filters;
 using PropertyBuildingDemo.Api.Middleware;
 using PropertyBuildingDemo.Infrastructure;
 
@@ -29,13 +30,15 @@ public class Startup
         services.AddApplicationServices();
 
         // Add controllers
-        services.AddControllers();
-
+        services.AddControllers(options =>
+        {
+            options.Filters.Add(typeof(DtoModelValidationFilter));
+        });
         // Configure Swagger/OpenAPI for API documentation
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddSwaggerDocumentation();
-
+        //services.AddScoped<ValidateModelAttribute>();
         // Configure API versioning
         services.AddApiVersioning(options =>
         {
@@ -54,6 +57,10 @@ public class Startup
                 .WithExposedHeaders("*"));
         });
 
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
         // Add localization support
         services.AddLocalization();
     }
@@ -83,12 +90,17 @@ public class Startup
         // Enable HTTPS redirection
         app.UseHttpsRedirection();
 
+        app.UseRouting();
+
         // Enable authentication and authorization
         app.UseAuthentication();
         app.UseAuthorization();
 
         // Map controllers
-        app.MapControllers();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers(); // Map controllers after other middleware
+        });
 
         // Configure request localization to use "en-US" culture
         app.UseRequestLocalization("en-US");

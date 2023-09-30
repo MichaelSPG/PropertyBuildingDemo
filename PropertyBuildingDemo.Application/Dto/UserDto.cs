@@ -6,6 +6,10 @@
     public class UserDto
     {
         /// <summary>
+        /// Get or sets Id of this user
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
         /// Gets or sets the identity number of the user.
         /// </summary>
         public string IdentityNumber { get; set; }

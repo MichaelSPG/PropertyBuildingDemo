@@ -9,11 +9,6 @@ namespace PropertyBuildingDemo.Application.Dto
     public class UserRegisterDto
     {
         /// <summary>
-        /// Gets or sets the unique identifier for the user.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or sets the identification number for the user.
         /// </summary>
         [Required]

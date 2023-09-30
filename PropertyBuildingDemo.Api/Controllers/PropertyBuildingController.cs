@@ -41,8 +41,8 @@ public class PropertyBuildingController : BaseController
     /// </summary>
     /// <param name="inFilterArgs">The filter criteria.</param>
     /// <returns>An IActionResult containing the list of properties or an error message.</returns>
-    [HttpPost("ListBy")]
-    public async Task<IActionResult> GetListBy([FromBody] DefaultQueryFilterArgs inFilterArgs)
+    [HttpGet("ListBy")]
+    public async Task<IActionResult> GetListBy([FromQuery] DefaultQueryFilterArgs inFilterArgs)
     {
         ApiResult<IEnumerable<Property>> apiResult = null;
         try

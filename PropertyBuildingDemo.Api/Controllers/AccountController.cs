@@ -1,12 +1,12 @@
 ﻿// <copyright file="AccountController.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
 namespace PropertyBuildingDemo.Api.Controllers;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PropertyBuildingDemo.Api.Filters;
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Common;
@@ -70,6 +70,7 @@ public class AccountController : BaseController
     /// <returns>An IActionResult containing the registered user or an error message.</returns>
     [AllowAnonymous]
     [HttpPost("Register")]
+    [DtoModelValidationFilter]
     public async Task<ActionResult<UserDto>> RegisterAsync([FromBody] UserRegisterDto registerDto)
     {
         ApiResult<UserDto> apiResult = null;

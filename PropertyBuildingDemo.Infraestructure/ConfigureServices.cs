@@ -163,7 +163,7 @@ namespace PropertyBuildingDemo.Infrastructure
                        {
                            c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                            c.Response.ContentType = "application/json";
-                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult("The Token is expired."));
+                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult(c.Response.StatusCode, "The Token is expired."));
                            return c.Response.WriteAsync(result);
                        }
                        else
@@ -172,7 +172,7 @@ namespace PropertyBuildingDemo.Infrastructure
                            c.NoResult();
                            c.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                            c.Response.ContentType = "text/plain";
-                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult(c.Exception.ToString()));
+                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult(c.Response.StatusCode, c.Exception.ToString()));
                            return c.Response.WriteAsync(result);
 #else
                             c.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -189,7 +189,7 @@ namespace PropertyBuildingDemo.Infrastructure
                        {
                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                            context.Response.ContentType = "application/json";
-                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult("You are not Authorized."));
+                           var result = JsonConvert.SerializeObject(ApiResult.FailedResult(context.Response.StatusCode, "You are not Authorized."));
                            return context.Response.WriteAsync(result);
                        }
 
@@ -199,7 +199,7 @@ namespace PropertyBuildingDemo.Infrastructure
                    {
                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                        context.Response.ContentType = "application/json";
-                       var result = JsonConvert.SerializeObject(ApiResult.FailedResult("You are not authorized to access this resource."));
+                       var result = JsonConvert.SerializeObject(ApiResult.FailedResult(context.Response.StatusCode, "You are not authorized to access this resource."));
                        return context.Response.WriteAsync(result);
                    },
                };

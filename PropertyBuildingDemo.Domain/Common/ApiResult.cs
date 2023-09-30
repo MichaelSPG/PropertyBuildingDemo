@@ -86,6 +86,15 @@ namespace PropertyBuildingDemo.Domain.Common
         {
             return new ApiResult { Success = false, Message = new List<string> { inMessage } };
         }
+        /// <summary>
+        /// Creates a failed API result with a message list.
+        /// </summary>
+        /// <param name="inMessage">The error message list.</param>
+        /// <returns>A failed API result with the specified message.</returns>
+        public static ApiResult FailedResult(List<string> inMessage)
+        {
+            return new ApiResult { Success = false, Message =inMessage };
+        }
 
         /// <summary>
         /// Creates a failed API result without a message.

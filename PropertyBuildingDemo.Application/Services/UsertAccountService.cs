@@ -54,6 +54,7 @@ namespace PropertyBuildingDemo.Application.Services
             }
             return await ApiResult<UserDto>.SuccessResultAsync(new UserDto
             {
+                Id = appUser.Id,
                 DisplayName = appUser.DisplayName,
                 Email = appUser.Email,
                 IdentityNumber = appUser.IdentityNumber
@@ -70,6 +71,7 @@ namespace PropertyBuildingDemo.Application.Services
             var user = await _userManager.FindByEmailAsync(email);
             return user != null ?  ApiResult<UserDto>.SuccessResult(new UserDto
             {
+                Id = user.Id,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 IdentityNumber = user.IdentityNumber
@@ -97,6 +99,7 @@ namespace PropertyBuildingDemo.Application.Services
             var user = await FindByEmailFromClaimPrincipal(httpContext.User);
             return ApiResult<UserDto>.SuccessResult(new UserDto
             {
+                Id = user.Id,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 IdentityNumber = user.IdentityNumber
