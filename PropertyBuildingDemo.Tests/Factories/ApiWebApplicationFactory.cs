@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 using PropertyBuildingDemo.Infrastructure.Data;
 using System.Data.Common;
 using PropertyBuildingDemo.Api;
+using Microsoft.Data.Sqlite;
 
-namespace PropertyBuildingDemo.Tests
+namespace PropertyBuildingDemo.Tests.Factories
 {
     public class ApiWebApplicationFactory
         : WebApplicationFactory<Program>
     {
-        private DbConnection _connection;
         private string _dbName;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -42,7 +42,38 @@ namespace PropertyBuildingDemo.Tests
 
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                DisposeDatabase();
+            }
             base.Dispose(disposing);
+        }
+        private void DisposeDatabase()
+        {
+            using (var scope = Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
+                context.Database.EnsureDeleted(); // Removes the database schema and data
+
+                // Specify the database file path and extension (e.g., .mdf for SQL Server)
+                string databaseFilePath = context.Database.GetDbConnection().ConnectionString;
+
+                // Depending on the database provider, you may need to adjust the file path extraction
+                if (!string.IsNullOrEmpty(databaseFilePath))
+                {
+                    // Extract the database file path from the connection string
+                    // and delete the file
+                    try
+                    {
+                        System.IO.File.Delete(databaseFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions that may occur during file deletion
+                        // Log the exception or take appropriate action
+                    }
+                }
+            }
         }
     }
 }

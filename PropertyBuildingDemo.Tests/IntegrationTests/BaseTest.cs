@@ -3,49 +3,111 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities;
-using System.Net.Http.Headers;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
+using PropertyBuildingDemo.Application.Dto;
+using PropertyBuildingDemo.Domain.Interfaces;
+using PropertyBuildingDemo.Tests.Factories;
+using PropertyBuildingDemo.Tests.Helpers;
+using System.Net;
+using PropertyBuildingDemo.Application.IServices;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests
 {
     public class BaseTest : IDisposable
     {
-        protected HttpApiClient ApiClient;
         protected ApiWebApplicationFactory Application;
+        protected TokenResponse _tokenResponse;
+        protected IUserAccountService _userAccountService;
+        protected UserDto _userDto;
+        protected HttpApiClient httpApiClient;
+        protected IApiTokenService _tokenService;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public virtual void OneTimeSetUp()
         {
             Application = new ApiWebApplicationFactory();
-            ApiClient = new HttpApiClient(Application.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false }));
+            httpApiClient = new HttpApiClient(Application.CreateClient(new WebApplicationFactoryClientOptions
+                { AllowAutoRedirect = false }));
         }
+
+        public HttpApiClient CreateAuthorizedApiClient()
+        {
+            var client = new HttpApiClient(Application.CreateClient(new WebApplicationFactoryClientOptions
+                { AllowAutoRedirect = false }));
+            client.SetTokenAuthorizationHeader(_tokenResponse);
+            return client;
+        }
+
         public void Dispose()
         {
-            ApiClient?.Dispose();
+            httpApiClient?.Dispose();
             Application?.Dispose();
         }
+        
+        private async Task<UserDto> CreateTestUserDto(UserRegisterDto userRegisterDto)
+        {
+            var newUser = new AppUser
+            {
+                UserName = userRegisterDto.Email,
+                DisplayName = userRegisterDto.DisplayName,
+                Email = userRegisterDto.Email,
+                IdentificationNumber = userRegisterDto.IdentificationNumber
+            };
+            var result = await _userAccountService.RegisterUser(userRegisterDto);
 
+            return new UserDto()
+            {
+                DisplayName = newUser.DisplayName,
+                Email = newUser.UserName,
+                Id = newUser.Id,
+                IdentificationNumber = newUser.IdentificationNumber,
+            };
+        }
 
-        //public async Task<(HttpClient Client, string UserId)> CreateTestUser(string userName, string password, string[] roles)
-        //{
-        //    using var scope = Application.Services.CreateScope();
-        //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+        private async Task<UserDto> GetTestUserDto(string userName)
+        {
+            var result = await _userAccountService.FindByEmail(userName);
+            if (result == null || result.Failed())
+            {
+                return null;
+            }
+            var appUser = result.Data;
+            return new UserDto()
+            {
+                DisplayName = appUser.DisplayName,
+                Email = appUser.Email,
+                Id = appUser.Id,
+                IdentificationNumber = appUser.IdentificationNumber,
+            };
+        }
 
-        //    var newUser = new AppUser();
-        //    newUser.UserName = userName;
-        //    newUser.DisplayName = userName;
-        //    await userManager.CreateAsync(newUser, password);
+        public async Task<UserDto> CreateTestUserIfNotExists(UserRegisterDto userRegisterDto)
+        {
+            var user = await GetTestUserDto(userRegisterDto.Email);
+            if (user != null)
+            {
+                return user;
+            }
 
-        //    foreach (var role in roles)
-        //    {
-        //        await userManager.AddToRoleAsync(newUser, role);
-        //    }
+            return await CreateTestUserDto(userRegisterDto);
+        }
 
-        //    var accessToken = await GetAccessToken(userName, password);
+        private async Task<TokenResponse> CreateTestTokenForUser(IApiTokenService tokenService, UserRegisterDto userRegister)
+        {
+            var result = await tokenService.CreateToken(TokenDataFactory.CreateTokenRequestFromUserData(userRegister));
+            return result.Data;
+        }
 
-        //    var client = Application.CreateClient();
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        public async Task SetupUserDataAsync(UserRegisterDto userRegister)
+        {
+            using var scope = Application.Services.CreateScope();
+            _tokenService = scope.ServiceProvider.GetRequiredService<IApiTokenService>();
+            _userAccountService = scope.ServiceProvider.GetRequiredService<IUserAccountService>();
 
-        //    return (client, newUser.Id);
-        //}
+            _userDto = await CreateTestUserIfNotExists(userRegister);
+            _tokenResponse = await CreateTestTokenForUser(_tokenService, userRegister);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 
 namespace PropertyBuildingDemo.Tests.Factories
@@ -34,6 +35,14 @@ namespace PropertyBuildingDemo.Tests.Factories
             {
                 Username = userName,
                 Password = password
+            };
+        }
+        public static TokenRequest CreateTokenRequestFromUserData(UserRegisterDto user)
+        {
+            return new TokenRequest()
+            {
+                Username = user.Email,
+                Password = user.Password,
             };
         }
     }
