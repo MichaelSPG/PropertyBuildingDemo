@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Domain.Interfaces;
-using PropertyBuildingDemo.Infrastructure.Config;
 using PropertyBuildingDemo.Infrastructure.Data;
 using PropertyBuildingDemo.Infrastructure.Logging;
 using PropertyBuildingDemo.Infrastructure.Repositories;
@@ -19,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PropertyBuildingDemo.Domain.Common;
 using System.Globalization;
+using PropertyBuildingDemo.Application.Config;
 
 namespace PropertyBuildingDemo.Infrastructure
 {

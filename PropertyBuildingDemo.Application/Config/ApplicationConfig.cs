@@ -1,4 +1,4 @@
-﻿namespace PropertyBuildingDemo.Infrastructure.Config
+﻿namespace PropertyBuildingDemo.Application.Config
 {
     /// <summary>
     /// Represents the application configuration settings.

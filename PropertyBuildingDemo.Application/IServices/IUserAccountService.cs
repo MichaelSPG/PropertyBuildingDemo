@@ -43,5 +43,8 @@ namespace PropertyBuildingDemo.Application.IServices
         /// <param name="user">The claims principal containing user information.</param>
         /// <returns>The user found in the claims principal.</returns>
         Task<AppUser> FindByEmailFromClaimPrincipal(ClaimsPrincipal user);
+
+
+        //Task<AppUser> UpdateUser(AppUser appUser);
     }
 }

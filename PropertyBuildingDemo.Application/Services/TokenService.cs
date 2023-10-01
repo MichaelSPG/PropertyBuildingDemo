@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Domain.Interfaces;
-using PropertyBuildingDemo.Infrastructure.Config;
-using PropertyBuildingDemo.Infrastructure.Data;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using PropertyBuildingDemo.Application.Config;
+using PropertyBuildingDemo.Application.IServices;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PropertyBuildingDemo.Application.Services
 {
@@ -23,7 +23,7 @@ namespace PropertyBuildingDemo.Application.Services
         private readonly IConfiguration _configuration;
         private readonly IOptions<ApplicationConfig> _appConfig;
         private readonly SymmetricSecurityKey _key;
-        private readonly PropertyBuildingContext _dbContext;
+        private readonly IUserAccountService _accountService;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         /// <summary>
@@ -31,14 +31,14 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="configuration">The application configuration.</param>
         /// <param name="appConfig">The application configuration options.</param>
-        /// <param name="dbContext">The database context.</param>
+        /// <param name="accountService">The account service.</param>
         /// <param name="roleManager">The role manager.</param>
         /// <param name="userManager">The user manager.</param>
-        public TokenService(IConfiguration configuration, IOptions<ApplicationConfig> appConfig, PropertyBuildingContext dbContext, RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public TokenService(IConfiguration configuration, IOptions<ApplicationConfig> appConfig, IUserAccountService accountService, RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _configuration = configuration;
             _appConfig = appConfig;
-            _dbContext = dbContext;
+            _accountService = accountService;
             _roleManager = roleManager;
             _userManager = userManager;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Value.Secret));
@@ -77,8 +77,7 @@ namespace PropertyBuildingDemo.Application.Services
             var token = await GenerateJwtAsync(appUser);
             var response = new TokenResponse { Token = token, RefreshToken = appUser.RefreshToken, TokenExpiryTime = appUser.RefreshTokenExpiryTime };
 
-            _dbContext.Set<AppUser>().Update(appUser);
-            await _dbContext.SaveChangesAsync();
+            await _userManager.UpdateAsync(appUser);
 
             return await ApiResult<TokenResponse>.SuccessResultAsync(response);
         }
