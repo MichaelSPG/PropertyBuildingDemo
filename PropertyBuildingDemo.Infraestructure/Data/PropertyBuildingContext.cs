@@ -43,6 +43,10 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         /// <param name="modelBuilder">The model builder.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Property>()
+                .Property(p => p.InternalCode)
+                .HasDefaultValue(Guid.NewGuid().ToString());
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }

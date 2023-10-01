@@ -62,7 +62,7 @@ public class GenericEntityController<TEntity> : BaseController
     /// </summary>
     /// <param name="id">The ID of the entity to retrieve.</param>
     /// <returns>An IActionResult containing the entity or an error message if not found.</returns>
-    [HttpGet("{id}")]
+    [HttpGet("ById")]
     public async Task<IActionResult> GetById(long id)
     {
         ApiResult<TEntity> apiResult = null;

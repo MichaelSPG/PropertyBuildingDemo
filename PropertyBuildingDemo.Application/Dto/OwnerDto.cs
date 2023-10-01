@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PropertyBuildingDemo.Application.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace PropertyBuildingDemo.Application.Dto
 {
@@ -28,6 +29,7 @@ namespace PropertyBuildingDemo.Application.Dto
         /// Gets or sets the photo of the owner (as a byte array).
         /// </summary>
         [Required]
+        [MinLengthBytesAttribute( minLength:200)]
         public byte[] Photo { get; set; }
 
         /// <summary>
