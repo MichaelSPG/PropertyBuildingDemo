@@ -56,7 +56,7 @@ public class AccountController : BaseController
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<TokenResponse>.FailedResult(ex.Message);
+            apiResult = await ApiResult<TokenResponse>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TokenResponse)}/RequestToken failed!", ex);
         }
 
@@ -82,7 +82,7 @@ public class AccountController : BaseController
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<UserDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<UserDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(UserDto)}/Register failed!", ex);
         }
 
@@ -107,7 +107,7 @@ public class AccountController : BaseController
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<UserDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<UserDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(UserDto)}/CheckEmailAsync failed!", ex);
         }
 
@@ -131,7 +131,7 @@ public class AccountController : BaseController
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<UserDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<UserDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(UserDto)}/GetCurrentUser failed!", ex);
         }
 

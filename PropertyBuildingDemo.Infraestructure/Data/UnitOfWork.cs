@@ -33,13 +33,14 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         public async Task<bool> Complete(CancellationToken cancellationToken = default, bool inFinishTransaction = true)
         {
             var result = false;
+            int rowsAffected = -1;
             try
             {
-                await _context.SaveChangesAsync(cancellationToken);
+                rowsAffected = await _context.SaveChangesAsync(cancellationToken);
                 
                 if (_transaction != null && inFinishTransaction)
                     await _transaction.CommitAsync(cancellationToken);
-                result = true;
+                result = rowsAffected > 0;
             }
             catch (Exception exc)
             {

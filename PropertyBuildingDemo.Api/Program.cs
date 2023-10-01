@@ -60,6 +60,6 @@ public class Program
         }
 
         // Start the application
-        app.Run();
+        await app.RunAsync();
     }
 }

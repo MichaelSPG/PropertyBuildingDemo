@@ -48,12 +48,12 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to filter and retrieve a list of properties
-            apiResult = ApiResult<IEnumerable<PropertyDto>>.SuccessResult(await this._propertyBuildingService.FilterPropertyBuildings(inFilterArgs));
+            apiResult = await ApiResult<IEnumerable<PropertyDto>>.SuccessResultAsync(await this._propertyBuildingService.FilterPropertyBuildings(inFilterArgs));
         }
         catch (Exception ex)
         {
             string title = $"{nameof(PropertyDto)}/GetListBy failed!->{ex.Message}";
-            apiResult = ApiResult<IEnumerable<PropertyDto>>.FailedResult(title);
+            apiResult = await ApiResult<IEnumerable<PropertyDto>>.FailedResultAsync(title);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/GetListBy failed!", ex);
         }
 
@@ -76,12 +76,12 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to filter and retrieve a property by its unique identifier
-            apiResult = ApiResult<PropertyDto>.SuccessResult(await this._propertyBuildingService.GetPropertyBuildingById(id));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.GetPropertyBuildingById(id));
         }
         catch (Exception ex)
         {
             string title = $"{nameof(PropertyDto)}/GetListBy failed!->{ex.Message}";
-            apiResult = ApiResult<PropertyDto>.FailedResult(title);
+            apiResult = await ApiResult<PropertyDto>.FailedResultAsync(title);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/GetListBy failed!", ex);
         }
 
@@ -100,11 +100,11 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to create a new property building
-            apiResult = ApiResult<PropertyDto>.SuccessResult(await this._propertyBuildingService.CreatePropertyBuilding(inPropertyDto));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.CreatePropertyBuilding(inPropertyDto));
         }
         catch (Exception ex)
         {
-            apiResult = ApiResult<PropertyDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<PropertyDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/CreatePropertyBuilding failed!", ex);
         }
 
@@ -123,11 +123,11 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to add an image to a property
-            apiResult = ApiResult<PropertyDto>.SuccessResult(await this._propertyBuildingService.AddImageFromProperty(inPropertyImageDto));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.AddImageFromProperty(inPropertyImageDto));
         }
         catch (Exception ex)
         {
-            apiResult = ApiResult<PropertyDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<PropertyDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/AddImageFromProperty failed!", ex);
         }
 
@@ -146,11 +146,11 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to update an existing property
-            apiResult = ApiResult<PropertyDto>.SuccessResult(await this._propertyBuildingService.UpdatePropertyBuilding(inPropertyDto));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.UpdatePropertyBuilding(inPropertyDto));
         }
         catch (Exception ex)
         {
-            apiResult = ApiResult<PropertyDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<PropertyDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/UpdateProperty failed!", ex);
         }
 
@@ -170,11 +170,11 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to change the price of the property
-            apiResult = ApiResult<PropertyDto>.SuccessResult(await this._propertyBuildingService.ChangePrice(inIdProperty, inNewPrice));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.ChangePrice(inIdProperty, inNewPrice));
         }
         catch (Exception ex)
         {
-            apiResult = ApiResult<PropertyDto>.FailedResult(ex.Message);
+            apiResult = await ApiResult<PropertyDto>.FailedResultAsync(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(PropertyBuildingController)}/ChangePrice failed!", ex);
         }
 
