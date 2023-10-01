@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static PropertyBuildingDemo.Domain.Common.Constants;
 
 namespace PropertyBuildingDemo.Application.Dto
 {
@@ -10,9 +11,10 @@ namespace PropertyBuildingDemo.Application.Dto
     {
         /// <summary>
         /// <summary>
-        /// Gets or sets the identification number for the user.
+        /// Gets or sets the identification number for the user. For this sample 
         /// </summary>
         [Required]
+        [Range(AppUserConstats.IDENTITY_NUMBER_VALUE_MIN, AppUserConstats.IDENTITY_NUMBER_VALUE_MAX, ErrorMessage = "The value must be within the valid range.")]
         public int IdentificationNumber { get; set; }
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace PropertyBuildingDemo.Application.Dto
         /// Gets or sets the password for the user.
         /// </summary>
         [PasswordPropertyText]
-        [RegularExpression("(?=^.{6,10}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$",
+        [RegularExpression("(?=^.{5,25}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$",
             ErrorMessage = "Password Must have At least 1 Lowercase, 1 Uppercase, and 1 Special Character")]
         public string Password { get; set; }
     }

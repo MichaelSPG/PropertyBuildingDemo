@@ -32,7 +32,7 @@ public static class ApplicationServicesExtension
         services.AddScoped<IPropertyBuildingService, PropertyService>();
         services.AddScoped<IPropertyImageService, PropertyImageService>();
         services.AddScoped<IPropertyTraceService, PropertyTraceService>();
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IApiTokenService, TokenService>();
         services.AddScoped<IUserAccountService, UserAccountService>();
 
         // Register CurrentUserService as a transient service

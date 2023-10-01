@@ -6,7 +6,7 @@ namespace PropertyBuildingDemo.Domain.Interfaces
     /// <summary>
     /// Represents a service interface for token management.
     /// </summary>
-    public interface ITokenService
+    public interface IApiTokenService
     {
         /// <summary>
         /// Creates a token based on the provided user credentials.

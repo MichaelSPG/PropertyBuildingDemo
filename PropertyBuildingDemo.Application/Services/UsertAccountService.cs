@@ -57,7 +57,7 @@ namespace PropertyBuildingDemo.Application.Services
                 Id = appUser.Id,
                 DisplayName = appUser.DisplayName,
                 Email = appUser.Email,
-                IdentityNumber = appUser.IdentityNumber
+                IdentificationNumber = appUser.IdentificationNumber
             });
         }
 
@@ -74,8 +74,8 @@ namespace PropertyBuildingDemo.Application.Services
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                IdentityNumber = user.IdentityNumber
-            }) : ApiResult<UserDto>.FailedResult();
+                IdentificationNumber = user.IdentificationNumber
+            }) : ApiResult<UserDto>.FailedResult($" '{email}' not found");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace PropertyBuildingDemo.Application.Services
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                IdentityNumber = user.IdentityNumber
+                IdentificationNumber = user.IdentificationNumber
             });
         }
     }

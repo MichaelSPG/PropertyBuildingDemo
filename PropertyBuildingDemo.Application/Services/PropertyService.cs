@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Application.Helpers;
+using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Entities.Enums;
@@ -39,7 +40,7 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="inPropertyDto">The property DTO.</param>
         /// <returns>The created property.</returns>
-        public async Task<Property> CreatePropertyBuilding(PropertyDto inPropertyDto)
+        public async Task<PropertyDto> CreatePropertyBuilding(PropertyDto inPropertyDto)
         {
             Owner owner = await _unitOfWork.GetRepository<Owner>().GetAsync(inPropertyDto.IdOwner);
 
@@ -76,20 +77,32 @@ namespace PropertyBuildingDemo.Application.Services
             }
 
             await _unitOfWork.Complete();
-            return newProperty;
+            
+            return _mapper.Map<PropertyDto>(newProperty);
         }
-
         /// <summary>
         /// Adds an image to a property.
         /// </summary>
-        /// <param name="inImageDto">The property image DTO.</param>
-        /// <returns>The added property image.</returns>
-        public async Task<PropertyImage> AddImageFromProperty(PropertyImageDto inImageDto)
+        /// <param name="inImageDto">The property image DTO containing image information.</param>
+        /// <returns>The added property DTO with the new image information.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified property identifier (IdProperty) does not exist.</exception>
+        public async Task<PropertyDto> AddImageFromProperty(PropertyImageDto inImageDto)
         {
             PropertyImage newPropertyImage = _mapper.Map<PropertyImage>(inImageDto);
+
+            Property property = await _unitOfWork.GetRepository<Property>().GetAsync(newPropertyImage.IdProperty);
+
+            if (property == null)
+            {
+                throw new ArgumentException("IdProperty does not exist!");
+            }
+
             await _unitOfWork.GetRepository<PropertyImage>().AddAsync(newPropertyImage);
             await _unitOfWork.Complete();
-            return newPropertyImage;
+
+            property = await _unitOfWork.GetRepository<Property>().GetAsync(property.IdProperty);
+            // Return the added property DTO with the new image information.
+            return _mapper.Map<PropertyDto>(property);
         }
 
         /// <summary>
@@ -98,17 +111,17 @@ namespace PropertyBuildingDemo.Application.Services
         /// <param name="inPropertyId">The ID of the property.</param>
         /// <param name="inNewPrice">The new price.</param>
         /// <returns>The updated property.</returns>
-        public async Task<Property> ChangePrice(long inPropertyId, decimal inNewPrice)
+        public async Task<PropertyDto> ChangePrice(long inPropertyId, decimal inNewPrice)
         {
             Property property = await _unitOfWork.GetRepository<Property>().GetAsync(inPropertyId);
             if (property.Price == inNewPrice)
             {
-                return property;
+                return _mapper.Map<PropertyDto>(property);
             };
             property.Price = inNewPrice;
             await _unitOfWork.GetRepository<Property>().UpdateAsync(property);
             await _unitOfWork.Complete();
-            return property;
+            return _mapper.Map<PropertyDto>(property);
         }
 
         /// <summary>
@@ -116,12 +129,12 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="inPropertyDto">The updated property DTO.</param>
         /// <returns>The updated property.</returns>
-        public async Task<Property> UpdatePropertyBuilding(PropertyDto inPropertyDto)
+        public async Task<PropertyDto> UpdatePropertyBuilding(PropertyDto inPropertyDto)
         {
             Property property = _mapper.Map<Property>(inPropertyDto);
             await _unitOfWork.GetRepository<Property>().UpdateAsync(property);
             await _unitOfWork.Complete();
-            return property;
+            return _mapper.Map<PropertyDto>(property);
         }
 
         /// <summary>
@@ -129,11 +142,11 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="inFilterArgs">The query filter arguments.</param>
         /// <returns>The filtered properties.</returns>
-        public async Task<IEnumerable<Property>> FilterPropertyBuildings(DefaultQueryFilterArgs inFilterArgs)
+        public async Task<IEnumerable<PropertyDto>> FilterPropertyBuildings(DefaultQueryFilterArgs inFilterArgs)
         {
             IEnumerable<Property> properties;
             if (inFilterArgs == null)
-                return _unitOfWork.GetRepository<Property>().Entities.ToList();
+                return _mapper.Map<IEnumerable<PropertyDto>>(_unitOfWork.GetRepository<Property>().Entities.ToList());
 
             if (inFilterArgs.SortingParameters == null && !inFilterArgs.SortingParameters.Any())
             {
@@ -148,7 +161,29 @@ namespace PropertyBuildingDemo.Application.Services
             PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.CreatePropertyValidationExpression(inFilterArgs));
             properties = await _unitOfWork.GetRepository<Property>().ListByAsync(propertySpecification);
 
-            return properties;
+            return _mapper.Map<IEnumerable<PropertyDto>>(properties); 
+        }
+
+        /// <summary>
+        /// Retrieves detailed information about a property or building based on its unique identifier.
+        /// </summary>
+        /// <param name="inId">The unique identifier of the property or building to retrieve.</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous operation.
+        /// The task result is a <see cref="PropertyDto"/> containing detailed information about the retrieved property or building.
+        /// </returns>
+        /// <exception cref="ArgumentException">Thrown when the specified property identifier (IdProperty) does not exist.</exception>
+        public async Task<PropertyDto> GetPropertyBuildingById(long inId)
+        {
+            Property property = await _unitOfWork.GetRepository<Property>().GetAsync(inId);
+
+            if (property == null)
+            {
+                throw new ArgumentException("IdProperty does not exist!");
+            }
+
+            // Return the property DTO
+            return _mapper.Map<PropertyDto>(property);
         }
     }
 }

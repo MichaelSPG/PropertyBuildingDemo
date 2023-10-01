@@ -21,7 +21,7 @@ using PropertyBuildingDemo.Domain.Interfaces;
 [Authorize(AuthenticationSchemes = "JwtClient")]
 public class AccountController : BaseController
 {
-    private readonly ITokenService _tokenService; // Service for token management
+    private readonly IApiTokenService _tokenService; // Service for token management
     private readonly IUserAccountService _accountService; // Service for user account operations
     private readonly ISystemLogger _systemLogger; // Logger for logging exceptions
 
@@ -31,7 +31,7 @@ public class AccountController : BaseController
     /// <param name="systemLogger">The system logger for logging exceptions.</param>
     /// <param name="tokenService">The service for token management.</param>
     /// <param name="accountService">The service for user account operations.</param>
-    public AccountController(ISystemLogger systemLogger, ITokenService tokenService, IUserAccountService accountService)
+    public AccountController(ISystemLogger systemLogger, IApiTokenService tokenService, IUserAccountService accountService)
     {
         this._systemLogger = systemLogger;
         this._tokenService = tokenService;

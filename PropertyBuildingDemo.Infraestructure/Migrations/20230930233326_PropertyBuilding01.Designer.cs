@@ -12,7 +12,7 @@ using PropertyBuildingDemo.Infrastructure.Data;
 namespace PropertyBuildingDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(PropertyBuildingContext))]
-    [Migration("20230929062316_PropertyBuilding01")]
+    [Migration("20230930233326_PropertyBuilding01")]
     partial class PropertyBuilding01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -324,8 +324,8 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("IdentityNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("IdentificationNumber")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");

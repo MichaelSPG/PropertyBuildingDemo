@@ -17,7 +17,7 @@ namespace PropertyBuildingDemo.Application.Services
     /// <summary>
     /// Service for managing user tokens.
     /// </summary>
-    public class TokenService : ITokenService
+    public class TokenService : IApiTokenService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _configuration;
@@ -70,17 +70,17 @@ namespace PropertyBuildingDemo.Application.Services
                 return await ApiResult<TokenResponse>.FailedResultAsync("User/Password invalid credentials!.");
             }
 
-            var claims = GetClaimsAsync(appUser);
+            var claims = await GetClaimsAsync(appUser);
             appUser.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_appConfig.Value.ExpireInMinutes);
             appUser.RefreshToken = CreateRefreshToken();
 
             var token = await GenerateJwtAsync(appUser);
-
             var response = new TokenResponse { Token = token, RefreshToken = appUser.RefreshToken, TokenExpiryTime = appUser.RefreshTokenExpiryTime };
 
             _dbContext.Set<AppUser>().Update(appUser);
             await _dbContext.SaveChangesAsync();
-            return ApiResult<TokenResponse>.SuccessResult(response);
+
+            return await ApiResult<TokenResponse>.SuccessResultAsync(response);
         }
 
         private string CreateRefreshToken()
@@ -145,7 +145,7 @@ namespace PropertyBuildingDemo.Application.Services
         {
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_appConfig.Value.ExpireInMinutes),
+                expires: DateTime.Now.AddMinutes(_appConfig.Value.ExpireInMinutes),
                 signingCredentials: signingCredentials,
                 issuer: _appConfig.Value.Issuer, 
                 audience: appUser.UserName);
@@ -196,7 +196,7 @@ namespace PropertyBuildingDemo.Application.Services
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty),
-                    new Claim(ClaimTypes.UserData, user.IdentityNumber ?? string.Empty)
+                    new Claim(ClaimTypes.UserData, user.IdentificationNumber.ToString())
                 }
                 .Union(userClaims)
                 .Union(roleClaims)

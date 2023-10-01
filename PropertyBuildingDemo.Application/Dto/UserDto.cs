@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets or sets the identity number of the user.
         /// </summary>
-        public string IdentityNumber { get; set; }
+        public int IdentificationNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the display name of the user.

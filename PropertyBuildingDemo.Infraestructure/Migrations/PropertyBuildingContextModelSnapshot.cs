@@ -105,7 +105,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -322,8 +322,8 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("IdentityNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("IdentificationNumber")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -423,7 +423,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasKey("IdOwner");
 
-                    b.ToTable("Owner", (string)null);
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.Property", b =>
@@ -474,7 +474,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdOwner");
 
-                    b.ToTable("Property", (string)null);
+                    b.ToTable("Property");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyImage", b =>
@@ -514,7 +514,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyImage", (string)null);
+                    b.ToTable("PropertyImage");
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyTrace", b =>
@@ -560,7 +560,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyTrace", (string)null);
+                    b.ToTable("PropertyTrace");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

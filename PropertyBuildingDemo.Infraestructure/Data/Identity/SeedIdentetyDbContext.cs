@@ -25,7 +25,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data.Identity
                     UserName = "christopher92@stwnet.com",
                     Email = "christopher92@stwnet.com",
                     Role = ERoleType.Admin,
-                    IdentityNumber = "12359233"
+                    IdentificationNumber = 12359233
                 };
 
                 // Attempt to create the user with a password
