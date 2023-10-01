@@ -13,12 +13,14 @@ namespace PropertyBuildingDemo.Tests.Factories
     {
         public static OwnerDto CreateValidTestOwnerDto()
         {
+            byte[] buffer = new byte[201];
+            Utilities.Random.NextBytes(buffer);
             return new OwnerDto()
             {
                 BirthDay = DateTime.Now.AddYears(-20),
-                Address = "st aca 233, av 34 # 44",
+                Address = GenerateValidRandomAddress(),
                 Name = "Alfred Newman",
-                Photo = new byte[]{2, 4, 3},
+                Photo = buffer,
             };
         }
         public static List<OwnerDto> CreateValidTestOwnerList(int count)
@@ -44,8 +46,8 @@ namespace PropertyBuildingDemo.Tests.Factories
         {
             var owner = new OwnerDto()
             {
-                BirthDay = GenerateRandomDate(),
-                Address = GenerateRandomAddress(),
+                BirthDay = GenerateValidAgeRandomDate(),
+                Address = GenerateValidRandomAddress(),
                 Name = GenerateUniqueRandomName(),
                 Photo = GenerateRandomByteArray()
             };
@@ -53,14 +55,23 @@ namespace PropertyBuildingDemo.Tests.Factories
             return owner;
         }
 
-        private static DateTime GenerateRandomDate()
+        public static DateTime GenerateValidAgeRandomDate()
         {
-            DateTime start = DateTime.Now.AddYears(-30); // Adjust the range as needed
-            int range = (DateTime.Today - start).Days;
-            return start.AddDays(Utilities.Random.Next(range));
+            int years = Utilities.Random.Next(18, 99);
+            DateTime start = DateTime.Now.AddYears(-years); // Adjust the range as needed
+            int randomDay = Utilities.Random.Next(365);
+
+            start = start.AddDays(randomDay);
+
+            if (start >= DateTime.Now.AddYears(-18))
+            {
+                return GenerateValidAgeRandomDate();
+            }
+
+            return start;
         }
 
-        private static string GenerateRandomAddress()
+        private static string GenerateValidRandomAddress()
         {
             string[] streets = { "Main St", "Elm St", "Maple Ave", "Oak Ln", "Cedar Rd" };
             string[] cities = { "New York", "Los Angeles", "Chicago", "Houston", "Miami" };

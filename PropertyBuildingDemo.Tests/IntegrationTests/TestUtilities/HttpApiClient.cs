@@ -63,7 +63,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities
             {
                 
                 // Assert: Verify the response
-                Assert.That(response.StatusCode, equalConstraint);
+                Assert.That(response.StatusCode, equalConstraint, result?.GetJoinedMessages());
             }
 
             // Deserialize the response content to a strongly typed object
