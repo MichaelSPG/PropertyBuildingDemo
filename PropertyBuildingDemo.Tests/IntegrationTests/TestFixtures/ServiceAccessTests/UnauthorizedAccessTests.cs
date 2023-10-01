@@ -15,7 +15,6 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
         [Test(Description = "Test if we don't have access to any endpoint")]
         [TestCase(TestConstants.OwnerEnpoint.List)]
-        [TestCase(TestConstants.PropertyEnpoint.List)]
         [TestCase(TestConstants.PropertyImageEnpoint.List)]
         [TestCase(TestConstants.PropertyBuildingEnpoint.ListBy)]
         [TestCase(TestConstants.AccountEnpoint.CurrentUser)]

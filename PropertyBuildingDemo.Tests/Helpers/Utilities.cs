@@ -13,6 +13,7 @@ namespace PropertyBuildingDemo.Tests.Helpers
 {
     public class Utilities
     {
+        public static Random Random = new Random();
         public static void ValidateApiResultData<TData>(ApiResult<TData> result)
         {
             Assert.NotNull(result);

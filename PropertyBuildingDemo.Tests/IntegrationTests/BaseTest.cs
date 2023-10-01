@@ -10,8 +10,10 @@ using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Tests.Factories;
 using PropertyBuildingDemo.Tests.Helpers;
 using System.Net;
+using AutoMapper;
 using PropertyBuildingDemo.Application.IServices;
 using static System.Net.Mime.MediaTypeNames;
+using PropertyBuildingDemo.Infrastructure.Data;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests
 {
@@ -23,6 +25,8 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         protected UserDto _userDto;
         protected HttpApiClient httpApiClient;
         protected IApiTokenService _tokenService;
+        protected PropertyBuildingContext _dbContext;
+        protected IMapper _mapper;
 
         [OneTimeSetUp]
         public virtual void OneTimeSetUp()
@@ -44,6 +48,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         {
             httpApiClient?.Dispose();
             Application?.Dispose();
+            _dbContext?.Dispose();
         }
         
         private async Task<UserDto> CreateTestUserDto(UserRegisterDto userRegisterDto)
@@ -100,14 +105,20 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return result.Data;
         }
 
-        public async Task SetupUserDataAsync(UserRegisterDto userRegister)
+        public async Task SetupUserDataAsync(UserRegisterDto userRegister, IServiceScope scope = null)
         {
-            using var scope = Application.Services.CreateScope();
+            if(scope == null)
+                scope = Application.Services.CreateScope();
+
+            _dbContext = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
             _tokenService = scope.ServiceProvider.GetRequiredService<IApiTokenService>();
             _userAccountService = scope.ServiceProvider.GetRequiredService<IUserAccountService>();
+            _mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
 
             _userDto = await CreateTestUserIfNotExists(userRegister);
             _tokenResponse = await CreateTestTokenForUser(_tokenService, userRegister);
+
+            
         }
     }
 }

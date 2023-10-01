@@ -36,7 +36,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities
         public async Task<ApiResult<T>> MakeApiRequestAsync<T>(string endpoint, RequestType requestType = RequestType.Get, EqualConstraint equalConstraint = null, object requestData = null)
         {
             HttpResponseMessage response = null;
-
+            ApiResult <T> result = null;
             switch (requestType)
             {
                 case RequestType.Get:
@@ -54,13 +54,16 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities
                 default:
                     throw new ArgumentOutOfRangeException(nameof(requestType), requestType, null);
             }
-
-            var result = await response.Content.ReadFromJsonAsync<ApiResult<T>>();
-
+            var message = await response.Content.ReadAsStringAsync();
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                result = await response.Content.ReadFromJsonAsync<ApiResult<T>>();
+            }
             if (equalConstraint != null)
             {
+                
                 // Assert: Verify the response
-                Assert.That(response.StatusCode, equalConstraint, result.GetJoinedMessages());
+                Assert.That(response.StatusCode, equalConstraint);
             }
 
             // Deserialize the response content to a strongly typed object

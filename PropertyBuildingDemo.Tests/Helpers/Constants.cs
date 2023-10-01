@@ -14,7 +14,7 @@ namespace PropertyBuildingDemo.Tests.Helpers
         public const string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
 
         public const string BaseApiPath = "/Api";
-        public const string PasswordPattern = @"^(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"":;'?/>.<,])(?!.*\s).*$";
+        public const string PasswordPattern = @"^(?=.{5,25}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"":;'?/>.<,])(?!.*\s).*$";
         public const string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public const string DigitChars = "0123456789";
         public const string SymbolChars = "!@#$%^&*()_+}{\":;'?/>.<,.";
@@ -32,12 +32,8 @@ namespace PropertyBuildingDemo.Tests.Helpers
         {
             public const string BaseEndpoint = $"{BaseApiPath}/Owner";
             public const string List = $"{BaseEndpoint}/List";
-        }
-
-        public struct PropertyEnpoint
-        {
-            public const string BaseEndpoint = $"{BaseApiPath}/Property";
-            public const string List = $"{BaseEndpoint}/List";
+            public const string Insert = $"{BaseEndpoint}/Insert";
+            public const string ById = $"{BaseEndpoint}/ById";
         }
 
         public struct PropertyImageEnpoint

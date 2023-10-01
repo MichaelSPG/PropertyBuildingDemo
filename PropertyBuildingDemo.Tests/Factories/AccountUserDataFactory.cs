@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace PropertyBuildingDemo.Tests.Factories
 {
@@ -57,7 +58,8 @@ namespace PropertyBuildingDemo.Tests.Factories
                     usedIdentificationNumbers.Add(identificationNumber);
                 }
             }
-
+            usedIdentificationNumbers.Clear();
+            usedEmails.Clear();
             return userDtos;
         }
 
@@ -74,17 +76,13 @@ namespace PropertyBuildingDemo.Tests.Factories
 
         public static string GenerateRandomValidPassword(Random random)
         {
-            // Define the regex pattern and error message
-            string pattern = @"^(?=.{5,25}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"":;'?/>.<,])(?!.*\s).*$";
-            string errorMessage = "Password Must have At least 1 Lowercase, 1 Uppercase, and 1 Special Character";
-
             string password;
             do
             {
                 int passwordLength = random.Next(6, 15); // Password length between 6 and 10
                 password = new string(Enumerable.Repeat(GetAllowedCharacters(), passwordLength)
                     .Select(s => s[random.Next(s.Length)]).ToArray());
-            } while (!IsValidPassword(password, pattern));
+            } while (!IsValidPassword(password, TestConstants.PasswordPattern));
 
             return password;
         }
@@ -96,11 +94,7 @@ namespace PropertyBuildingDemo.Tests.Factories
 
         public static string GetAllowedCharacters()
         {
-            const string uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const string lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
-            const string digitChars = "0123456789";
-            const string symbolChars = "!@#$%^&*()_+}{\":;'?/>.<,.";
-            return uppercaseChars + lowercaseChars + digitChars + symbolChars;
+            return TestConstants.UppercaseChars + TestConstants.LowercaseChars + TestConstants.DigitChars + TestConstants.SymbolChars;
         }
 
         public static string GenerateInvalidRandomPassword(Random random)

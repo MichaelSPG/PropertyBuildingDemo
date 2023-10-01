@@ -7,7 +7,7 @@ using PropertyBuildingDemo.Domain.Entities.Identity;
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.PropertyBuildingTests;
 
 [TestFixture]
-public class CreationTests : BaseTest
+public class PropertyCreationTests : BaseTest
 {
     private UserRegisterDto validUserRegistration;
 
@@ -28,4 +28,15 @@ public class CreationTests : BaseTest
         Utilities.ValidateApiResult_ExpectedNotOk(result);
         Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
     }
+
+    //[Test()]
+    //public async Task Should_ReturnOkResponseWithPropertyDto_When_ValidPropertyWithNoImagesAndNoTraces()
+    //{
+
+    //    var result = await httpApiClient.MakeApiGetRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.ById}?id={notExistentId}", Is.EqualTo(HttpStatusCode.OK));
+
+    //    Utilities.ValidateApiResult_ExpectedNotOk(result);
+    //    Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
+    //}
+
 }
