@@ -1,11 +1,5 @@
 ﻿using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Tests.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PropertyBuildingDemo.Tests.Factories
 {
@@ -25,21 +19,40 @@ namespace PropertyBuildingDemo.Tests.Factories
         }
         public static List<OwnerDto> CreateValidTestOwnerList(int count)
         {
-            var userDtos = new List<OwnerDto>();
+            var random = new Random();
+            var ownerDtos = new List<OwnerDto>();
 
-            while (userDtos.Count < count)
+            string[] firstNames = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
+            string[] lastNames = { "Smith", "Johnson", "Brown", "Davis", "Wilson", "Miller", "Anderson", "Martinez", "Garcia", "Jackson" };
+
+
+            var usedNames = new HashSet<string>();
+
+            while (ownerDtos.Count < count)
             {
-                var owner = CreateRandomOwner();
+                var displayName = $"{firstNames[random.Next(firstNames.Length)]} {lastNames[random.Next(lastNames.Length)]}";
+
+                var password = GenerateRandomByteArray();
+
                 // Ensure email and identification number are unique
-                if (!userDtos.Any(x => x.Name.Equals(owner.Name)))
+                if (!usedNames.Contains(displayName))
                 {
-                    userDtos.Add(owner);
+                    var owner = new OwnerDto
+                    {
+                        Name = displayName,
+                        BirthDay = GenerateValidAgeRandomDate(),
+                        Photo = GenerateRandomByteArray(),
+                        Address = GenerateValidRandomAddress()
+                    };
+
+                    ownerDtos.Add(owner);
+                    usedNames.Add(displayName);
                 }
             }
-
-            return userDtos;
+            usedNames.Clear();
+            return ownerDtos;
         }
-        
+
         private static HashSet<string> generatedNames = new HashSet<string>();
 
         public static OwnerDto CreateRandomOwner()
@@ -62,12 +75,6 @@ namespace PropertyBuildingDemo.Tests.Factories
             int randomDay = Utilities.Random.Next(365);
 
             start = start.AddDays(randomDay);
-
-            if (start >= DateTime.Now.AddYears(-18))
-            {
-                return GenerateValidAgeRandomDate();
-            }
-
             return start;
         }
 
@@ -84,8 +91,8 @@ namespace PropertyBuildingDemo.Tests.Factories
 
         private static string GenerateUniqueRandomName()
         {
-            string[] firstNames = { "Alice", "Bob", "Charlie", "David", "Emma" };
-            string[] lastNames = { "Smith", "Johnson", "Brown", "Davis", "Wilson" };
+            string[] firstNames = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
+            string[] lastNames = { "Smith", "Johnson", "Brown", "Davis", "Wilson", "Miller", "Anderson", "Martinez", "Garcia", "Jackson" };
 
             string randomFirstName;
             string randomLastName;
