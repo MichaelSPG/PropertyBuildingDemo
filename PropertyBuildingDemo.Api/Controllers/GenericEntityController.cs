@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using AutoMapper;
+
 namespace PropertyBuildingDemo.Api.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
@@ -16,21 +18,24 @@ using PropertyBuildingDemo.Domain.Interfaces;
 /// </summary>
 /// <typeparam name="TEntity">The entity type this controller operates on.</typeparam>
 [Authorize(AuthenticationSchemes = "JwtClient")]
-public class GenericEntityController<TEntity> : BaseController
+public class GenericEntityController<TEntity, TEntityDto> : BaseController
     where TEntity : BaseEntityDb
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISystemLogger _systemLogger;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericEntityController{TEntity}"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work for database operations.</param>
     /// <param name="systemLogger">The system logger for logging exceptions.</param>
-    public GenericEntityController(IUnitOfWork unitOfWork, ISystemLogger systemLogger)
+    /// <param name="mapper">The system mapper the TEntity.</param>
+    public GenericEntityController(IUnitOfWork unitOfWork, ISystemLogger systemLogger, IMapper mapper)
     {
         this._unitOfWork = unitOfWork;
         this._systemLogger = systemLogger;
+        this._mapper = mapper;
     }
 
     /// <summary>
@@ -40,17 +45,20 @@ public class GenericEntityController<TEntity> : BaseController
     [HttpGet("List")]
     public async Task<IActionResult> Index()
     {
-        ApiResult<IEnumerable<TEntity>> apiResult = null;
+        ApiResult<IEnumerable<TEntityDto>> apiResult = null;
         try
         {
             // Retrieve all entities of type TEntity from the database
-            apiResult = ApiResult<IEnumerable<TEntity>>.SuccessResult(
-                await this._unitOfWork.GetRepository<TEntity>().Entities.ToListAsync());
+            var dataList = await this._unitOfWork.GetRepository<TEntity>().Entities.ToListAsync();
+
+            apiResult = ApiResult<IEnumerable<TEntityDto>>.SuccessResult(
+                this._mapper.Map<IEnumerable<TEntityDto>>(dataList)
+                );
         }
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<IEnumerable<TEntity>>.FailedResult(ex.Message);
+            apiResult = ApiResult<IEnumerable<TEntityDto>>.FailedResult(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/Index failed!", ex);
         }
 
@@ -65,19 +73,20 @@ public class GenericEntityController<TEntity> : BaseController
     [HttpGet("ById")]
     public async Task<IActionResult> GetById(long id)
     {
-        ApiResult<TEntity> apiResult = null;
+        ApiResult<TEntityDto> apiResult = null;
         try
         {
             // Retrieve the entity by its ID using the unit of work and repository
             var result = await this._unitOfWork.GetRepository<TEntity>().GetAsync(id);
 
             // Check if the entity was found or not, and create an appropriate API result
-            apiResult = result == null ? ApiResult<TEntity>.FailedResult() : ApiResult<TEntity>.SuccessResult(result);
+            apiResult = result == null ? ApiResult<TEntityDto>.FailedResult() : 
+                ApiResult<TEntityDto>.SuccessResult(this._mapper.Map<TEntityDto>(result));
         }
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
+            apiResult = ApiResult<TEntityDto>.FailedResult(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/GetById failed!", ex);
         }
 
@@ -90,24 +99,28 @@ public class GenericEntityController<TEntity> : BaseController
     /// <param name="inTEntity">The entity to insert.</param>
     /// <returns>An IActionResult containing the inserted entity or an error message.</returns>
     [HttpPost("Insert")]
-    public async Task<IActionResult> Insert([FromBody] TEntity inTEntity)
+    public async Task<IActionResult> Insert([FromBody] TEntityDto inTEntity)
     {
-        ApiResult<TEntity> apiResult = null;
+        ApiResult<TEntityDto> apiResult = null;
         try
         {
+            // Map to TEntity
+            var entity = this._mapper.Map<TEntity>(inTEntity);
+
             // Add the new entity to the repository
-            var result = await this._unitOfWork.GetRepository<TEntity>().AddAsync(inTEntity);
+            var result = await this._unitOfWork.GetRepository<TEntity>().AddAsync(entity);
 
             // Complete the unit of work transaction and check if the operation succeeded
             bool succeeded = await this._unitOfWork.Complete();
 
             // Create an appropriate API result based on the operation's success
-            apiResult = result == null ? ApiResult<TEntity>.FailedResult($"Failed to insert {nameof(TEntity)}") : ApiResult<TEntity>.SuccessResult(result);
+            apiResult = result == null ? ApiResult<TEntityDto>.FailedResult($"Failed to insert {nameof(TEntityDto)}") :
+                ApiResult<TEntityDto>.SuccessResult(this._mapper.Map<TEntityDto>(result));
         }
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
+            apiResult = ApiResult<TEntityDto>.FailedResult(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/Insert failed!", ex);
         }
 
@@ -120,24 +133,28 @@ public class GenericEntityController<TEntity> : BaseController
     /// <param name="inTEntity">The entity with updated data.</param>
     /// <returns>An IActionResult containing the updated entity or an error message.</returns>
     [HttpPut("Update")]
-    public async Task<IActionResult> Update([FromBody] TEntity inTEntity)
+    public async Task<IActionResult> Update([FromBody] TEntityDto inTEntity)
     {
-        ApiResult<TEntity> apiResult = null;
+        ApiResult<TEntityDto> apiResult = null;
         try
         {
+            // Map to TEntity
+            var entity = this._mapper.Map<TEntity>(inTEntity);
+
             // Update the entity in the repository
-            var result = await this._unitOfWork.GetRepository<TEntity>().UpdateAsync(inTEntity);
+            var result = await this._unitOfWork.GetRepository<TEntity>().UpdateAsync(entity);
 
             // Complete the unit of work transaction and check if the operation succeeded
             bool succeeded = await this._unitOfWork.Complete();
 
             // Create an appropriate API result based on the operation's success
-            apiResult = result == null ? ApiResult<TEntity>.FailedResult($"Failed to Update {nameof(TEntity)}") : ApiResult<TEntity>.SuccessResult(result);
+            apiResult = result == null ? ApiResult<TEntityDto>.FailedResult($"Failed to Update {nameof(TEntity)}") :
+                ApiResult<TEntityDto>.SuccessResult(this._mapper.Map<TEntityDto>(result));
         }
         catch (Exception ex)
         {
             // Handle exceptions and log them
-            apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
+            apiResult = ApiResult<TEntityDto>.FailedResult(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/Update failed!", ex);
         }
 
@@ -153,7 +170,7 @@ public class GenericEntityController<TEntity> : BaseController
 
     public async Task<IActionResult> Delete([FromBody] long id)
     {
-        ApiResult<TEntity> apiResult = null;
+        ApiResult<TEntityDto> apiResult = null;
         try
         {
             // Retrieve the entity by its ID
@@ -163,16 +180,17 @@ public class GenericEntityController<TEntity> : BaseController
                 // Delete the entity and complete the unit of work transaction
                 await this._unitOfWork.GetRepository<TEntity>().DeleteAsync(item);
                 bool succeeded = await this._unitOfWork.Complete();
-                apiResult = !succeeded ? ApiResult<TEntity>.FailedResult($"Failed to Delete {nameof(TEntity)}") : ApiResult<TEntity>.SuccessResult();
+                apiResult = !succeeded ? ApiResult<TEntityDto>.FailedResult($"Failed to Delete {nameof(TEntityDto)}") :
+                    ApiResult<TEntityDto>.SuccessResult(this._mapper.Map<TEntityDto>(item));
             }
             else
             {
-                apiResult = ApiResult<TEntity>.FailedResult($"Failed to Delete {nameof(TEntity)}");
+                apiResult = ApiResult<TEntityDto>.FailedResult($"Failed to Delete {nameof(TEntity)} because it does not exist");
             }
         }
         catch (Exception ex)
         {
-            apiResult = ApiResult<TEntity>.FailedResult(ex.Message);
+            apiResult = ApiResult<TEntityDto>.FailedResult(ex.Message);
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/Update failed!", ex);
         }
 

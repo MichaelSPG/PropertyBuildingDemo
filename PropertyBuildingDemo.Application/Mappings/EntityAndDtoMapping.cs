@@ -18,23 +18,15 @@ namespace PropertyBuildingDemo.Application.Mappings
                 .ReverseMap(); // Reverse mapping to map PropertyDto back to Property entity
 
             // PropertyImage to PropertyImageDto mapping
-            CreateMap<PropertyImage, PropertyImageDto>();
+            CreateMap<PropertyImage, PropertyImageDto>().ReverseMap();
 
             // PropertyTrace to PropertyTraceDto mapping
-            CreateMap<PropertyTrace, PropertyTraceDto>();
-
-            // PropertyImageDto to PropertyImage mapping (reverse mapping)
-            CreateMap<PropertyImageDto, PropertyImage>();
-
-            // PropertyTraceDto to PropertyTrace mapping (reverse mapping)
-            CreateMap<PropertyTraceDto, PropertyTrace>();
+            CreateMap<PropertyTrace, PropertyTraceDto>().ReverseMap();
 
             // Owner to OwnerDto mapping
             CreateMap<Owner, OwnerDto>()
-                .ForMember(dest => dest.IdOwner, opt => opt.MapFrom(src => src.IdOwner)); // Map IdOwner to IdOwner
-
-            // Owner to OwnerDto mapping (no special configuration needed)
-            CreateMap<Owner, OwnerDto>();
+                .ForMember(dest => dest.IdOwner, opt => opt.MapFrom(src => src.IdOwner))
+                .ReverseMap(); ; // Map IdOwner to IdOwner
         }
     }
 }
