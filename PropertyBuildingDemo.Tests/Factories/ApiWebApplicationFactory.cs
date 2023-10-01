@@ -44,36 +44,30 @@ namespace PropertyBuildingDemo.Tests.Factories
         {
             if (disposing)
             {
-                DisposeDatabase();
+                //DisposeDatabase();
             }
             base.Dispose(disposing);
         }
+
         private void DisposeDatabase()
         {
-            using (var scope = Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
-                context.Database.EnsureDeleted(); // Removes the database schema and data
+            //string databaseFilePath = $"(localdb)\\{_dbName}";
 
-                // Specify the database file path and extension (e.g., .mdf for SQL Server)
-                string databaseFilePath = context.Database.GetDbConnection().ConnectionString;
-
-                // Depending on the database provider, you may need to adjust the file path extraction
-                if (!string.IsNullOrEmpty(databaseFilePath))
-                {
-                    // Extract the database file path from the connection string
-                    // and delete the file
-                    try
-                    {
-                        System.IO.File.Delete(databaseFilePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions that may occur during file deletion
-                        // Log the exception or take appropriate action
-                    }
-                }
-            }
+            //// Depending on the database provider, you may need to adjust the file path extraction
+            //if (!string.IsNullOrEmpty(databaseFilePath))
+            //{
+            //    // Extract the database file path from the connection string
+            //    // and delete the file
+            //    try
+            //    {
+            //        System.IO.File.Delete(databaseFilePath);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // Handle any exceptions that may occur during file deletion
+            //        // Log the exception or take appropriate action
+            //    }
+            //}
         }
     }
 }

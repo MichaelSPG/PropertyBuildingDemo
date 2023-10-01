@@ -45,7 +45,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
             var result = await httpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.Register}", Is.EqualTo(HttpStatusCode.OK), validUserRegistration);
 
             // Validate the API result data using a utility method
-            Utilities.ValidateApiResult_ExpectedNotOk(result);
+            Utilities.ValidateApiResult_ExpectedFailed(result);
             Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "email has been taken");
         }
 
@@ -64,7 +64,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
             var result = await httpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.Register}", Is.EqualTo(HttpStatusCode.OK).Or.EqualTo(HttpStatusCode.BadRequest), validUserRegistration);
 
             // Validate the API result data using a utility method
-            Utilities.ValidateApiResult_ExpectedNotOk(result);
+            Utilities.ValidateApiResult_ExpectedFailed(result);
 
             // Assert that the User Id is not null or empty
             Utilities.ValidateApiResultMessage_ExpectContainsValue(result, new []{ "is not a valid", "is invalid" });
@@ -83,7 +83,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
             var result = await httpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.Register}", Is.EqualTo(HttpStatusCode.OK), userRegister);
             
             // Validate the API result data using a utility method
-            Utilities.ValidateApiResultData(result);
+            Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
             // Assert that the User Id is not null or empty
             Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Data.Id), $"User Id must not be null/empty");
@@ -97,7 +97,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiPostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", Is.EqualTo(HttpStatusCode.OK), request);
 
-            Utilities.ValidateApiResult_ExpectedNotOk(result);
+            Utilities.ValidateApiResult_ExpectedFailed(result);
             Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "invalid credentials");
         }
 
@@ -110,7 +110,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiPostRequestAsync<TokenResponse>($"{TestConstants.AccountEnpoint.Login}", Is.EqualTo(HttpStatusCode.OK), request);
 
-            Utilities.ValidateApiResult_ExpectedNotOk(result);
+            Utilities.ValidateApiResult_ExpectedFailed(result);
             Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
         }
 
@@ -127,7 +127,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
             var result = await httpApiClient.MakeApiPostRequestAsync<TokenResponse>(
                 $"{TestConstants.AccountEnpoint.Login}", Is.EqualTo(HttpStatusCode.OK), request);
 
-            Utilities.ValidateApiResultData(result);
+            Utilities.ValidateApiResultData_ExpectedSuccess(result);
             _tokenResponse = result.Data;
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(_tokenResponse.Token), $"Token must not be null/empty");
@@ -144,7 +144,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.OK));
 
-            Utilities.ValidateApiResultData(result);
+            Utilities.ValidateApiResultData_ExpectedSuccess(result);
         }
 
         [Test()]
@@ -156,7 +156,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.ExistsEmail}?email={validUserRegistration.Email}", Is.EqualTo(HttpStatusCode.OK));
 
-            Utilities.ValidateApiResultData(result);
+            Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
             Assert.That(result.Data.Email, Is.EqualTo(validUserRegistration.Email), "Email must be the equals to the supplied one to create user/token");
         }
@@ -171,7 +171,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.ExistsEmail}?email={email}", Is.EqualTo(HttpStatusCode.OK));
 
-            Utilities.ValidateApiResult_ExpectedNotOk(result);
+            Utilities.ValidateApiResult_ExpectedFailed(result);
             Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not found");
         }
 
@@ -184,7 +184,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             var result = await httpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEnpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.OK));
 
-            Utilities.ValidateApiResultData(result);
+            Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Data.Id), $"must return user with valid id");
 

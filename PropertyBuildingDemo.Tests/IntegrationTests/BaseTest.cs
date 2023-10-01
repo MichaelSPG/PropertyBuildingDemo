@@ -25,7 +25,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         protected UserDto _userDto;
         protected HttpApiClient httpApiClient;
         protected IApiTokenService _tokenService;
-        protected PropertyBuildingContext _dbContext;
+        protected IUnitOfWork _unitOfWork;
         protected IMapper _mapper;
 
         [OneTimeSetUp]
@@ -48,7 +48,6 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         {
             httpApiClient?.Dispose();
             Application?.Dispose();
-            _dbContext?.Dispose();
         }
         
         private async Task<UserDto> CreateTestUserDto(UserRegisterDto userRegisterDto)
@@ -110,7 +109,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             if(scope == null)
                 scope = Application.Services.CreateScope();
 
-            _dbContext = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
+            _unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             _tokenService = scope.ServiceProvider.GetRequiredService<IApiTokenService>();
             _userAccountService = scope.ServiceProvider.GetRequiredService<IUserAccountService>();
             _mapper = scope.ServiceProvider.GetRequiredService<IMapper>();

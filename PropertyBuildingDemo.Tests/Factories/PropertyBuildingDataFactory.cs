@@ -78,7 +78,7 @@ namespace PropertyBuildingDemo.Tests.Factories
             return start;
         }
 
-        private static string GenerateValidRandomAddress()
+        public static string GenerateValidRandomAddress()
         {
             string[] streets = { "Main St", "Elm St", "Maple Ave", "Oak Ln", "Cedar Rd" };
             string[] cities = { "New York", "Los Angeles", "Chicago", "Houston", "Miami" };

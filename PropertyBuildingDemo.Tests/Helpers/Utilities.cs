@@ -14,15 +14,21 @@ namespace PropertyBuildingDemo.Tests.Helpers
     public class Utilities
     {
         public static Random Random = new Random();
-        public static void ValidateApiResultData<TData>(ApiResult<TData> result)
+        public static void ValidateApiResultData_ExpectedSuccess<TData>(ApiResult<TData> result)
         {
             Assert.NotNull(result);
             Assert.NotNull(result, $"Content must be of type 'ApiResult<{nameof(TData)}>'");
             Assert.IsTrue(result.Success, $"ApiResult must be success, response is {result.GetJoinedMessages()}");
             Assert.NotNull(result.Data, $"ApiResult data must not be null");
         }
+        public static void ValidateApiResult_ExpectedSuccessButNullData<TData>(ApiResult<TData> result)
+        {
+            Assert.NotNull(result, $"Content must be of type 'ApiResult<{nameof(TData)}>'");
+            Assert.IsTrue(result.Success, $"ApiResult must be success, response is {result.GetJoinedMessages()}");
+            Assert.Null(result.Data, $"ApiResult data must be null");
+        }
 
-        public static void ValidateApiResult_ExpectedNotOk<TData>(ApiResult<TData> result)
+        public static void ValidateApiResult_ExpectedFailed<TData>(ApiResult<TData> result)
         {
             Assert.NotNull(result, $"Content must be of type 'ApiResult<{nameof(TData)}>'");
             Assert.IsFalse(result.Success, $"ApiResult must be false, response is {result.GetJoinedMessages()}");

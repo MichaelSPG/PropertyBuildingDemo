@@ -25,7 +25,7 @@ public class PropertyCreationTests : BaseTest
         long notExistentId = 945893;
         var result = await httpApiClient.MakeApiGetRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.ById}?id={notExistentId}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResult_ExpectedNotOk(result);
+        Utilities.ValidateApiResult_ExpectedFailed(result);
         Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
     }
 
@@ -35,7 +35,7 @@ public class PropertyCreationTests : BaseTest
 
     //    var result = await httpApiClient.MakeApiGetRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.ById}?id={notExistentId}", Is.EqualTo(HttpStatusCode.OK));
 
-    //    Utilities.ValidateApiResult_ExpectedNotOk(result);
+    //    Utilities.ValidateApiResult_ExpectedFailed(result);
     //    Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
     //}
 

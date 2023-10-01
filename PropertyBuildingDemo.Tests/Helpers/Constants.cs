@@ -33,6 +33,8 @@ namespace PropertyBuildingDemo.Tests.Helpers
             public const string BaseEndpoint = $"{BaseApiPath}/Owner";
             public const string List = $"{BaseEndpoint}/List";
             public const string Insert = $"{BaseEndpoint}/Insert";
+            public const string Update = $"{BaseEndpoint}/Update";
+            public const string Delete = $"{BaseEndpoint}/Delete";
             public const string ById = $"{BaseEndpoint}/ById";
         }
 
