@@ -80,6 +80,28 @@ namespace PropertyBuildingDemo.Tests.Helpers
                 // Generate a random integer (0 or 1) and convert it to a boolean value
                 return Random.Next(2) == 1;
             }
+
+            public static string GenerateRandomBuildingName()
+            {
+                List<string> buildingPrefixes = new List<string>
+                {
+                    "Skyview", "Riverside", "Serenity", "Urban Oasis", "Harmony",
+                    "Cityscape", "Emerald", "Beacon Ridge", "Golden Gate", "Sunset Shores",
+                    "Pinecrest", "Mountain View", "Lakeside", "Parkside", "Meadowbrook",
+                    "Horizon", "Coastal Crest", "Willowbrook", "Metropolitan View", "Azure Skies"
+                };
+
+                List<string> buildingSuffixes = new List<string>
+                {
+                    "Towers", "Residences", "Heights", "Apartments", "Gardens",
+                    "Suites", "Penthouses", "Condos", "Estates", "Villas",
+                    "Palms", "Lofts", "Haven", "Plaza", "Manor"
+                };
+                string prefix = buildingPrefixes[Random.Next(buildingPrefixes.Count)];
+                string suffix = buildingSuffixes[Random.Next(buildingSuffixes.Count)];
+
+                return $"{prefix} {suffix}";
+            }
         }
     }
 }

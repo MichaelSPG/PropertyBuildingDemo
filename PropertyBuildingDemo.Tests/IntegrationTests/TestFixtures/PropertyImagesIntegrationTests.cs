@@ -15,10 +15,26 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 [TestFixture]
 public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyImage, PropertyImageDto>
 {
+    protected IDataFactory<OwnerDto> OwnerDataFactory;
+    protected IDataFactory<PropertyDto> PropertyDataFactory;
+    private List<PropertyDto> _propertyValidList;
+    private List<OwnerDto> _ownerValidList;
+
     [SetUp]
     public async Task Setup()
     {
         await InitFactoryData();
+
+        OwnerDataFactory = EntityDataFactory.GetFactory<OwnerDto>();
+        PropertyDataFactory = EntityDataFactory.GetFactory<PropertyDto>();
+
+        _ownerValidList = OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
+        _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
+        _propertyValidList = PropertyDataFactory.CreateValidEntityDtoList(ValidTestEntityCount, _ownerValidList.FirstOrDefault().IdOwner).ToList();
+        _propertyValidList = await InsertListOfEntity<Property, PropertyDto>(_propertyValidList);
+        ValidTestEntityDto.IdProperty = _propertyValidList.FirstOrDefault().IdProperty;
+
+        ValidEntityList.ForEach(x => x.IdProperty = _propertyValidList.FirstOrDefault().IdProperty);
     }
 
     protected override void SetIdToEntity(long id, PropertyImageDto entity)
@@ -59,6 +75,8 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
     public async Task Should_ReturnBadRequestResponse_When_InsertPropertyImageWithInvalidFileLenght()
     {
         var expectedPropertyImageDto = DataFactory.CreateValidEntityDto();
+        expectedPropertyImageDto.IdProperty = ValidTestEntityDto.IdProperty;
+
         expectedPropertyImageDto.File = expectedPropertyImageDto.File.Take(199).ToArray();
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyImageDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedPropertyImageDto);
 

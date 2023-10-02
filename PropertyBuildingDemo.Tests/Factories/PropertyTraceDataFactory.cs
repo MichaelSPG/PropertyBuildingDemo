@@ -15,6 +15,7 @@ namespace PropertyBuildingDemo.Tests.Factories
                 Value = (decimal)Utilities.Random.NextDouble() * 1000,
                 DateSale = DateTime.Now.AddDays(-Utilities.Random.Next(40, 2000)),
                 Tax = (decimal)Utilities.Random.NextDouble() * 1000,
+                Name = Utilities.RandomGenerators.GenerateRandomBuildingName()
             };
         }
 
@@ -35,10 +36,11 @@ namespace PropertyBuildingDemo.Tests.Factories
         {
             var owner = new PropertyTraceDto()
             {
-                IdProperty = 0,
+                IdProperty = idProperty,
                 Value = (decimal)Utilities.Random.NextDouble() * 1000,
                 DateSale = DateTime.Now.AddDays(-Utilities.Random.Next(40, 2000)),
                 Tax = (decimal)Utilities.Random.NextDouble() * 1000,
+                Name = Utilities.RandomGenerators.GenerateRandomBuildingName()
             };
 
             return owner;

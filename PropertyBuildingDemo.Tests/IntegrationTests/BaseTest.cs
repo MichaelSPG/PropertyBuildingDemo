@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using IdentityModel;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyBuildingDemo.Application.Dto;
@@ -8,7 +7,12 @@ using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Tests.Factories;
+using PropertyBuildingDemo.Tests.Helpers;
 using PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities;
+using System.Net;
+using Microsoft.EntityFrameworkCore;
+using PropertyBuildingDemo.Infrastructure.Data;
+using static PropertyBuildingDemo.Tests.Helpers.TestConstants;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests
 {
@@ -61,6 +65,8 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// Represents the mapper used for mapping between DTOs and entities during testing.
         /// </summary>
         protected IMapper Mapper;
+
+        protected PropertyBuildingContext _context;
 
         /// <summary>
         /// Performs one-time setup for the test fixture, including creating the API web application factory and HTTP API client.
@@ -182,7 +188,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             TokenService = scope.ServiceProvider.GetRequiredService<IApiTokenService>();
             UserAccountService = scope.ServiceProvider.GetRequiredService<IUserAccountService>();
             Mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
-
+            _context = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
             UserDto = await CreateTestUserIfNotExists(userRegister);
             TokenResponse = await CreateTestTokenForUser(TokenService, userRegister);
         }
@@ -193,10 +199,10 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// </summary>
         /// <param name="id">The ID of the entity to retrieve.</param>
         /// <returns>The entity object if found; otherwise, null.</returns>
-        protected async Task<TEntity> GetEntityDto<TEntity, TEntityDto>(long id)
+        protected async Task<TEntityDto> GetEntityDto<TEntity, TEntityDto>(long id)
             where TEntity : BaseEntityDb
         {
-            return await UnitOfWork.GetRepository<TEntity>().GetAsync(id);
+            return Mapper.Map<TEntityDto>(await UnitOfWork.GetRepository<TEntity>().GetAsync(id));
         }
 
         /// <summary>
@@ -210,7 +216,21 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             var entity = Mapper.Map<TEntity>(entityDto);
             await UnitOfWork.GetRepository<TEntity>().AddAsync(entity);
             await UnitOfWork.Complete();
+
             return Mapper.Map<TEntityDto>(entity);
+        }
+
+        protected async Task<TEntityDto> InsertEntityDtoWithApi<TEntityDto>(string endpointUrl, TEntityDto entityDto, bool expectsOkResult = true)
+        {
+            var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>($"{endpointUrl}",
+                expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK), entityDto);
+
+            if (expectsOkResult)
+                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            else
+                Utilities.ValidateApiResult_ExpectedFailed(result);
+
+            return result.Data;
         }
 
         /// <summary>
@@ -240,6 +260,38 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             await UnitOfWork.GetRepository<TEntity>().AddRangeAsync(entities);
             await UnitOfWork.Complete();
             return Mapper.Map<List<TEntityDto>>(entities);
+        }
+
+        /// <summary>
+        /// Retrieves a list of entity DTOs from the API and validates the result based on the expected HTTP status code.
+        /// </summary>
+        /// <param name="endpointUrl">The url of the endpoint</param>
+        /// <param name="expectsOkResult">A flag indicating whether the result is expected to have an HTTP OK status code.</param>
+        /// <returns>The list of entity DTOs retrieved from the API.</returns>
+        protected async Task<List<TEntityDto>> GetEntityListWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
+        {
+            var result = await HttpApiClient.MakeApiGetRequestAsync<List<TEntityDto>>($"{endpointUrl}",
+                expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
+
+            if (expectsOkResult)
+                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            else
+                Utilities.ValidateApiResult_ExpectedFailed(result);
+
+            return result.Data;
+        }
+
+        protected async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
+        {
+            var result = await HttpApiClient.MakeApiGetRequestAsync<TEntityDto>($"{endpointUrl}",
+                expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
+
+            if (expectsOkResult)
+                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            else
+                Utilities.ValidateApiResult_ExpectedFailed(result);
+
+            return result.Data;
         }
     }
 }

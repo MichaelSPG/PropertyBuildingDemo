@@ -69,23 +69,5 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
             await SetupUserDataAsync(ValidUserRegistration);
             HttpApiClient = CreateAuthorizedApiClient();
         }
-
-        /// <summary>
-        /// Retrieves a list of entity DTOs from the API and validates the result based on the expected HTTP status code.
-        /// </summary>
-        /// <param name="expectsOkResult">A flag indicating whether the result is expected to have an HTTP OK status code.</param>
-        /// <returns>The list of entity DTOs retrieved from the API.</returns>
-        protected async Task<List<TEntityDto>> GetEntityListWithApi(bool expectsOkResult = true)
-        {
-            var result = await HttpApiClient.MakeApiGetRequestAsync<List<TEntityDto>>($"{TestApiEndpoint.List}",
-                expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
-
-            if (expectsOkResult)
-                Utilities.ValidateApiResultData_ExpectedSuccess(result);
-            else
-                Utilities.ValidateApiResult_ExpectedFailed(result);
-
-            return result.Data;
-        }
     }
 }

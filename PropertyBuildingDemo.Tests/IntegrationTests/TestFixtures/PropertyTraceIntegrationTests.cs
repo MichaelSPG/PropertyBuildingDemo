@@ -1,5 +1,6 @@
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Domain.Entities;
+using PropertyBuildingDemo.Tests.Factories;
 using PropertyBuildingDemo.Tests.Helpers;
 using System.Net;
 
@@ -8,10 +9,26 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 [TestFixture]
 public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrace, PropertyTraceDto>
 {
+    protected IDataFactory<OwnerDto> OwnerDataFactory;
+    protected IDataFactory<PropertyDto> PropertyDataFactory;
+    private List<PropertyDto> _propertyValidList;
+    private List<OwnerDto> _ownerValidList;
+
     [SetUp]
     public async Task Setup()
     {
         await InitFactoryData();
+        OwnerDataFactory = EntityDataFactory.GetFactory<OwnerDto>();
+        PropertyDataFactory = EntityDataFactory.GetFactory<PropertyDto>();
+        
+        _ownerValidList = OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
+        _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
+        _propertyValidList = PropertyDataFactory.CreateValidEntityDtoList(ValidTestEntityCount, _ownerValidList.FirstOrDefault().IdOwner).ToList();
+        _propertyValidList = await InsertListOfEntity<Property, PropertyDto>(_propertyValidList);
+        ValidTestEntityDto.IdProperty = _propertyValidList.FirstOrDefault().IdProperty;
+
+        ValidEntityList.ForEach(x=> x.IdProperty = _propertyValidList.FirstOrDefault().IdProperty);
+
     }
 
     protected override void SetIdToEntity(long id, PropertyTraceDto entity)
@@ -31,7 +48,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     public async Task Should_ReturnBadRequestResponse_When_InsertSinglePropertyTraceWithInvalidBirthdayAgeRange()
     {
         var expectedPropertyTraceDto = ValidTestEntityDto;
-        expectedPropertyTraceDto.DateSale = DateTime.Now.AddYears(-Utilities.Random.Next(1, 17));
+        expectedPropertyTraceDto.DateSale = DateTime.Now.AddDays(-Utilities.Random.Next(0, 20));
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedPropertyTraceDto);
         Utilities.ValidateApiResult_ExpectedFailed(result);
         Assert.IsNotNull(result.Message);
@@ -90,7 +107,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
         expectedPropertyTraceDto.DateSale = Utilities.RandomGenerators.GenerateRandomDateInPast(20);
         expectedPropertyTraceDto.Tax = Utilities.RandomGenerators.GenerateRandomDecimal(100, 4500);
         expectedPropertyTraceDto.Name = Utilities.RandomGenerators.GenerateUniqueRandomName();
-        expectedPropertyTraceDto.IdProperty = 1;
+        expectedPropertyTraceDto.IdProperty = _propertyValidList.FirstOrDefault().IdProperty;
 
         var result = await HttpApiClient.MakeApiPutRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Update}", Is.EqualTo(HttpStatusCode.OK), expectedPropertyTraceDto);
 
@@ -165,7 +182,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     {
         var resultList = await InsertListOfEntity<PropertyTrace, PropertyTraceDto>(ValidEntityList);
 
-        var result = await GetEntityListWithApi();
+        var result = await GetEntityListWithApi<PropertyTraceDto>(TestApiEndpoint.List);
 
         Assert.That(result.Count, Is.GreaterThanOrEqualTo(resultList.Count));
     }
@@ -177,7 +194,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     [Test()]
     public async Task Should_ReturnOkResponseWithApiResultError_When_DeletePropertyTraceWithNotExistentId()
     {
-        var originList = await GetEntityListWithApi();
+        var originList = await GetEntityListWithApi<PropertyTraceDto>(TestApiEndpoint.List);
         if (!originList.Any())
         {
             originList = await InsertListOfEntity<PropertyTrace, PropertyTraceDto>(ValidEntityList);
@@ -192,7 +209,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     [Test()]
     public async Task Should_ReturnOkResponseWithPropertyTraceListButOneIsDeleted_When_DeletePropertyTraceWithInvalidId()
     {
-        var originList = await GetEntityListWithApi();
+        var originList = await GetEntityListWithApi< PropertyTraceDto>(TestApiEndpoint.List);
         if (!originList.Any())
         {
             originList = await InsertListOfEntity<PropertyTrace, PropertyTraceDto>(ValidEntityList);
@@ -201,7 +218,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
         var result = await HttpApiClient.MakeApiDeleteRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Delete}/{idToDelete}", Is.EqualTo(HttpStatusCode.OK));
 
         Utilities.ValidateApiResultData_ExpectedSuccess(result);
-        var resultList = await GetEntityListWithApi();
+        var resultList = await GetEntityListWithApi<PropertyTraceDto>(TestApiEndpoint.List);
         Assert.IsNull(resultList.Find(x => x.IdPropertyTrace == idToDelete));
 
         Assert.That(originList.Count, Is.GreaterThan(resultList.Count));

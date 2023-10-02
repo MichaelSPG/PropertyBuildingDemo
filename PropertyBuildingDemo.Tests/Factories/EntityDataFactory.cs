@@ -12,7 +12,7 @@ namespace PropertyBuildingDemo.Tests.Factories
             // Register your data factories for different types here.
             Factories[typeof(OwnerDto)] = new OwnerDataFactory();
             Factories[typeof(PropertyImageDto)] = new PropertyImageDataFactory();
-            Factories[typeof(PropertyTraceDto)] = new PropertyImageDataFactory();
+            Factories[typeof(PropertyTraceDto)] = new PropertyTraceDataFactory();
             Factories[typeof(PropertyDto)] = new PropertyDataFactory();
             // Add more registrations for other entity types as needed.
         }

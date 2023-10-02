@@ -77,10 +77,12 @@ namespace PropertyBuildingDemo.Tests.Helpers
             public const string BaseEndpoint = $"{BaseApiPath}/PropertyBuilding";
             public const string ListBy = $"{BaseEndpoint}/ListBy";
             public const string ById = $"{BaseEndpoint}/ById";
-            //public const string ListBy = $"{BaseEndpoint}/ListBy";
-            //public const string ListBy = $"{BaseEndpoint}/ListBy";
-            //public const string ListBy = $"{BaseEndpoint}/ListBy";
+
+            public static string Update { get; set; } = $"{BaseEndpoint}/Update";
             public static string Insert { get; set; } = $"{BaseEndpoint}/Create";
+            public static string AddImage { get; set; } = $"{BaseEndpoint}/AddImageFromProperty";
+
+            public const string  ChangePrice = $"{BaseEndpoint}/ChangePrice";
         }
 
         public interface IEndpointUrl

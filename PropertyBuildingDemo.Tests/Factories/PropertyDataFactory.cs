@@ -18,7 +18,7 @@ namespace PropertyBuildingDemo.Tests.Factories
             };
         }
 
-        public IEnumerable<PropertyDto> CreateValidEntityDtoList(int count, long unused)
+        public IEnumerable<PropertyDto> CreateValidEntityDtoList(int count, long ownerId)
         {
             var ownerDtos = new List<PropertyDto>();
 
@@ -39,7 +39,8 @@ namespace PropertyBuildingDemo.Tests.Factories
                     Name = displayName,
                     Year = Utilities.RandomGenerators.GenerateRandomDateInPast().Year,
                     Price = Utilities.RandomGenerators.GenerateRandomDecimal(10000, 1000000),
-                    Address = Utilities.RandomGenerators.GenerateValidRandomAddress()
+                    Address = Utilities.RandomGenerators.GenerateValidRandomAddress(),
+                    IdOwner = ownerId
                 };
 
                 ownerDtos.Add(owner);
