@@ -1,7 +1,9 @@
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Tests.Helpers;
 using System.Net;
+using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities;
+using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Tests.Factories;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
@@ -67,6 +69,8 @@ public class PropertyBuildingIntegrationTests : BaseTest
         _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
     }
 
+    #region QUERY
+
     [Test()]
     public async Task Should_ReturnOkResponseWithPropertyNotFoundMessage_When_GetPropertyWithInvalidId()
     {
@@ -76,12 +80,96 @@ public class PropertyBuildingIntegrationTests : BaseTest
         Utilities.ValidateApiResult_ExpectedFailed(result);
         Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "not exist");
     }
-    
+
     [Test()]
-    [TestCase( true, 0, 0)]
-    [TestCase( true, 10, 0)]
-    [TestCase( true, 0, 10)]
-    [TestCase( true, 10, 10)]
+    public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdEqualsOneResult()
+    {
+        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2));
+        var targetEntity = currentProperty.FirstOrDefault();
+
+
+        DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
+        args.FilteringParameters = new List<FilteringParameters>()
+        {
+            new("IdProperty", targetEntity.IdProperty.ToString(), EComparisionOperator.Equal),
+        };
+        args.PageIndex = 0;
+        args.PageSize = 10;
+
+        var result = await HttpApiClient.MakeApiPostRequestAsync<List<PropertyDto>>(
+            $"{TestConstants.PropertyBuildingEnpoint.ListBy}",
+            Is.EqualTo(HttpStatusCode.OK), args);
+
+        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+
+        Assert.That(result.Data.Count, Is.EqualTo(1));
+        Assert.That(result.Data.FirstOrDefault().IdProperty, Is.EqualTo(targetEntity.IdProperty));
+    }
+
+    [Test()]
+    public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdNotEqualsOneResult()
+    {
+        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(20, 0, false, 4, 2));
+        var targetEntity = currentProperty.FirstOrDefault();
+
+
+        DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
+        args.FilteringParameters = new List<FilteringParameters>()
+        {
+            new("Owner.IdOwner", targetEntity.IdOwner.ToString(), EComparisionOperator.NotEqual),
+        };
+        args.PageIndex = 0;
+        args.PageSize = 10;
+
+        var result = await HttpApiClient.MakeApiPostRequestAsync<List<PropertyDto>>(
+            $"{TestConstants.PropertyBuildingEnpoint.ListBy}",
+            Is.EqualTo(HttpStatusCode.OK), args);
+
+        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+
+        var w = result.Data.Where(x => x.IdOwner > 0);
+
+        int expectedCount = currentProperty.Count(x => x.IdOwner != targetEntity.IdOwner);
+
+        Assert.That(result.Data.Count, Is.EqualTo(expectedCount));
+    }
+
+    [Test()]
+    public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdContainsOneResult()
+    {
+        string criteria = "Christoper";
+        var targetEntity = PropertyDataFactory.CreateValidEntityDto();
+        targetEntity.IdOwner = _ownerValidList.FirstOrDefault().IdOwner;
+        targetEntity = await this.InsertValidEntityDto< Property, PropertyDto> (targetEntity);
+        
+        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2));
+        
+        DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
+        args.FilteringParameters = new List<FilteringParameters>()
+        {
+            new("Name", criteria, EComparisionOperator.StartsWith),
+        };
+        args.PageIndex = 0;
+        args.PageSize = 10;
+
+        var result = await HttpApiClient.MakeApiPostRequestAsync<List<PropertyDto>>(
+            $"{TestConstants.PropertyBuildingEnpoint.ListBy}",
+            Is.EqualTo(HttpStatusCode.OK), args);
+
+        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+
+        Assert.That(result.Data.Count, Is.EqualTo(1));
+        Assert.That(result.Data.FirstOrDefault().IdProperty, Is.EqualTo(targetEntity.IdProperty));
+    }
+    #endregion
+
+    #region INSERT_TEST
+
+    [Test()]
+    [TestCase(true, 0, 0)]
+    [TestCase(true, 10, 0)]
+    [TestCase(true, 0, 10)]
+    [TestCase(true, 10, 10)]
     public async Task Should_ReturnOkResponseWithSinglePropertyData_When_InsertSinglePropertyWithValidData(bool sameOwner, int numImages, int numTraces)
     {
         var property = GenerateRandomValidProperties(1, 0, sameOwner, numImages, numTraces).FirstOrDefault();
@@ -99,6 +187,36 @@ public class PropertyBuildingIntegrationTests : BaseTest
     }
 
     [Test()]
+    [TestCase(true, 1)]
+    [TestCase(true, 4)]
+    [TestCase(true, 5)]
+    [TestCase(true, 10)]
+    public async Task Should_ReturnOkResponseWithSinglePropertyData_When_InsertImageWithValidData(bool sameOwner, int initialImages)
+    {
+        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, sameOwner, initialImages).FirstOrDefault());
+
+        var newImages = PropertyImageDataFactory.CreateValidEntityDtoList(1, currentProperty.IdProperty).FirstOrDefault();
+
+        var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.AddImage}",
+            Is.EqualTo(HttpStatusCode.OK), newImages);
+
+        var insertedEntity = await GetEntityWithApi<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.ById}/{result.Data.IdProperty}");
+        //await GetEntityDto<Property, PropertyDto>(result.Data.IdProperty);
+        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+
+        Assert.That(result.Data.IdProperty, Is.GreaterThan(0));
+        Assert.That(insertedEntity, Is.Not.Null);
+        Assert.That(insertedEntity.PropertyImages.Count(), Is.EqualTo(initialImages + 1));
+    }
+
+
+
+    #endregion
+
+
+    #region UPDATE_TESTS
+
+    [Test()]
     [TestCase(true, 0, 0, 10, 0)]
     [TestCase(true, 10, 0, 0, 10)]
     [TestCase(true, 0, 10, 0, 23)]
@@ -106,7 +224,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
     public async Task Should_ReturnOkResponseWithPropertyData_When_UpdatePropertyWithValidDataNoImagesOrTraces(bool sameOwner, int initialImages, int initialTraces, int numImages, int numTraces)
     {
         var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, sameOwner, initialImages, initialTraces).FirstOrDefault());
-        
+
         var expectedProperty = GenerateRandomValidProperties(1, currentProperty.IdOwner, sameOwner, numImages, numTraces).FirstOrDefault();
         expectedProperty.IdProperty = currentProperty.IdProperty;
 
@@ -131,7 +249,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
     {
         decimal newPrice = 1419232.22M;
         var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2).FirstOrDefault());
-        
+
         var result = await HttpApiClient.MakeApiPutRequestAsync<PropertyDto>(
             $"{TestConstants.PropertyBuildingEnpoint.ChangePrice}/{currentProperty.IdProperty}?inNewPrice={newPrice}",
             Is.EqualTo(HttpStatusCode.OK));
@@ -143,27 +261,6 @@ public class PropertyBuildingIntegrationTests : BaseTest
         Assert.That(result.Data.IdProperty, Is.EqualTo(updatedEntity.IdProperty));
         Assert.That(updatedEntity.Price, Is.EqualTo(newPrice));
     }
+    #endregion
 
-    [Test()]
-    [TestCase(true, 1 )]
-    [TestCase(true, 4)]
-    [TestCase(true, 5)]
-    [TestCase(true, 10)]
-    public async Task Should_ReturnOkResponseWithSinglePropertyData_When_InsertImageWithValidData(bool sameOwner, int initialImages)
-    {
-        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, sameOwner, initialImages).FirstOrDefault());
-
-        var newImages = PropertyImageDataFactory.CreateValidEntityDtoList(1, currentProperty.IdProperty).FirstOrDefault();
-
-        var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.AddImage}",
-            Is.EqualTo(HttpStatusCode.OK), newImages);
-
-        var insertedEntity = await GetEntityWithApi<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.ById}/{result.Data.IdProperty}");
-        //await GetEntityDto<Property, PropertyDto>(result.Data.IdProperty);
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
-
-        Assert.That(result.Data.IdProperty, Is.GreaterThan(0));
-        Assert.That(insertedEntity, Is.Not.Null);
-        Assert.That(insertedEntity.PropertyImages.Count(), Is.EqualTo(initialImages+1));
-    }
 }

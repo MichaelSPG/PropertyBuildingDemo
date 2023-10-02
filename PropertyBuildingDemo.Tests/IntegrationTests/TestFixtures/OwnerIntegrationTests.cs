@@ -73,7 +73,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         expectedOwnerDto.BirthDay = DateTime.Now.AddYears(Utilities.Random.Next(1, 17));
         var result = await HttpApiClient.MakeApiPostRequestAsync<OwnerDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedOwnerDto);
         Utilities.ValidateApiResult_ExpectedFailed(result);
-        Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "cannot be in the future");
+        Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "must be in the past");
     }
 
     [Test()]

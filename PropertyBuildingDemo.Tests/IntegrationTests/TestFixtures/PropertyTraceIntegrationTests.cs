@@ -45,25 +45,15 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
 
 
     [Test()]
-    public async Task Should_ReturnBadRequestResponse_When_InsertSinglePropertyTraceWithInvalidBirthdayAgeRange()
+    public async Task Should_ReturnBadRequestResponse_When_InsertSinglePropertyTraceWithInvalidDateSale()
     {
         var expectedPropertyTraceDto = ValidTestEntityDto;
-        expectedPropertyTraceDto.DateSale = DateTime.Now.AddDays(-Utilities.Random.Next(0, 20));
+        expectedPropertyTraceDto.DateSale = DateTime.Now.AddDays(Utilities.Random.Next(0, 20));
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedPropertyTraceDto);
         Utilities.ValidateApiResult_ExpectedFailed(result);
         Assert.IsNotNull(result.Message);
         Assert.That(result.Message.Count(), Is.EqualTo(1), $"Must only have one error {result.GetJoinedMessages()}");
-        Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "valid age range");
-    }
-
-    [Test()]
-    public async Task Should_ReturnBadRequestResponse_When_InsertSinglePropertyTraceHasBirthDayInTheFuture()
-    {
-        var expectedPropertyTraceDto = ValidTestEntityDto;
-        expectedPropertyTraceDto.DateSale = DateTime.Now.AddYears(Utilities.Random.Next(1, 17));
-        var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedPropertyTraceDto);
-        Utilities.ValidateApiResult_ExpectedFailed(result);
-        Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "cannot be in the future");
+        Utilities.ValidateApiResultMessage_ExpectContainsValue(result, "must be in the past");
     }
 
     [Test()]

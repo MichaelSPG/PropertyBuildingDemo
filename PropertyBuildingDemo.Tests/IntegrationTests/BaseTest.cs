@@ -19,6 +19,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
     /// <summary>
     /// Base class for test fixtures that require common setup and resources.
     /// </summary>
+    [SetCulture("en-US")]
     public class BaseTest : IDisposable
     {
         /// <summary>
