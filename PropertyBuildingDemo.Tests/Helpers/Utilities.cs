@@ -11,7 +11,7 @@ using PropertyBuildingDemo.Infrastructure.Data.Identity;
 
 namespace PropertyBuildingDemo.Tests.Helpers
 {
-    public class Utilities
+    public partial class Utilities
     {
         public static Random Random = new Random();
         public static void ValidateApiResultData_ExpectedSuccess<TData>(ApiResult<TData> result)

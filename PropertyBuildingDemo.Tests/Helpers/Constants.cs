@@ -19,7 +19,7 @@ namespace PropertyBuildingDemo.Tests.Helpers
         public const string DigitChars = "0123456789";
         public const string SymbolChars = "!@#$%^&*()_+}{\":;'?/>.<,.";
 
-        public struct AccountEnpoint
+        public struct AccountEndpoint
         {
             public const string BaseEndpoint = $"{BaseApiPath}/Account";
             public const string Login = $"{BaseEndpoint}/Login";
@@ -28,26 +28,48 @@ namespace PropertyBuildingDemo.Tests.Helpers
             public const string CurrentUser = $"{BaseEndpoint}/CurrentUser";
         }
 
-        public struct OwnerEnpoint
+        public struct OwnerEndpoint : IEndpointUrl
         {
+            public OwnerEndpoint()
+            {
+            }
+
             public const string BaseEndpoint = $"{BaseApiPath}/Owner";
-            public const string List = $"{BaseEndpoint}/List";
-            public const string Insert = $"{BaseEndpoint}/Insert";
-            public const string Update = $"{BaseEndpoint}/Update";
-            public const string Delete = $"{BaseEndpoint}/Delete";
-            public const string ById = $"{BaseEndpoint}/ById";
+            public string List    { get; } = $"{BaseEndpoint}/List";
+            public string Insert  { get; } = $"{BaseEndpoint}/Insert";
+            public string Update  { get; } = $"{BaseEndpoint}/Update";
+            public string Delete  { get; } = $"{BaseEndpoint}/Delete";
+            public string ById    { get; } = $"{BaseEndpoint}/ById";
         }
 
-        public struct PropertyImageEnpoint
+        public struct PropertyImageEndpoint : IEndpointUrl
         {
             public const string BaseEndpoint = $"{BaseApiPath}/PropertyImage";
-            public const string List = $"{BaseEndpoint}/List";
+
+            public PropertyImageEndpoint()
+            {
+            }
+
+            public string List   { get; } = $"{BaseEndpoint}/List";
+            public string Insert { get; } = $"{BaseEndpoint}/Insert";
+            public string Update { get; } = $"{BaseEndpoint}/Update";
+            public string Delete { get; } = $"{BaseEndpoint}/Delete";
+            public string ById   { get; } = $"{BaseEndpoint}/ById";
         }
 
-        public struct PropertyTraceEnpoint
+        public struct PropertyTraceEndpoint : IEndpointUrl
         {
             public const string BaseEndpoint = $"{BaseApiPath}/PropertyTrace";
-            public const string List = $"{BaseEndpoint}/List";
+
+            public PropertyTraceEndpoint()
+            {
+            }
+
+            public string List { get; } = $"{BaseEndpoint}/List";
+            public string Insert { get; } = $"{BaseEndpoint}/Insert";
+            public string Update { get; } = $"{BaseEndpoint}/Update";
+            public string Delete { get; } = $"{BaseEndpoint}/Delete";
+            public string ById { get; } = $"{BaseEndpoint}/ById";
         }
 
         public struct PropertyBuildingEnpoint
@@ -58,6 +80,17 @@ namespace PropertyBuildingDemo.Tests.Helpers
             //public const string ListBy = $"{BaseEndpoint}/ListBy";
             //public const string ListBy = $"{BaseEndpoint}/ListBy";
             //public const string ListBy = $"{BaseEndpoint}/ListBy";
+            public static string Insert { get; set; } = $"{BaseEndpoint}/Create";
         }
+
+        public interface IEndpointUrl
+        {
+            string List { get; }
+            string Insert{ get; }
+            string Update { get; }
+            string Delete { get; }
+            string ById { get; }
+        }
+
     }
 }
