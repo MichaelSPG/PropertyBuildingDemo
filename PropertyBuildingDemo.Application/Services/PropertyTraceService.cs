@@ -24,9 +24,11 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="inPropertyTraces">The collection of property traces to add.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the added property traces.</returns>
-        public Task<IEnumerable<PropertyTrace>> AddMultipleTraces(IEnumerable<PropertyTrace> inPropertyTraces)
+        public async Task<IEnumerable<PropertyTrace>> AddMultipleTraces(IEnumerable<PropertyTrace> inPropertyTraces)
         {
-            return _unitOfWork.GetRepository<PropertyTrace>().AddRangeAsync(inPropertyTraces);
+            inPropertyTraces = await _unitOfWork.GetRepository<PropertyTrace>().AddRangeAsync(inPropertyTraces);
+            await _unitOfWork.Complete();
+            return inPropertyTraces;
         }
     }
 }

@@ -5,6 +5,7 @@
 namespace PropertyBuildingDemo.Api;
 
 using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Extensions;
 using PropertyBuildingDemo.Api.Filters;
@@ -69,6 +70,20 @@ public class Startup
 
         // Add localization support
         services.AddLocalization();
+
+        var supportedCultures = new[]
+        {
+            new CultureInfo("en-US"), // Example: US English
+            new CultureInfo("es-ES"),
+            new CultureInfo("es-MX"),
+        };
+
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.DefaultRequestCulture = new RequestCulture("en-US");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+        });
     }
 
     /// <summary>

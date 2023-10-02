@@ -23,8 +23,8 @@ namespace PropertyBuildingDemo.Domain.Specifications
         /// Initializes a new instance of the <see cref="PropertySpecification"/> class with multiple filters.
         /// </summary>
         /// <param name="inFilters">A list of filter expressions.</param>
-        public PropertySpecification(List<Expression<Func<Property, bool>>> inFilters)
-            : base(x => true)
+        public PropertySpecification(List<Expression<Func<Property, bool>>> inFilters, List<Expression<Func<Property, object>>> includes)
+            : base(x => x.IsDeleted == false, includes)
         {
             foreach (var filter in inFilters)
                 And(filter);
@@ -34,8 +34,9 @@ namespace PropertyBuildingDemo.Domain.Specifications
         /// Initializes a new instance of the <see cref="PropertySpecification"/> class with a single filter.
         /// </summary>
         /// <param name="inFilter">The filter expression.</param>
-        public PropertySpecification(Expression<Func<Property, bool>> inFilter)
-            : base(x => true)
+        /// <param name="includes">Include other fields to the query</param>
+        public PropertySpecification(Expression<Func<Property, bool>> inFilter, List<Expression<Func<Property, object>>> includes)
+            : base(x => x.IsDeleted == false, includes)
         {
             And(inFilter);
         }

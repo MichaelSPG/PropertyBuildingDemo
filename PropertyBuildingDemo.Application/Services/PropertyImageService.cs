@@ -24,9 +24,11 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="inPropertyImages">The collection of property images to add.</param>
         /// <returns>The added property images.</returns>
-        public Task<IEnumerable<PropertyImage>> AddMultipleImages(IEnumerable<PropertyImage> inPropertyImages)
+        public async Task<IEnumerable<PropertyImage>> AddMultipleImages(IEnumerable<PropertyImage> inPropertyImages)
         {
-            return _unitOfWork.GetRepository<PropertyImage>().AddRangeAsync(inPropertyImages);
+            inPropertyImages = await _unitOfWork.GetRepository<PropertyImage>().AddRangeAsync(inPropertyImages);
+            await _unitOfWork.Complete();
+            return inPropertyImages;
         }
     }
 }

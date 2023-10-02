@@ -47,6 +47,16 @@ namespace PropertyBuildingDemo.Infrastructure.Data
                 .Property(p => p.InternalCode)
                 .HasDefaultValue(Guid.NewGuid().ToString());
 
+            modelBuilder.Entity<PropertyImage>()
+                .HasOne(i => i.Property)
+                .WithMany(p => p.PropertyImages)
+                .HasForeignKey(i => i.IdProperty);
+
+            modelBuilder.Entity<PropertyTrace>()
+                .HasOne(i => i.Property)
+                .WithMany(p => p.PropertyTraces)
+                .HasForeignKey(i => i.IdProperty);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }

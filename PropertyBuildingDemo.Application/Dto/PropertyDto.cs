@@ -40,6 +40,8 @@ namespace PropertyBuildingDemo.Application.Dto
         /// Gets or sets the price of the property.
         /// </summary>
         [Required]
+        [Range(10000, 1200300020)]
+        
         public decimal Price { get; set; }
 
         /// <summary>

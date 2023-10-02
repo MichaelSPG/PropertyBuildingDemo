@@ -1,6 +1,7 @@
 ﻿using PropertyBuildingDemo.Domain.Common;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PropertyBuildingDemo.Domain.Entities
 {
@@ -55,6 +56,12 @@ namespace PropertyBuildingDemo.Domain.Entities
         /// Gets or sets the navigation property to the owner of the property.
         /// </summary>
         public virtual Owner Owner { get; set; }
+
+
+        [NotMapped]
+        public virtual ICollection<PropertyImage> PropertyImages{ get; set; }
+        [NotMapped]
+        public virtual ICollection<PropertyTrace> PropertyTraces { get; set; }
 
         /// <summary>
         /// Implementation of the GetId() method, considering the different column name ([Key]) for this entity.

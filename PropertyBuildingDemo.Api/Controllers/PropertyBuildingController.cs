@@ -69,14 +69,24 @@ public class PropertyBuildingController : BaseController
     /// If successful, it returns the property information in the response body.
     /// If an error occurs, it returns an error message in the response body.
     /// </returns>
-    [HttpGet("ById")]
-    public async Task<IActionResult> GetById([FromQuery] long id)
+    [HttpGet("ById/{id}")]
+    public async Task<IActionResult> GetById(long id)
     {
         ApiResult<PropertyDto> apiResult = null;
         try
         {
             // Attempt to filter and retrieve a property by its unique identifier
             apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.GetPropertyBuildingById(id));
+
+            //DefaultQueryFilterArgs inFilterArgs = new DefaultQueryFilterArgs();
+            //inFilterArgs.FilteringParameters = new List<FilteringParameters>
+            //{
+            //    new("IdProperty", id.ToString(), EComparisionOperator.Equal)
+            //};
+
+
+            //var datResult = await this._propertyBuildingService.FilterPropertyBuildings(inFilterArgs);
+            //apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(datResult.FirstOrDefault());
         }
         catch (Exception ex)
         {
@@ -94,6 +104,7 @@ public class PropertyBuildingController : BaseController
     /// <param name="inPropertyDto">The property details for creation.</param>
     /// <returns>An IActionResult indicating success or an error message.</returns>
     [HttpPost("Create")]
+    [AllowAnonymous]
     public async Task<IActionResult> CreatePropertyBuilding([FromBody] PropertyDto inPropertyDto)
     {
         ApiResult<PropertyDto> apiResult = null;
@@ -146,7 +157,8 @@ public class PropertyBuildingController : BaseController
         try
         {
             // Attempt to update an existing property
-            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.UpdatePropertyBuilding(inPropertyDto));
+            apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(
+                await this._propertyBuildingService.UpdatePropertyBuilding(inPropertyDto));
         }
         catch (Exception ex)
         {
@@ -163,8 +175,8 @@ public class PropertyBuildingController : BaseController
     /// <param name="inIdProperty">The ID of the property to update.</param>
     /// <param name="inNewPrice">The new price of the property.</param>
     /// <returns>An IActionResult indicating success or an error message.</returns>
-    [HttpPut("ChangePrice")]
-    public async Task<IActionResult> ChangePrice([FromQuery] long inIdProperty, [FromQuery] decimal inNewPrice)
+    [HttpPut("ChangePrice/{inIdProperty}")]
+    public async Task<IActionResult> ChangePrice(long inIdProperty, [FromQuery] decimal inNewPrice)
     {
         ApiResult<PropertyDto> apiResult = null;
         try

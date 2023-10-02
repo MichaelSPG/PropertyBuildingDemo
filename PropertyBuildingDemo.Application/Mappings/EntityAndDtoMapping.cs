@@ -13,8 +13,8 @@ namespace PropertyBuildingDemo.Application.Mappings
         {
             // Property to PropertyDto mapping
             CreateMap<Property, PropertyDto>()
-                .ForMember(dest => dest.PropertyImages, opt => opt.Ignore()) // Ignore PropertyImages during mapping
-                .ForMember(dest => dest.PropertyTraces, opt => opt.Ignore()) // Ignore PropertyTraces during mapping
+                .ForMember(dest => dest.PropertyImages, opt => opt.MapFrom(src => src.PropertyImages))
+                .ForMember(dest => dest.PropertyTraces, opt => opt.MapFrom(src => src.PropertyTraces))
                 .ReverseMap(); // Reverse mapping to map PropertyDto back to Property entity
 
             // PropertyImage to PropertyImageDto mapping

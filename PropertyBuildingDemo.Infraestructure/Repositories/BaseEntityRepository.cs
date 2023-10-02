@@ -3,6 +3,8 @@ using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Domain.Specifications;
 using PropertyBuildingDemo.Infrastructure.Data;
+using System.Data.Entity;
+using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
 namespace PropertyBuildingDemo.Infrastructure.Repositories
 {
@@ -121,7 +123,7 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
 
         private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> specifications)
         {
-            return SpecificationEvaluator<TEntity>.ApplyToQueryQuery(_context.Set<TEntity>().AsQueryable(), specifications);
+            return SpecificationEvaluator<TEntity>.ApplyToQuery(_context.Set<TEntity>().AsQueryable(), specifications);
         }
 
         /// <summary>
@@ -132,8 +134,27 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             await Task.Delay(1); // Placeholder for update logic
+
+            var local = _context.Set<TEntity>()
+                .Local
+                .FirstOrDefault(entry => entry.GetId().Equals(entity.GetId()));
+            // check if local is not null 
+            if (local != null)
+            {
+                // detach
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            //entity = _context.Set<TEntity>().Local.FirstOrDefault(entry => entry.GetId() == entity.GetId());
+            //if (entity != null)
+            //{
+            //    _context.Entry(entity).State = EntityState.Detached;
+            //}
+            //_context.Entry(entity).State = EntityState.Modified;
+
             entity.UpdatedTime = DateTime.Now;
             _context.Set<TEntity>().Update(entity);
+            
             return entity;
         }
     }

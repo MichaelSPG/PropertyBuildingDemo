@@ -23,7 +23,11 @@ namespace PropertyBuildingDemo.Domain.Specifications
         {
             this.Criteria = inCriteria;
         }
-
+        public BaseSpecifications(Expression<Func<TEntity, bool>> inCriteria, List<Expression<Func<TEntity, object>>> includes)
+        {
+            this.Criteria = inCriteria;
+            this.Includes = includes;
+        }
         /// <summary>
         /// Gets or sets the criteria expression for the specification.
         /// </summary>

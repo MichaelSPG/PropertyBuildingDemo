@@ -19,7 +19,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         /// <param name="inputQuery">The input query to apply specifications</param>
         /// <param name="spec">The specifications</param>
         /// <returns>the result query with applied specifications</returns>
-        public static IQueryable<TEntity> ApplyToQueryQuery(IQueryable<TEntity> inputQuery, ISpecifications<TEntity> spec)
+        public static IQueryable<TEntity> ApplyToQuery(IQueryable<TEntity> inputQuery, ISpecifications<TEntity> spec)
         {
             var query = inputQuery.AsQueryable();
             if (spec.Criteria != null)

@@ -7,6 +7,13 @@ namespace PropertyBuildingDemo.Domain.Common
     /// </summary>
     public class FilteringParameters
     {
+        public FilteringParameters(string targetField, string value, EComparisionOperator comparisionOperator)
+        {
+            TargetField = targetField;
+            Value = value;
+            ComparisionOperator = comparisionOperator;
+        }
+
         /// <summary>
         /// Gets or sets the target field to filter by.
         /// </summary>

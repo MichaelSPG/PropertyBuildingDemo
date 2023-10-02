@@ -1,4 +1,5 @@
-﻿using PropertyBuildingDemo.Domain.Entities;
+﻿using PropertyBuildingDemo.Application.Attributes;
+using PropertyBuildingDemo.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,6 +25,7 @@ namespace PropertyBuildingDemo.Application.Dto
         /// Gets or sets the binary data of the image.
         /// </summary>
         [Required]
+        [MinLengthBytesAttribute(minLength: 200)]
         public byte[] File { get; set; }
 
         /// <summary>

@@ -105,7 +105,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys");
+                    b.ToTable("Keys", (string)null);
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -423,7 +423,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasKey("IdOwner");
 
-                    b.ToTable("Owner");
+                    b.ToTable("Owner", (string)null);
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.Property", b =>
@@ -476,7 +476,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdOwner");
 
-                    b.ToTable("Property");
+                    b.ToTable("Property", (string)null);
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyImage", b =>
@@ -516,7 +516,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyImage");
+                    b.ToTable("PropertyImage", (string)null);
                 });
 
             modelBuilder.Entity("PropertyBuildingDemo.Domain.Entities.PropertyTrace", b =>
@@ -562,7 +562,7 @@ namespace PropertyBuildingDemo.Infrastructure.Migrations
 
                     b.HasIndex("IdProperty");
 
-                    b.ToTable("PropertyTrace");
+                    b.ToTable("PropertyTrace", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

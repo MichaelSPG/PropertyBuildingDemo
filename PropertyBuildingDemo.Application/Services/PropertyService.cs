@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Application.Helpers;
 using PropertyBuildingDemo.Application.IServices;
@@ -19,7 +21,6 @@ namespace PropertyBuildingDemo.Application.Services
         private readonly IMapper _mapper;
         private readonly IPropertyImageService _inImageService;
         private readonly IPropertyTraceService _inPropertyTraceService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyService"/> class.
         /// </summary>
@@ -49,35 +50,13 @@ namespace PropertyBuildingDemo.Application.Services
                 throw new ArgumentException("IdOwner does not exist!");
             }
 
-            await _unitOfWork.BeginTransaction();
+            //await _unitOfWork.BeginTransaction();
 
             Property newProperty = _mapper.Map<Property>(inPropertyDto);
             newProperty = await _unitOfWork.GetRepository<Property>().AddAsync(newProperty);
             await _unitOfWork.Complete(inFinishTransaction: false);
-            // Add images if any
-            if (inPropertyDto.PropertyImages.Any())
-            {
-                foreach (var propertyImageDto in inPropertyDto.PropertyImages)
-                {
-                    propertyImageDto.IdProperty = newProperty.IdProperty;
-                }
-                var propertyImages = _mapper.Map<IEnumerable<PropertyImage>>(inPropertyDto.PropertyImages);
-                propertyImages = await _inImageService.AddMultipleImages(propertyImages);
-            }
-
-            // Add traces if any
-            if (inPropertyDto.PropertyTraces.Any())
-            {
-                foreach (var propertyTraceDto in inPropertyDto.PropertyTraces)
-                {
-                    propertyTraceDto.IdProperty = newProperty.IdProperty;
-                }
-                var propertyTraces = _mapper.Map<IEnumerable<PropertyTrace>>(inPropertyDto.PropertyTraces);
-                propertyTraces = await _inPropertyTraceService.AddMultipleTraces(propertyTraces);
-            }
-
-            await _unitOfWork.Complete();
             
+
             return _mapper.Map<PropertyDto>(newProperty);
         }
         /// <summary>
@@ -114,6 +93,10 @@ namespace PropertyBuildingDemo.Application.Services
         public async Task<PropertyDto> ChangePrice(long inPropertyId, decimal inNewPrice)
         {
             Property property = await _unitOfWork.GetRepository<Property>().GetAsync(inPropertyId);
+            if (property == null)
+            {
+                throw new ArgumentException("IdProperty does not exist!");
+            }
             if (property.Price == inNewPrice)
             {
                 return _mapper.Map<PropertyDto>(property);
@@ -131,6 +114,15 @@ namespace PropertyBuildingDemo.Application.Services
         /// <returns>The updated property.</returns>
         public async Task<PropertyDto> UpdatePropertyBuilding(PropertyDto inPropertyDto)
         {
+            var currentValue = await _unitOfWork.GetRepository<Property>().GetAsync(inPropertyDto.IdProperty);
+            if (currentValue == null || inPropertyDto.IdProperty < 0)
+            {
+                throw new ArgumentException("IdProperty was not found!");
+            }
+            if (string.IsNullOrWhiteSpace(inPropertyDto.InternalCode))
+            {
+                inPropertyDto.InternalCode = currentValue.InternalCode;
+            }
             Property property = _mapper.Map<Property>(inPropertyDto);
             await _unitOfWork.GetRepository<Property>().UpdateAsync(property);
             await _unitOfWork.Complete();
@@ -157,9 +149,20 @@ namespace PropertyBuildingDemo.Application.Services
                     Priority = 0
                 });
             }
+            var includes = new List<Expression<Func<Property, object>>>
+            {
+                x => x.PropertyImages,
+                x => x.PropertyTraces,
+            };
+            PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.BuildPropertyFilterExpressions(inFilterArgs), includes);
 
-            PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.CreatePropertyValidationExpression(inFilterArgs));
+            
+
             properties = await _unitOfWork.GetRepository<Property>().ListByAsync(propertySpecification);
+
+            //properties = await _unitOfWork.GetRepository<Property>()
+            //    .ListByAsync(propertySpecification);
+
 
             return _mapper.Map<IEnumerable<PropertyDto>>(properties); 
         }
