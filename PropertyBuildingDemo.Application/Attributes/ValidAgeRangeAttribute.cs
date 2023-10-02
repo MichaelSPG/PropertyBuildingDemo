@@ -40,12 +40,6 @@ namespace PropertyBuildingDemo.Application.Attributes
         {
             if (value is DateTime birthDate)
             {
-                // Ensure that the birthdate is not in the future.
-                if (birthDate > DateTime.Now)
-                {
-                    return new ValidationResult($"The {validationContext.DisplayName} cannot be in the future.");
-                }
-
                 // Calculate the age by subtracting the birthDate from the current date.
                 int age = DateTime.Now.Year - birthDate.Year;
 

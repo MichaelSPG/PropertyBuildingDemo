@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PropertyBuildingDemo.Application.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace PropertyBuildingDemo.Application.Dto
 {
@@ -15,6 +16,7 @@ namespace PropertyBuildingDemo.Application.Dto
         /// <summary>
         /// Gets or sets the date of sale for the property.
         /// </summary>
+        [PastDate]
         public DateTime DateSale { get; set; }
 
         /// <summary>

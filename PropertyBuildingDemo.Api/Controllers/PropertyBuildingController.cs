@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using PropertyBuildingDemo.Application.IServices;
 
 namespace PropertyBuildingDemo.Api.Controllers;
@@ -41,8 +43,8 @@ public class PropertyBuildingController : BaseController
     /// </summary>
     /// <param name="inFilterArgs">The filter criteria.</param>
     /// <returns>An IActionResult containing the list of properties or an error message.</returns>
-    [HttpGet("ListBy")]
-    public async Task<IActionResult> GetListBy([FromQuery] DefaultQueryFilterArgs inFilterArgs)
+    [HttpPost("ListBy")]
+    public async Task<IActionResult> GetListBy([FromBody] DefaultQueryFilterArgs inFilterArgs)
     {
         ApiResult<IEnumerable<PropertyDto>> apiResult = null;
         try
@@ -77,16 +79,6 @@ public class PropertyBuildingController : BaseController
         {
             // Attempt to filter and retrieve a property by its unique identifier
             apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.GetPropertyBuildingById(id));
-
-            //DefaultQueryFilterArgs inFilterArgs = new DefaultQueryFilterArgs();
-            //inFilterArgs.FilteringParameters = new List<FilteringParameters>
-            //{
-            //    new("IdProperty", id.ToString(), EComparisionOperator.Equal)
-            //};
-
-
-            //var datResult = await this._propertyBuildingService.FilterPropertyBuildings(inFilterArgs);
-            //apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(datResult.FirstOrDefault());
         }
         catch (Exception ex)
         {
@@ -176,12 +168,11 @@ public class PropertyBuildingController : BaseController
     /// <param name="inNewPrice">The new price of the property.</param>
     /// <returns>An IActionResult indicating success or an error message.</returns>
     [HttpPut("ChangePrice/{inIdProperty}")]
-    public async Task<IActionResult> ChangePrice(long inIdProperty, [FromQuery] decimal inNewPrice)
+    public async Task<IActionResult> ChangePrice(long inIdProperty, decimal inNewPrice)
     {
         ApiResult<PropertyDto> apiResult = null;
         try
         {
-            // Attempt to change the price of the property
             apiResult = await ApiResult<PropertyDto>.SuccessResultAsync(await this._propertyBuildingService.ChangePrice(inIdProperty, inNewPrice));
         }
         catch (Exception ex)

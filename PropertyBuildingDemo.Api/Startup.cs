@@ -4,13 +4,13 @@
 
 namespace PropertyBuildingDemo.Api;
 
-using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Extensions;
 using PropertyBuildingDemo.Api.Filters;
 using PropertyBuildingDemo.Api.Middleware;
 using PropertyBuildingDemo.Infrastructure;
+using System.Globalization;
 
 /// <summary>
 /// The startup class for configuring and initializing the application.
@@ -74,8 +74,6 @@ public class Startup
         var supportedCultures = new[]
         {
             new CultureInfo("en-US"), // Example: US English
-            new CultureInfo("es-ES"),
-            new CultureInfo("es-MX"),
         };
 
         services.Configure<RequestLocalizationOptions>(options =>

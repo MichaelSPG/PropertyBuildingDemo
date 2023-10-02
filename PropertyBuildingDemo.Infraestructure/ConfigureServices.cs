@@ -41,6 +41,7 @@ namespace PropertyBuildingDemo.Infrastructure
                 options.UseSqlServer(conn, sqlServerOptionsAction:
                     sqlOptions =>
                     {
+                        options.EnableSensitiveDataLogging();
                         options.EnableDetailedErrors();
                         sqlOptions.CommandTimeout(120);
                         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromMilliseconds(500), null);

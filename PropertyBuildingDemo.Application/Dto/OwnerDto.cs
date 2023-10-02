@@ -41,6 +41,7 @@ namespace PropertyBuildingDemo.Application.Dto
         /// The date of birth must fall within a valid age range of at least 18 and up to 100 years old.
         /// </remarks>
         [ValidAgeRange(18, 100, ErrorMessage = "The age must be between 18 and 100 years old.")]
+        [PastDate]
         public DateTime BirthDay { get; set; }
     }
 }

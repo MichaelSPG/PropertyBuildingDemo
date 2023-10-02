@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using PropertyBuildingDemo.Application.Dto;
@@ -129,6 +130,8 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<PropertyDto>(property);
         }
 
+        
+
         /// <summary>
         /// Filters property buildings based on query filter arguments.
         /// </summary>
@@ -154,7 +157,10 @@ namespace PropertyBuildingDemo.Application.Services
                 x => x.PropertyImages,
                 x => x.PropertyTraces,
             };
-            PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.BuildPropertyFilterExpressions(inFilterArgs), includes);
+
+            
+
+            PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.GetSpecificationsFromFilters<Property>(inFilterArgs), includes);
 
             
 

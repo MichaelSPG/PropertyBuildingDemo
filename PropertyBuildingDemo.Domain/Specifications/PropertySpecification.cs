@@ -24,7 +24,7 @@ namespace PropertyBuildingDemo.Domain.Specifications
         /// </summary>
         /// <param name="inFilters">A list of filter expressions.</param>
         public PropertySpecification(List<Expression<Func<Property, bool>>> inFilters, List<Expression<Func<Property, object>>> includes)
-            : base(x => x.IsDeleted == false, includes)
+            : base(x => true, includes)
         {
             foreach (var filter in inFilters)
                 And(filter);
@@ -36,7 +36,7 @@ namespace PropertyBuildingDemo.Domain.Specifications
         /// <param name="inFilter">The filter expression.</param>
         /// <param name="includes">Include other fields to the query</param>
         public PropertySpecification(Expression<Func<Property, bool>> inFilter, List<Expression<Func<Property, object>>> includes)
-            : base(x => x.IsDeleted == false, includes)
+            : base(x => true, includes)
         {
             And(inFilter);
         }
