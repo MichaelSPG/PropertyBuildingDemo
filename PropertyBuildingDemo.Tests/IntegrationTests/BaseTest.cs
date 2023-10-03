@@ -282,6 +282,13 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return result.Data;
         }
 
+        protected async Task<List<TEntityDto>> GetEntityList<TEntity, TEntityDto>()
+            where TEntity : BaseEntityDb
+        {
+            await Task.Delay(1);
+            return Mapper.Map<List<TEntityDto>>(UnitOfWork.GetRepository<TEntity>().GetAll());
+        }
+
         protected async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
         {
             var result = await HttpApiClient.MakeApiGetRequestAsync<TEntityDto>($"{endpointUrl}",
