@@ -69,6 +69,8 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// </summary>
         protected IMapper Mapper;
 
+        protected int ValidTestEntityCount = 10;
+
         IServiceProvider _serviceProvider;
 
         /// <summary>
@@ -251,7 +253,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// </summary>
         /// <param name="entityDto">The entity DTO to insert with IsDeleted set to true.</param>
         /// <returns>The inserted entity DTO with the updated information.</returns>
-        protected async Task<TEntityDto> InsertDeletedEntityDto<TEntity, TEntityDto>(TEntityDto entityDto)
+        public async Task<TEntityDto> InsertDeletedEntityDto<TEntity, TEntityDto>(TEntityDto entityDto)
             where TEntity : BaseEntityDb
             where TEntityDto : class
         {
@@ -264,7 +266,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// </summary>
         /// <param name="list">The list of entity DTOs to insert.</param>
         /// <returns>The inserted entity DTOs with the updated information.</returns>
-        protected async Task<List<TEntityDto>> InsertListOfEntity<TEntity, TEntityDto>(List<TEntityDto> list)
+        public async Task<List<TEntityDto>> InsertListOfEntity<TEntity, TEntityDto>(List<TEntityDto> list)
             where TEntity : BaseEntityDb
             where TEntityDto : class
         {
@@ -282,7 +284,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// <param name="endpointUrl">The url of the endpoint</param>
         /// <param name="expectsOkResult">A flag indicating whether the result is expected to have an HTTP OK status code.</param>
         /// <returns>The list of entity DTOs retrieved from the API.</returns>
-        protected async Task<List<TEntityDto>> GetEntityListWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
+        public async Task<List<TEntityDto>> GetEntityListWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
         {
             var result = await HttpApiClient.MakeApiGetRequestAsync<List<TEntityDto>>($"{endpointUrl}",
                 expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
@@ -295,14 +297,14 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return result.Data;
         }
 
-        protected IDbEntityServices<TEntity, TEntityDto> GetDbEntityServices<TEntity, TEntityDto>()
+        public IDbEntityServices<TEntity, TEntityDto> GetDbEntityServices<TEntity, TEntityDto>()
             where TEntity : BaseEntityDb
             where TEntityDto : class
         {
             return _serviceProvider.GetService<IDbEntityServices<TEntity, TEntityDto>>();
         }
 
-        protected async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
+        public async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
         {
             var result = await HttpApiClient.MakeApiGetRequestAsync<TEntityDto>($"{endpointUrl}",
                 expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));

@@ -9,41 +9,13 @@ using PropertyBuildingDemo.Tests.Factories;
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 
 [TestFixture]
-public class PropertyBuildingIntegrationTests : BaseTest
+public class PropertyBuildingIntegrationTests : PropertyBaseTest
 {
-    private List<OwnerDto> _ownerValidList;
-    private List<PropertyDto> _propertyValidList;
-    protected const int ValidTestEntityCount = 10;
-
-    List<long> GetValidOwnerIdList(List<OwnerDto> owners = null)
-    {
-        if (owners == null)
-        {
-            owners = _ownerValidList;
-        }
-        return owners.Select(x => x.IdOwner).ToList();
-    }
-
-    async Task<List<PropertyDto>> InsertValidPropertyDtoList(int count, long ownerId = 0, bool sameOwner = true, int minImages = 0, int minTraces = 0)
-    {
-        return await this.InsertListOfEntity<Property, PropertyDto>(
-            PropertyBuildingDataFactory.GenerateRandomValidProperties(
-                count, 
-                GetValidOwnerIdList(),
-                ownerId, 
-                sameOwner,
-                minImages, minTraces));
-    }
-
     [SetUp]
     public async Task Setup()
     {
         await SetupValidRegistrationUser();
-
-        _propertyValidList = PropertyBuildingDataFactory.PropertyDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
-        _ownerValidList = PropertyBuildingDataFactory.OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
-
-        _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
+        await SetupPropertyTest();
     }
 
     #region QUERY
@@ -131,7 +103,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
     {
         string criteria = "Christoper";
         var targetEntity = PropertyBuildingDataFactory.PropertyDataFactory.CreateValidEntityDto();
-        targetEntity.IdOwner = _ownerValidList.FirstOrDefault().IdOwner;
+        targetEntity.IdOwner = OwnerValidList.FirstOrDefault().IdOwner;
 
         targetEntity = await this.InsertValidEntityDto< Property, PropertyDto> (targetEntity);
         
@@ -205,9 +177,6 @@ public class PropertyBuildingIntegrationTests : BaseTest
         Assert.That(insertedEntity, Is.Not.Null);
         Assert.That(insertedEntity.PropertyImages.Count(), Is.EqualTo(initialImages + 1));
     }
-
-
-
     #endregion
 
 

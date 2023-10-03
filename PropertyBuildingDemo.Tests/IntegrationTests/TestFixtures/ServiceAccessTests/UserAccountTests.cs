@@ -8,13 +8,13 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 {
     public class UserAccountTests : BaseTest
     {
-        private UserRegisterDto validUserRegistration;
+        private UserRegisterDto _validUserRegistration;
 
         [SetUp]
         public async Task Setup()
         {
-            validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
-            await SetupUserDataAsync(validUserRegistration);
+            _validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
+            await SetupUserDataAsync(_validUserRegistration);
         }
 
         public static IEnumerable<UserRegisterDto> ValidUserTestCases()
@@ -37,12 +37,12 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
         [Test]
         public async Task Should_ReturnBadResponseWithUserData_When_RegisterWithExistentEmail()
         {
-            validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
+            _validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
 
             Assert.IsNotNull(UserDto);
 
             // Act: Make the HTTP request to create an anonymous user
-            var result = await HttpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.Register}", Is.EqualTo(HttpStatusCode.OK), validUserRegistration);
+            var result = await HttpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.Register}", Is.EqualTo(HttpStatusCode.OK), _validUserRegistration);
 
             // Validate the API result data using a utility method
             Utilities.ValidateApiResult_ExpectedFailed(result);
@@ -58,10 +58,10 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
         public async Task Should_ReturnBadResponseWithInvalidUserEmail_When_RegisterAccountUser(string email)
         {
             // Arrange: Prepare the user data for creation
-            validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
-            validUserRegistration.Email = email;
+            _validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
+            _validUserRegistration.Email = email;
             // Act: Make the HTTP request to create an anonymous user
-            var result = await HttpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.Register}", Is.EqualTo(HttpStatusCode.OK).Or.EqualTo(HttpStatusCode.BadRequest), validUserRegistration);
+            var result = await HttpApiClient.MakeApiPostRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.Register}", Is.EqualTo(HttpStatusCode.OK).Or.EqualTo(HttpStatusCode.BadRequest), _validUserRegistration);
 
             // Validate the API result data using a utility method
             Utilities.ValidateApiResult_ExpectedFailed(result);
@@ -117,12 +117,12 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
         [Test()]
         public async Task Should_ReturnOkResponseWithTokenData_When_UserLoginAndCreateToken()
         {
-            validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
+            _validUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
 
             Assert.IsNotNull(UserDto);
             
             TokenRequest request =
-                TokenDataFactory.CreateTokenRequestFromUserData(validUserRegistration);
+                TokenDataFactory.CreateTokenRequestFromUserData(_validUserRegistration);
 
             var result = await HttpApiClient.MakeApiPostRequestAsync<TokenResponse>(
                 $"{TestConstants.AccountEndpoint.Login}", Is.EqualTo(HttpStatusCode.OK), request);
@@ -154,11 +154,11 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             HttpApiClient = CreateAuthorizedApiClient();
 
-            var result = await HttpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.ExistsEmail}?email={validUserRegistration.Email}", Is.EqualTo(HttpStatusCode.OK));
+            var result = await HttpApiClient.MakeApiGetRequestAsync<UserDto>($"{TestConstants.AccountEndpoint.ExistsEmail}?email={_validUserRegistration.Email}", Is.EqualTo(HttpStatusCode.OK));
 
             Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
-            Assert.That(result.Data.Email, Is.EqualTo(validUserRegistration.Email), "Email must be the equals to the supplied one to create user/token");
+            Assert.That(result.Data.Email, Is.EqualTo(_validUserRegistration.Email), "Email must be the equals to the supplied one to create user/token");
         }
 
         [Test()]
@@ -188,7 +188,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccess
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.Data.Id), $"must return user with valid id");
 
-            Assert.That(result.Data.Email, Is.EqualTo(validUserRegistration.Email), "Email must be the equals to the supplied one to create user/token");
+            Assert.That(result.Data.Email, Is.EqualTo(_validUserRegistration.Email), "Email must be the equals to the supplied one to create user/token");
         }
     }
 }

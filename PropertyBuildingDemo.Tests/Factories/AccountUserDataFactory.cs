@@ -66,12 +66,12 @@ namespace PropertyBuildingDemo.Tests.Factories
         public static List<UserRegisterDto> GetInvalidTestUserForRegisterList(int count)
         {
             var random = new Random();
-            List<UserRegisterDto> List = GetValidTestUserForRegisterList(count);
-            foreach (var item in List)
+            List<UserRegisterDto> list = GetValidTestUserForRegisterList(count);
+            foreach (var item in list)
             {
                 item.Password = GenerateInvalidRandomPassword(random);
             }
-            return List;
+            return list;
         }
 
         public static string GenerateRandomValidPassword(Random random)
