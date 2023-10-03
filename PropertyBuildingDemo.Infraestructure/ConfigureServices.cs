@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Configuration;
+using System.Net;
 using System.Security.Claims;
 using log4net.Config;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ using Newtonsoft.Json;
 using PropertyBuildingDemo.Domain.Common;
 using System.Globalization;
 using PropertyBuildingDemo.Application.Config;
+using StackExchange.Redis;
 
 namespace PropertyBuildingDemo.Infrastructure
 {
@@ -46,6 +48,13 @@ namespace PropertyBuildingDemo.Infrastructure
                         sqlOptions.CommandTimeout(120);
                         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromMilliseconds(500), null);
                     });
+            });
+
+            services.AddSingleton<IConnectionMultiplexer>(c =>
+            {
+                var config = ConfigurationOptions.
+                    Parse(configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(config);
             });
             return services;
         }

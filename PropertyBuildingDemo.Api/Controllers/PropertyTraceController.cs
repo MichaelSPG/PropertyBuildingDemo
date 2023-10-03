@@ -5,8 +5,10 @@
 namespace PropertyBuildingDemo.Api.Controllers;
 
 using AutoMapper;
+using IdentityModel;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Application.Dto;
+using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Interfaces;
 
@@ -22,8 +24,8 @@ public class PropertyTraceController : GenericEntityController<PropertyTrace, Pr
     /// <param name="unitOfWork">The unit of work for managing data operations.</param>
     /// <param name="systemLogger">The logger for system-related activities and events.</param>
     /// <param name="mapper">The mapper for mapping between entity and DTO objects.</param>
-    public PropertyTraceController(IUnitOfWork unitOfWork, ISystemLogger systemLogger, IMapper mapper)
-        : base(unitOfWork, systemLogger, mapper)
+    public PropertyTraceController(ISystemLogger systemLogger, IDbEntityServices<PropertyTrace, PropertyTraceDto> dbEntityServices)
+        : base(systemLogger, dbEntityServices)
     {
     }
 }

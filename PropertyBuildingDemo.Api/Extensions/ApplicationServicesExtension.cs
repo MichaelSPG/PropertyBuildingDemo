@@ -34,6 +34,7 @@ public static class ApplicationServicesExtension
         services.AddScoped<IPropertyTraceService, PropertyTraceService>();
         services.AddScoped<IApiTokenService, TokenService>();
         services.AddScoped<IUserAccountService, UserAccountService>();
+        services.AddScoped(typeof(IDbEntityServices<,>), typeof(DbEntityServices<,>));
 
         // Register CurrentUserService as a transient service
         services.AddTransient<ICurrentUserService, CurentUserService>();

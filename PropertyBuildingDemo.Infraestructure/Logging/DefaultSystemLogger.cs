@@ -43,6 +43,9 @@ namespace PropertyBuildingDemo.Infrastructure.Logging
                 case ELoggingLevel.Fatal:
                     Logger.Fatal(inMessage, inException);
                     break;
+                case ELoggingLevel.Debug:
+                    Logger.Debug(inMessage, inException);
+                    break;
             }
         }
 
@@ -68,6 +71,9 @@ namespace PropertyBuildingDemo.Infrastructure.Logging
                     break;
                 case ELoggingLevel.Fatal:
                     Logger.Fatal(inMessage);
+                    break;
+                case ELoggingLevel.Debug:
+                    Logger.Debug(inMessage);
                     break;
             }
         }

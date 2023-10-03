@@ -29,6 +29,12 @@ namespace PropertyBuildingDemo.Domain.Entities.Enums
         /// Represents a fatal logging level.
         /// </summary>
         [EnumMember(Value = "Level Fatal")]
-        Fatal
+        Fatal,
+
+        /// <summary>
+        /// Represents a debug logging level.
+        /// </summary>
+        [EnumMember(Value = "Level Debug")]
+        Debug
     }
 }

@@ -65,6 +65,8 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
         /// <returns>A completed <see cref="Task"/>.</returns>
         public Task DeleteAsync(TEntity entity)
         {
+            UntrackEntity(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             entity.UpdatedTime = DateTime.Now;
             entity.IsDeleted = true;
             _context.Set<TEntity>().Update(entity);

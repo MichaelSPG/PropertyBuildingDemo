@@ -8,6 +8,7 @@ using PropertyBuildingDemo.Application.Dto;
 namespace PropertyBuildingDemo.Api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Interfaces;
 
@@ -23,8 +24,8 @@ public class OwnerController : GenericEntityController<Owner, OwnerDto>
     /// <param name="unitOfWork">The unit of work for database operations.</param>
     /// <param name="systemLogger">The system logger for logging exceptions.</param>
     /// <param name="mapper">The system mapper for mapping the DTOs.</param>
-    public OwnerController(IUnitOfWork unitOfWork, ISystemLogger systemLogger, IMapper mapper)
-        : base(unitOfWork, systemLogger, mapper)
+    public OwnerController(ISystemLogger systemLogger, IDbEntityServices<Owner, OwnerDto> dbEntityServices)
+        : base(systemLogger, dbEntityServices)
     {
         // The constructor initializes the base class with the provided unit of work and system logger.
     }

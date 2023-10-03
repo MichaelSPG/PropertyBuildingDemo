@@ -8,6 +8,7 @@ namespace PropertyBuildingDemo.Api.Controllers;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Interfaces;
 
@@ -23,8 +24,8 @@ public class PropertyImageController : GenericEntityController<PropertyImage, Pr
     /// <param name="unitOfWork">The unit of work for managing data operations.</param>
     /// <param name="systemLogger">The logger for system-related activities and events.</param>
     /// <param name="mapper">The mapper for mapping between entity and DTO objects.</param>
-    public PropertyImageController(IUnitOfWork unitOfWork, ISystemLogger systemLogger, IMapper mapper)
-        : base(unitOfWork, systemLogger, mapper)
+    public PropertyImageController(ISystemLogger systemLogger, IDbEntityServices<PropertyImage, PropertyImageDto> dbEntityServices)
+        : base(systemLogger, dbEntityServices)
     {
     }
 }
