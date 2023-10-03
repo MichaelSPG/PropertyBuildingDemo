@@ -1,6 +1,7 @@
 ﻿using PropertyBuildingDemo.Domain.Common;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PropertyBuildingDemo.Domain.Entities
 {
@@ -36,6 +37,7 @@ namespace PropertyBuildingDemo.Domain.Entities
         /// <summary>
         /// Gets or sets the navigation property to the associated property.
         /// </summary>
+        [JsonIgnore]
         public virtual Property Property { get; set; }
 
         /// <summary>

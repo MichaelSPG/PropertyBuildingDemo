@@ -2,13 +2,13 @@
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Specifications;
 
-namespace PropertyBuildingDemo.Infrastructure.Data
+namespace PropertyBuildingDemo.Application.Helpers
 {
     /// <summary>
     /// Class to apply the specifications
     /// </summary>
     /// <typeparam name="TEntity">The entity of type BaseEntityDB</typeparam>
-    public class SpecificationEvaluator<TEntity>  where TEntity : BaseEntityDb
+    public static class SpecificationEvaluator
     {
         /// <summary>
         /// Applies the specifications to an input query and returns the results
@@ -19,7 +19,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data
         /// <param name="inputQuery">The input query to apply specifications</param>
         /// <param name="spec">The specifications</param>
         /// <returns>the result query with applied specifications</returns>
-        public static IQueryable<TEntity> ApplyToQuery(IQueryable<TEntity> inputQuery, ISpecifications<TEntity> spec)
+        public static IQueryable<TEntity> ApplyToQuery<TEntity>(IQueryable<TEntity> inputQuery, ISpecifications<TEntity> spec) where TEntity : BaseEntityDb
         {
             var query = inputQuery.AsQueryable();
             if (spec.Criteria != null)

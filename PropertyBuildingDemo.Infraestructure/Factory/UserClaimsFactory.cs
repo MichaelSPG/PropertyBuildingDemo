@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using System.Security.Claims;
 
-namespace PropertyBuildingDemo.Infrastructure.Services
+namespace PropertyBuildingDemo.Infrastructure.Factory
 {
     /// <summary>
     /// Factory for generating claims for a user.

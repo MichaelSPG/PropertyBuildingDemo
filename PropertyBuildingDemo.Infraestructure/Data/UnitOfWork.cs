@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
+using PropertyBuildingDemo.Application.IServices;
+using Microsoft.Extensions.Options;
+using PropertyBuildingDemo.Application.Config;
 
 namespace PropertyBuildingDemo.Infrastructure.Data
 {
@@ -17,12 +20,16 @@ namespace PropertyBuildingDemo.Infrastructure.Data
     {        
         private readonly PropertyBuildingContext    _context;
         private readonly ISystemLogger              _systemLogger;
+        private readonly ICacheService _cacheService;
+        private readonly IOptions<ApplicationConfig> _appOptions;
         private Hashtable                           _repositories;
         private IDbContextTransaction               _transaction;
-        public UnitOfWork(PropertyBuildingContext context, ISystemLogger systemLogger)
+        public UnitOfWork(PropertyBuildingContext context, ISystemLogger systemLogger, ICacheService cacheService, IOptions<ApplicationConfig> appOptions)
         {
             _context = context;
             this._systemLogger = systemLogger;
+            _cacheService = cacheService;
+            _appOptions = appOptions;
         }
 
         public async Task BeginTransaction(CancellationToken cancellationToken = default)
@@ -72,7 +79,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data
             if (!_repositories.ContainsKey(type))
             {
                 var repositiryType = typeof(BaseEntityRepository<>);
-                var repositoryInstance = Activator.CreateInstance( repositiryType.MakeGenericType(typeof(TEntity)), _context);
+                var repositoryInstance = Activator.CreateInstance( repositiryType.MakeGenericType(typeof(TEntity)), _context, _cacheService, _appOptions);
                 _repositories.Add(type, repositoryInstance);
             }
             return (IGenericEntityRepository<TEntity>)_repositories[type];

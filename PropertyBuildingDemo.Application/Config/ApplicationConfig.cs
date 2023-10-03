@@ -9,6 +9,9 @@
         /// Gets or sets the base URL for the application.
         /// </summary>
         public string BaseUrl { get; set; }
+        public string RedisUrl { get; set; }
+
+        public decimal RedisCacheExpireInMinutes { get; set; }
 
         /// <summary>
         /// Gets or sets the secret key used for JWT token generation.

@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using PropertyBuildingDemo.Application.Config;
 using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Domain.Specifications;
+using System.Collections.Generic;
 
 namespace PropertyBuildingDemo.Application.Services
 {
@@ -16,7 +19,10 @@ namespace PropertyBuildingDemo.Application.Services
         private readonly ISystemLogger _systemLogger;
         private readonly IMapper _mapper;
 
-        public  DbEntityServices(IUnitOfWork unitOfWork, ISystemLogger systemLogger, IMapper mapper)
+        public  DbEntityServices(IUnitOfWork unitOfWork
+            , ISystemLogger systemLogger
+            , IMapper mapper, ICacheService cacheService
+            , IOptions<ApplicationConfig> appConfig)
         {
             _unitOfWork = unitOfWork;
             _systemLogger = systemLogger;
@@ -38,17 +44,21 @@ namespace PropertyBuildingDemo.Application.Services
         public async Task<List<TEntityDto>> GetAllAsync()
         {
             // Retrieve the entity by its ID using the unit of work and repository
-            var result = await this._unitOfWork.GetRepository<TEntity>()
-                .GetAll()
-                .Where(x=> x.IsDeleted == false)
-                .ToListAsync();
-            return _mapper.Map<List<TEntityDto>>(result);
+            var result = this._unitOfWork.GetRepository<TEntity>().GetAll().Where(x => x.IsDeleted == false);
+
+            List<TEntity> list = new List<TEntity>();
+            await Task.Run( () =>
+            {
+                list = result.ToList();
+            });
+            return _mapper.Map<List<TEntityDto>>(await result.ToListAsync());
         }
 
         public async Task<List<TEntityDto>> GetByAsync(ISpecifications<TEntity> specifications)
         {
             var result = await this._unitOfWork.GetRepository<TEntity>()
                 .ListByAsync(specifications);
+
             return _mapper.Map<List<TEntityDto>>(result);
         }
 

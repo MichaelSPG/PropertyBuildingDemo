@@ -174,7 +174,7 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
         }
         catch (Exception ex)
         {
-            apiResult = await ApiResult<TEntityDto>.FailedResultAsync(ex.Message);
+            apiResult = await ApiResult<TEntityDto>.FailedResultAsync(ex.Message + ex.StackTrace.ToString());
             this._systemLogger.LogExceptionMessage(ELoggingLevel.Error, $"{nameof(TEntity)}/Update failed!", ex);
         }
 

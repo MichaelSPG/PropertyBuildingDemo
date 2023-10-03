@@ -11,7 +11,6 @@ using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Infrastructure.Data;
 using PropertyBuildingDemo.Infrastructure.Logging;
 using PropertyBuildingDemo.Infrastructure.Repositories;
-using PropertyBuildingDemo.Infrastructure.Services;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +19,11 @@ using Newtonsoft.Json;
 using PropertyBuildingDemo.Domain.Common;
 using System.Globalization;
 using PropertyBuildingDemo.Application.Config;
+using PropertyBuildingDemo.Infrastructure.Factory;
 using StackExchange.Redis;
+using PropertyBuildingDemo.Application.IServices;
+using PropertyBuildingDemo.Infrastructure.Caching;
+using IdentityModel;
 
 namespace PropertyBuildingDemo.Infrastructure
 {
@@ -53,7 +56,7 @@ namespace PropertyBuildingDemo.Infrastructure
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
                 var config = ConfigurationOptions.
-                    Parse(configuration.GetConnectionString("Redis"), true);
+                    Parse(configuration.GetConnectionString(services.GetApplicationSettings(configuration).RedisUrl), true);
                 return ConnectionMultiplexer.Connect(config);
             });
             return services;
@@ -66,6 +69,7 @@ namespace PropertyBuildingDemo.Infrastructure
         /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
+            services.AddScoped<ICacheService, CacheService>();
             services.AddScoped(typeof(IGenericEntityRepository<>), typeof(BaseEntityRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -251,6 +255,8 @@ namespace PropertyBuildingDemo.Infrastructure
             AddInfrastuctureBase(services);
             AddJwtAuthentication(services, configuration);
             AddHttpClient(services, configuration);
+            
+
             return services;
         }
     }
