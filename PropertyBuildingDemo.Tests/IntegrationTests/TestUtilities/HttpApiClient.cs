@@ -1,15 +1,7 @@
-﻿using PropertyBuildingDemo.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
+﻿using NUnit.Framework.Constraints;
+using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Identity;
-using PropertyBuildingDemo.Tests.Factories;
-using Microsoft.VisualStudio.TestPlatform.Common;
+using System.Net.Http.Json;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestUtilities
 {

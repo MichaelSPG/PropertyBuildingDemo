@@ -8,7 +8,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 [TestFixture]
 public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 {
-    [OneTimeSetUp]
+    [SetUp]
     public async Task Setup()
     {
         await InitFactoryData();
@@ -182,7 +182,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
     [Test()]
     public async Task Should_ReturnOkResponseWithOwnerList_When_QueryAllFromApi()
     {
-        var resultList = await InsertListOfEntity<Owner, OwnerDto>(ValidEntityList);
+        var resultList = await InsertEntityDtoListWithApi<OwnerDto>(TestApiEndpoint.Insert, ValidEntityList);
 
         var result = await GetOwnerListWithApi();
 

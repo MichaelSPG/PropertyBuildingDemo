@@ -248,6 +248,24 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return result.Data;
         }
 
+        protected async Task<List<TEntityDto>> InsertEntityDtoListWithApi<TEntityDto>(string endpointUrl, List<TEntityDto> entitiesDto, bool expectsOkResult = true)
+        {
+            for (int i = 0; i < entitiesDto.Count(); i++)
+            {
+                var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>($"{endpointUrl}",
+                    expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK), entitiesDto[i]);
+
+                if (expectsOkResult)
+                    Utilities.ValidateApiResultData_ExpectedSuccess(result);
+                else
+                    Utilities.ValidateApiResult_ExpectedFailed(result);
+
+                entitiesDto[i] = result.Data;
+            }
+            
+            return entitiesDto;
+        }
+
         /// <summary>
         /// Inserts a valid entity DTO with IsDeleted set to true into the database and returns the corresponding DTO.
         /// </summary>
