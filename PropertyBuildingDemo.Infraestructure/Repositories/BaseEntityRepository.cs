@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using PropertyBuildingDemo.Application.Config;
-using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Interfaces;
-using PropertyBuildingDemo.Domain.Specifications;
 using PropertyBuildingDemo.Infrastructure.Data;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
@@ -30,7 +26,7 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
         /// <summary>
         /// Gets a queryable collection of entities.
         /// </summary>
-        public IQueryable<TEntity> Entities => _context.Set<TEntity>();
+        public IQueryable<TEntity> Entities => _context.Set<TEntity>().AsQueryable();
 
         /// <summary>
         /// Gets all entities from the repository.
@@ -38,8 +34,12 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
         /// <returns>A queryable collection of entities.</returns>
         public IQueryable<TEntity> GetAll()
         {
-            var result = Entities;
-            return result;
+            return Entities;
+        }
+
+        public IQueryable<TEntity> GetAllAsNoTracking()
+        {
+            return Entities.AsNoTracking();
         }
 
         /// <summary>
@@ -51,42 +51,22 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
+      
+        ///// <summary>
+        ///// Counts entities based on the provided specification.
+        ///// </summary>
+        ///// <param name="specifications">The specification to apply.</param>
+        ///// <returns>The count of matching entities.</returns>
+        //public async Task<int> CountAsync(ISpecifications<TEntity> specifications)
+        //{
+        //    return await ApplySpecification(specifications).CountAsync();
+        //}
 
-        /// <summary>
-        /// Finds an entity based on the provided specification.
-        /// </summary>
-        /// <param name="specification">The specification to apply.</param>
-        /// <returns>The found entity.</returns>
-        public async Task<TEntity> FindBy(ISpecifications<TEntity> specification)
-        {
-            return await ApplySpecification(specification).FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Lists entities based on the provided specification.
-        /// </summary>
-        /// <param name="specification">The specification to apply.</param>
-        /// <returns>A collection of matching entities.</returns>
-        public async Task<IEnumerable<TEntity>> ListByAsync(ISpecifications<TEntity> specification)
-        {
-            return await ApplySpecification(specification).ToListAsync();
-        }
-
-        /// <summary>
-        /// Counts entities based on the provided specification.
-        /// </summary>
-        /// <param name="specifications">The specification to apply.</param>
-        /// <returns>The count of matching entities.</returns>
-        public async Task<int> CountAsync(ISpecifications<TEntity> specifications)
-        {
-            return await ApplySpecification(specifications).CountAsync();
-        }
-
-        private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> specifications)
-        {
-            var query = _context.Set<TEntity>().AsQueryable();
-            return Application.Helpers.SpecificationEvaluator.ApplyToQuery(query, specifications);
-        }
+        //private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> specifications)
+        //{
+        //    var query = _context.Set<TEntity>().AsQueryable();
+        //    return Application.Helpers.SpecificationEvaluator.ApplyToQuery(query, specifications);
+        //}
 
         /// <summary>
         /// Adds a new entity to the repository.

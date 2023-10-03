@@ -20,6 +20,12 @@ namespace PropertyBuildingDemo.Domain.Interfaces
         IQueryable<TEntity> GetAll();
 
         /// <summary>
+        /// Gets all entities.
+        /// </summary>
+        /// <returns>A queryable collection of all entities.</returns>
+        IQueryable<TEntity> GetAllAsNoTracking();
+
+        /// <summary>
         /// Adds an entity asynchronously.
         /// </summary>
         /// <param name="entity">The entity to add.</param>
@@ -53,26 +59,12 @@ namespace PropertyBuildingDemo.Domain.Interfaces
         /// <param name="entity">The entity to delete.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task DeleteAsync(TEntity entity);
-
-        /// <summary>
-        /// Finds an entity by a specification asynchronously.
-        /// </summary>
-        /// <param name="specification">The specification to filter the entity.</param>
-        /// <returns>The retrieved entity, or null if not found.</returns>
-        Task<TEntity> FindBy(ISpecifications<TEntity> specification);
-
-        /// <summary>
-        /// Lists entities based on a specification asynchronously.
-        /// </summary>
-        /// <param name="specification">The specification to filter the entities.</param>
-        /// <returns>A queryable collection of entities that match the specification.</returns>
-        Task<IEnumerable<TEntity>> ListByAsync(ISpecifications<TEntity> specification);
-
-        /// <summary>
-        /// Counts entities based on a specification asynchronously.
-        /// </summary>
-        /// <param name="specifications">The specification to filter the entities.</param>
-        /// <returns>The count of entities that match the specification.</returns>
-        Task<int> CountAsync(ISpecifications<TEntity> specifications);
+        
+        ///// <summary>
+        ///// Counts entities based on a specification asynchronously.
+        ///// </summary>
+        ///// <param name="specifications">The specification to filter the entities.</param>
+        ///// <returns>The count of entities that match the specification.</returns>
+        //Task<int> CountAsync(ISpecifications<TEntity> specifications);
     }
 }

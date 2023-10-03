@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PropertyBuildingDemo.Application.Config;
@@ -8,8 +7,6 @@ using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Domain.Specifications;
-using System.Collections.Generic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PropertyBuildingDemo.Application.Services
 {
@@ -43,10 +40,10 @@ namespace PropertyBuildingDemo.Application.Services
             {
                 return _mapper.Map<TEntityDto>(cacheData.ToList().Find(x => x.GetId() == id));
             }
-
+            
             // Retrieve the entity by its ID using the unit of work and repository
             var result = await this._unitOfWork.GetRepository<TEntity>().GetAsync(id);
-
+            
             if (result == null || result.IsDeleted)
             {
                 return null;
@@ -62,8 +59,13 @@ namespace PropertyBuildingDemo.Application.Services
             {
                 return _mapper.Map<List<TEntityDto>>(cacheData.ToList());
             }
+            // GEt query as no tracking
+            var query = this._unitOfWork.GetRepository<TEntity>().GetAllAsNoTracking();
+            // Apply where clause to query, we don want deleted fields
+            query = query.Where(x => x.IsDeleted == false);
+            // Executes the query
+            var result = await EntityFrameworkQueryableExtensions.ToListAsync(query); 
 
-            var result = await this._unitOfWork.GetRepository<TEntity>().GetAll().Where(x => x.IsDeleted == false).ToListAsync(); 
             var expirationTime = DateTimeOffset.Now.AddMinutes(_appConfig.Value.ExpireInMinutes);
             await _cacheService.SetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name, result, expirationTime).ConfigureAwait(false);
             return _mapper.Map<List<TEntityDto>>(result);
@@ -73,15 +75,11 @@ namespace PropertyBuildingDemo.Application.Services
         {
             var cacheData = await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
 
-            if (cacheData != null)
-            {
-                cacheData = Application.Helpers.SpecificationEvaluator.ApplyToQuery(cacheData.AsQueryable(), specifications).ToList();
+            var query = cacheData != null ? cacheData.AsQueryable() : this._unitOfWork.GetRepository<TEntity>().GetAllAsNoTracking();
 
-                return _mapper.Map<List<TEntityDto>>(cacheData);
-            }
+            query = Application.Helpers.SpecificationEvaluator.ApplyToQuery(query, specifications);
 
-            var result = await this._unitOfWork.GetRepository<TEntity>()
-                .ListByAsync(specifications);
+            var result = await query.ToListAsync();
 
             return _mapper.Map<List<TEntityDto>>(result);
         }
