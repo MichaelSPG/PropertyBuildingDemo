@@ -59,15 +59,13 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
         /// </summary>
         protected async Task InitFactoryData()
         {
-            DataFactory = EntityDataFactory.GetFactory<TEntityDto>();
+            DataFactory = EntityDataFactoryManager.GetFactory<TEntityDto>();
             ValidEntityList = DataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
             ValidTestEntityDto = DataFactory.CreateValidEntityDto();
 
             TestApiEndpoint = TestEndpoint.GetEndpoint<TEntityDto>();
 
-            ValidUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
-            await SetupUserDataAsync(ValidUserRegistration);
-            HttpApiClient = CreateAuthorizedApiClient();
+            await SetupValidRegistrationUser();
         }
     }
 }

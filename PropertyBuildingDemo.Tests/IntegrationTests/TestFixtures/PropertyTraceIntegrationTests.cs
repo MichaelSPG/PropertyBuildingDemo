@@ -18,8 +18,8 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     public async Task Setup()
     {
         await InitFactoryData();
-        OwnerDataFactory = EntityDataFactory.GetFactory<OwnerDto>();
-        PropertyDataFactory = EntityDataFactory.GetFactory<PropertyDto>();
+        OwnerDataFactory = EntityDataFactoryManager.GetFactory<OwnerDto>();
+        PropertyDataFactory = EntityDataFactoryManager.GetFactory<PropertyDto>();
         
         _ownerValidList = OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
         _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
@@ -48,7 +48,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
     public async Task Should_ReturnBadRequestResponse_When_InsertSinglePropertyTraceWithInvalidDateSale()
     {
         var expectedPropertyTraceDto = ValidTestEntityDto;
-        expectedPropertyTraceDto.DateSale = DateTime.Now.AddDays(Utilities.Random.Next(0, 20));
+        expectedPropertyTraceDto.DateSale = DateTime.Now.AddDays(Utilities.Random.Next(1, 20));
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.BadRequest), expectedPropertyTraceDto);
         Utilities.ValidateApiResult_ExpectedFailed(result);
         Assert.IsNotNull(result.Message);

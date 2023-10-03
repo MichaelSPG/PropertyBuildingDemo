@@ -103,6 +103,13 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return client;
         }
 
+        public async Task SetupValidRegistrationUser()
+        {
+            ValidUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
+            await SetupUserDataAsync(ValidUserRegistration);
+            HttpApiClient = CreateAuthorizedApiClient();
+        }
+
         /// <summary>
         /// Creates a user DTO based on the provided user registration DTO and registers the user in the system.
         /// </summary>
@@ -204,8 +211,15 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// <returns>The entity object if found; otherwise, null.</returns>
         protected async Task<TEntityDto> GetEntityDto<TEntity, TEntityDto>(long id)
             where TEntity : BaseEntityDb
+            where TEntityDto : class
         {
-            return Mapper.Map<TEntityDto>(await UnitOfWork.GetRepository<TEntity>().GetAsync(id));
+            return await GetDbEntityServices<TEntity, TEntityDto>().GetByIdAsync(id);
+        }
+        protected async Task<List<TEntityDto>> GetEntityList<TEntity, TEntityDto>()
+            where TEntity : BaseEntityDb
+            where TEntityDto : class
+        {
+            return await GetDbEntityServices<TEntity, TEntityDto>().GetAllAsync();
         }
 
         /// <summary>
@@ -214,13 +228,9 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// <param name="entityDto">The entity DTO to insert.</param>
         /// <returns>The inserted entity DTO with the updated information.</returns>
         protected async Task<TEntityDto> InsertValidEntityDto<TEntity, TEntityDto>(TEntityDto entityDto)
-            where TEntity : BaseEntityDb
+            where TEntity : BaseEntityDb where TEntityDto : class
         {
-            var entity = Mapper.Map<TEntity>(entityDto);
-            await UnitOfWork.GetRepository<TEntity>().AddAsync(entity);
-            await UnitOfWork.Complete();
-
-            return Mapper.Map<TEntityDto>(entity);
+            return await GetDbEntityServices<TEntity, TEntityDto>().AddAsync(entityDto);
         }
 
         protected async Task<TEntityDto> InsertEntityDtoWithApi<TEntityDto>(string endpointUrl, TEntityDto entityDto, bool expectsOkResult = true)
@@ -243,12 +253,10 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// <returns>The inserted entity DTO with the updated information.</returns>
         protected async Task<TEntityDto> InsertDeletedEntityDto<TEntity, TEntityDto>(TEntityDto entityDto)
             where TEntity : BaseEntityDb
+            where TEntityDto : class
         {
-            var entity = Mapper.Map<TEntity>(entityDto);
-            entity.IsDeleted = true;
-            await UnitOfWork.GetRepository<TEntity>().AddAsync(entity);
-            await UnitOfWork.Complete();
-            return Mapper.Map<TEntityDto>(entity);
+            entityDto =  await InsertValidEntityDto<TEntity, TEntityDto>(entityDto);
+            return await GetDbEntityServices<TEntity, TEntityDto>().DeleteAsync(entityDto);
         }
 
         /// <summary>
@@ -258,10 +266,13 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// <returns>The inserted entity DTOs with the updated information.</returns>
         protected async Task<List<TEntityDto>> InsertListOfEntity<TEntity, TEntityDto>(List<TEntityDto> list)
             where TEntity : BaseEntityDb
+            where TEntityDto : class
         {
             var entities = Mapper.Map<List<TEntity>>(list);
             await UnitOfWork.GetRepository<TEntity>().AddRangeAsync(entities);
             await UnitOfWork.Complete();
+
+
             return Mapper.Map<List<TEntityDto>>(entities);
         }
 
@@ -284,13 +295,11 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return result.Data;
         }
 
-        protected async Task<List<TEntityDto>> GetEntityList<TEntity, TEntityDto>()
+        protected IDbEntityServices<TEntity, TEntityDto> GetDbEntityServices<TEntity, TEntityDto>()
             where TEntity : BaseEntityDb
             where TEntityDto : class
         {
-            var service = _serviceProvider.GetService<IDbEntityServices<TEntity, TEntityDto>>();
-
-            return await service.GetAllAsync();
+            return _serviceProvider.GetService<IDbEntityServices<TEntity, TEntityDto>>();
         }
 
         protected async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)

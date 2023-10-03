@@ -11,60 +11,37 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 [TestFixture]
 public class PropertyBuildingIntegrationTests : BaseTest
 {
-    protected IDataFactory<OwnerDto> OwnerDataFactory;
-    protected IDataFactory<PropertyDto> PropertyDataFactory;
-    protected IDataFactory<PropertyTraceDto> PropertyTraceDataFactory;
-    protected IDataFactory<PropertyImageDto> PropertyImageDataFactory;
     private List<OwnerDto> _ownerValidList;
-
     private List<PropertyDto> _propertyValidList;
-
     protected const int ValidTestEntityCount = 10;
 
-    protected List<PropertyDto> GenerateRandomValidProperties(int count, long ownerId = 0, bool sameOwner = false, int minImages = 0, int minTraces = 0)
+    List<long> GetValidOwnerIdList(List<OwnerDto> owners = null)
     {
-        var propertyList = PropertyDataFactory.CreateValidEntityDtoList(count);
-        if (ownerId <= 0)
+        if (owners == null)
         {
-            ownerId = _ownerValidList[Utilities.Random.Next(0, _ownerValidList.Count)].IdOwner;
+            owners = _ownerValidList;
         }
+        return owners.Select(x => x.IdOwner).ToList();
+    }
 
-        foreach (var property in propertyList)
-        {
-            if (minImages > 0)
-            {
-                property.PropertyImages = PropertyImageDataFactory.CreateValidEntityDtoList(minImages);
-            }
-
-            if (minTraces > 0)
-            {
-                property.PropertyTraces = PropertyTraceDataFactory.CreateValidEntityDtoList(minTraces);
-            }
-
-            if (!sameOwner)
-            {
-                ownerId = _ownerValidList[Utilities.Random.Next(0, _ownerValidList.Count)].IdOwner;
-            }
-            property.IdOwner = ownerId;
-        }
-        return propertyList.ToList();
+    async Task<List<PropertyDto>> InsertValidPropertyDtoList(int count, long ownerId = 0, bool sameOwner = true, int minImages = 0, int minTraces = 0)
+    {
+        return await this.InsertListOfEntity<Property, PropertyDto>(
+            PropertyBuildingDataFactory.GenerateRandomValidProperties(
+                count, 
+                GetValidOwnerIdList(),
+                ownerId, 
+                sameOwner,
+                minImages, minTraces));
     }
 
     [SetUp]
     public async Task Setup()
     {
-        ValidUserRegistration = AccountUserDataFactory.CreateValidTestUserForRegister();
-        await SetupUserDataAsync(ValidUserRegistration);
-        HttpApiClient = CreateAuthorizedApiClient();
+        await SetupValidRegistrationUser();
 
-        OwnerDataFactory = EntityDataFactory.GetFactory<OwnerDto>();
-        PropertyDataFactory = EntityDataFactory.GetFactory<PropertyDto>();
-        PropertyTraceDataFactory = EntityDataFactory.GetFactory<PropertyTraceDto>();
-        PropertyImageDataFactory = EntityDataFactory.GetFactory<PropertyImageDto>();
-
-        _propertyValidList = PropertyDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
-
-        _ownerValidList = OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
+        _propertyValidList = PropertyBuildingDataFactory.PropertyDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
+        _ownerValidList = PropertyBuildingDataFactory.OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
 
         _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);
     }
@@ -84,7 +61,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [Test()]
     public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdEqualsOneResult()
     {
-        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2));
+        var currentProperty = await InsertValidPropertyDtoList(1, 0, false, 4, 2);
         var targetEntity = currentProperty.FirstOrDefault();
 
 
@@ -110,7 +87,8 @@ public class PropertyBuildingIntegrationTests : BaseTest
     public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdNotEqualsOneResult()
     {
         int countTotal = 20;
-        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(countTotal, 0, false, 4, 2));
+        var currentProperty = await this.InsertValidPropertyDtoList(countTotal,
+                0, false, 4, 2);
         var targetEntity = currentProperty.FirstOrDefault();
 
 
@@ -132,9 +110,8 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [Test()]
     public async Task Should_ReturnOkResponseWithPagingPropertyData_When_FilterPropertyNoFilters()
     {
-        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(20, 0, false, 4, 2));
+        var currentProperty = await this.InsertValidPropertyDtoList(  20, 0, false, 4, 2);
         var targetEntity = currentProperty.FirstOrDefault();
-
 
         DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
         args.PageIndex = 0;
@@ -146,18 +123,19 @@ public class PropertyBuildingIntegrationTests : BaseTest
 
         Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
-        Assert.That(result.Data.Count, Is.EqualTo(args.PageSize = 10));
+        Assert.That(result.Data.Count, Is.EqualTo(args.PageSize));
     }
 
     [Test()]
     public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdContainsOneResult()
     {
         string criteria = "Christoper";
-        var targetEntity = PropertyDataFactory.CreateValidEntityDto();
+        var targetEntity = PropertyBuildingDataFactory.PropertyDataFactory.CreateValidEntityDto();
         targetEntity.IdOwner = _ownerValidList.FirstOrDefault().IdOwner;
+
         targetEntity = await this.InsertValidEntityDto< Property, PropertyDto> (targetEntity);
         
-        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2));
+        var currentProperty = await this.InsertValidPropertyDtoList(1,  0, false, 4, 2);
         
         DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
         args.FilteringParameters = new List<FilteringParameters>()
@@ -187,13 +165,17 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [TestCase(true, 10, 10)]
     public async Task Should_ReturnOkResponseWithSinglePropertyData_When_InsertSinglePropertyWithValidData(bool sameOwner, int numImages, int numTraces)
     {
-        var property = GenerateRandomValidProperties(1, 0, sameOwner, numImages, numTraces).FirstOrDefault();
+        var validOwners = await GetEntityListWithApi<OwnerDto>(TestConstants.OwnerEndpoint.BaseEndpoint + "/List");
 
+        var property = PropertyBuildingDataFactory.GenerateRandomValidProperties(1, GetValidOwnerIdList(validOwners), 0, sameOwner, numImages, numTraces).FirstOrDefault();
+        
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.Insert}",
             Is.EqualTo(HttpStatusCode.OK), property);
 
-        var insertedEntity = await GetEntityDto<Property, PropertyDto>(result.Data.IdProperty);
         Utilities.ValidateApiResultData_ExpectedSuccess(result);
+
+        var insertedEntity = await GetEntityDto<Property, PropertyDto>(result.Data.IdProperty);
+        
 
         Assert.That(result.Data.IdProperty, Is.GreaterThan(0));
         Assert.That(insertedEntity, Is.Not.Null);
@@ -208,9 +190,9 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [TestCase(true, 10)]
     public async Task Should_ReturnOkResponseWithSinglePropertyData_When_InsertImageWithValidData(bool sameOwner, int initialImages)
     {
-        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, sameOwner, initialImages).FirstOrDefault());
+        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(PropertyBuildingDataFactory.GenerateRandomValidProperties(1, GetValidOwnerIdList(), 0, sameOwner, initialImages).FirstOrDefault());
 
-        var newImages = PropertyImageDataFactory.CreateValidEntityDtoList(1, currentProperty.IdProperty).FirstOrDefault();
+        var newImages = PropertyBuildingDataFactory.PropertyImageDataFactory.CreateValidEntityDtoList(1, currentProperty.IdProperty).FirstOrDefault();
 
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.AddImage}",
             Is.EqualTo(HttpStatusCode.OK), newImages);
@@ -238,9 +220,9 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [TestCase(true, 10, 10, 20, 4)]
     public async Task Should_ReturnOkResponseWithPropertyData_When_UpdatePropertyWithValidDataNoImagesOrTraces(bool sameOwner, int initialImages, int initialTraces, int numImages, int numTraces)
     {
-        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, sameOwner, initialImages, initialTraces).FirstOrDefault());
+        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(PropertyBuildingDataFactory.GenerateRandomValidProperties(1, GetValidOwnerIdList(), 0, sameOwner, initialImages, initialTraces).FirstOrDefault());
 
-        var expectedProperty = GenerateRandomValidProperties(1, currentProperty.IdOwner, sameOwner, numImages, numTraces).FirstOrDefault();
+        var expectedProperty = PropertyBuildingDataFactory.GenerateRandomValidProperties(1, GetValidOwnerIdList(), currentProperty.IdOwner, sameOwner, numImages, numTraces).FirstOrDefault();
         expectedProperty.IdProperty = currentProperty.IdProperty;
 
         var result = await HttpApiClient.MakeApiPutRequestAsync<PropertyDto>($"{TestConstants.PropertyBuildingEnpoint.Update}",
@@ -263,7 +245,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
     public async Task Should_ReturnOkResponseWithPropertyData_When_UpdatePropertyPriceWithValidId()
     {
         decimal newPrice = 1419232.22M;
-        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(GenerateRandomValidProperties(1, 0, false, 4, 2).FirstOrDefault());
+        var currentProperty = await this.InsertValidEntityDto<Property, PropertyDto>(PropertyBuildingDataFactory.GenerateRandomValidProperties(1, GetValidOwnerIdList(), 0, false, 4, 2).FirstOrDefault());
 
         var result = await HttpApiClient.MakeApiPutRequestAsync<PropertyDto>(
             $"{TestConstants.PropertyBuildingEnpoint.ChangePrice}/{currentProperty.IdProperty}?inNewPrice={newPrice}",

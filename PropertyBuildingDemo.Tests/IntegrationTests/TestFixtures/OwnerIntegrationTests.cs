@@ -8,7 +8,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 [TestFixture]
 public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 {
-    [SetUp]
+    [OneTimeSetUp]
     public async Task Setup()
     {
         await InitFactoryData();

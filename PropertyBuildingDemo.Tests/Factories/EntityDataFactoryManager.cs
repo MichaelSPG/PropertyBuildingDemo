@@ -2,12 +2,12 @@
 
 namespace PropertyBuildingDemo.Tests.Factories
 {
-    static class EntityDataFactory
+    static class EntityDataFactoryManager
     {
         private static readonly Dictionary<Type, object> Factories = new Dictionary<Type, object>();
 
         // Private constructor to prevent external instantiation.
-        static EntityDataFactory()
+        static EntityDataFactoryManager()
         {
             // Register your data factories for different types here.
             Factories[typeof(OwnerDto)] = new OwnerDataFactory();
@@ -26,5 +26,6 @@ namespace PropertyBuildingDemo.Tests.Factories
 
             throw new NotSupportedException($"Data factory for {typeof(TEntity)} is not supported.");
         }
+
     }
 }

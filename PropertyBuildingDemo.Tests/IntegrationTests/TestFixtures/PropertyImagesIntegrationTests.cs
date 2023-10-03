@@ -25,8 +25,8 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
     {
         await InitFactoryData();
 
-        OwnerDataFactory = EntityDataFactory.GetFactory<OwnerDto>();
-        PropertyDataFactory = EntityDataFactory.GetFactory<PropertyDto>();
+        OwnerDataFactory = EntityDataFactoryManager.GetFactory<OwnerDto>();
+        PropertyDataFactory = EntityDataFactoryManager.GetFactory<PropertyDto>();
 
         _ownerValidList = OwnerDataFactory.CreateValidEntityDtoList(ValidTestEntityCount).ToList();
         _ownerValidList = await InsertListOfEntity<Owner, OwnerDto>(_ownerValidList);

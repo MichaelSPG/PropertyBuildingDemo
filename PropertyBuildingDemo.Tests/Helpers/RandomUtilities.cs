@@ -51,7 +51,8 @@ namespace PropertyBuildingDemo.Tests.Helpers
                 var start = DateTime.Now.AddYears(-years); // Adjust the range as needed
                 var randomDay = Random.Next(365);
 
-                start = start.AddDays(randomDay);
+                start = start.AddDays(-randomDay);
+
                 return start;
             }
 
