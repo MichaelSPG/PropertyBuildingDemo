@@ -79,7 +79,7 @@ namespace PropertyBuildingDemo.Infrastructure.Data
             if (!_repositories.ContainsKey(type))
             {
                 var repositiryType = typeof(BaseEntityRepository<>);
-                var repositoryInstance = Activator.CreateInstance( repositiryType.MakeGenericType(typeof(TEntity)), _context, _cacheService, _appOptions);
+                var repositoryInstance = Activator.CreateInstance( repositiryType.MakeGenericType(typeof(TEntity)), _context);
                 _repositories.Add(type, repositoryInstance);
             }
             return (IGenericEntityRepository<TEntity>)_repositories[type];

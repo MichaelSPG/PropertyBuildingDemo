@@ -50,7 +50,7 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
         try
         {
             var result = await this._dbEntityServices.GetAllAsync();
-            apiResult =  await ApiResult<IEnumerable<TEntityDto>>.SuccessResultAsync(
+            apiResult = await ApiResult<IEnumerable<TEntityDto>>.SuccessResultAsync(
                 result
                 );
         }

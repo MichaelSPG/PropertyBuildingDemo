@@ -30,8 +30,6 @@ public static class ApplicationServicesExtension
 
         // Register application services with their respective lifetimes
         services.AddScoped<IPropertyBuildingService, PropertyService>();
-        services.AddScoped<IPropertyImageService, PropertyImageService>();
-        services.AddScoped<IPropertyTraceService, PropertyTraceService>();
         services.AddScoped<IApiTokenService, TokenService>();
         services.AddScoped<IUserAccountService, UserAccountService>();
         services.AddScoped(typeof(IDbEntityServices<,>), typeof(DbEntityServices<,>));
