@@ -13,6 +13,8 @@ using System.Net;
 using Microsoft.EntityFrameworkCore;
 using PropertyBuildingDemo.Infrastructure.Data;
 using static PropertyBuildingDemo.Tests.Helpers.TestConstants;
+using IdentityModel;
+using System;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests
 {
@@ -67,7 +69,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
         /// </summary>
         protected IMapper Mapper;
 
-        protected PropertyBuildingContext _context;
+        IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Performs one-time setup for the test fixture, including creating the API web application factory and HTTP API client.
@@ -189,7 +191,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             TokenService = scope.ServiceProvider.GetRequiredService<IApiTokenService>();
             UserAccountService = scope.ServiceProvider.GetRequiredService<IUserAccountService>();
             Mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
-            _context = scope.ServiceProvider.GetRequiredService<PropertyBuildingContext>();
+            _serviceProvider = scope.ServiceProvider;
             UserDto = await CreateTestUserIfNotExists(userRegister);
             TokenResponse = await CreateTestTokenForUser(TokenService, userRegister);
         }
@@ -284,9 +286,11 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
 
         protected async Task<List<TEntityDto>> GetEntityList<TEntity, TEntityDto>()
             where TEntity : BaseEntityDb
+            where TEntityDto : class
         {
-            await Task.Delay(1);
-            return Mapper.Map<List<TEntityDto>>(UnitOfWork.GetRepository<TEntity>().GetAll());
+            var service = _serviceProvider.GetService<IDbEntityServices<TEntity, TEntityDto>>();
+
+            return await service.GetAllAsync();
         }
 
         protected async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)

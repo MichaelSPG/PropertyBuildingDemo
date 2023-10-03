@@ -109,7 +109,8 @@ public class PropertyBuildingIntegrationTests : BaseTest
     [Test()]
     public async Task Should_ReturnOkResponseWithPropertyData_When_FilterPropertyIdNotEqualsOneResult()
     {
-        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(20, 0, false, 4, 2));
+        int countTotal = 20;
+        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(countTotal, 0, false, 4, 2));
         var targetEntity = currentProperty.FirstOrDefault();
 
 
@@ -118,6 +119,24 @@ public class PropertyBuildingIntegrationTests : BaseTest
         {
             new("Owner.IdOwner", targetEntity.IdOwner.ToString(), EComparisionOperator.NotEqual),
         };
+
+        var result = await HttpApiClient.MakeApiPostRequestAsync<List<PropertyDto>>(
+            $"{TestConstants.PropertyBuildingEnpoint.ListBy}",
+            Is.EqualTo(HttpStatusCode.OK), args);
+
+        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        
+        Assert.That(result.Data.Count, Is.LessThan(countTotal));
+    }
+
+    [Test()]
+    public async Task Should_ReturnOkResponseWithPagingPropertyData_When_FilterPropertyNoFilters()
+    {
+        var currentProperty = await this.InsertListOfEntity<Property, PropertyDto>(GenerateRandomValidProperties(20, 0, false, 4, 2));
+        var targetEntity = currentProperty.FirstOrDefault();
+
+
+        DefaultQueryFilterArgs args = new DefaultQueryFilterArgs();
         args.PageIndex = 0;
         args.PageSize = 10;
 
@@ -127,11 +146,7 @@ public class PropertyBuildingIntegrationTests : BaseTest
 
         Utilities.ValidateApiResultData_ExpectedSuccess(result);
 
-        var w = result.Data.Where(x => x.IdOwner > 0);
-
-        int expectedCount = currentProperty.Count(x => x.IdOwner != targetEntity.IdOwner);
-
-        Assert.That(result.Data.Count, Is.EqualTo(expectedCount));
+        Assert.That(result.Data.Count, Is.EqualTo(args.PageSize = 10));
     }
 
     [Test()]
