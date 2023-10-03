@@ -69,13 +69,13 @@ namespace PropertyBuildingDemo.Application.Services
         public async Task<ApiResult<UserDto>> FindByEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user != null ?  ApiResult<UserDto>.SuccessResult(new UserDto
+            return user != null ?  await ApiResult<UserDto>.SuccessResultAsync(new UserDto
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 IdentificationNumber = user.IdentificationNumber
-            }) : ApiResult<UserDto>.FailedResult($" '{email}' not found");
+            }) : await ApiResult<UserDto>.FailedResultAsync($" '{email}' not found");
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace PropertyBuildingDemo.Application.Services
         public async Task<ApiResult<UserDto>> GetCurrentUser(HttpContext httpContext)
         {
             var user = await FindByEmailFromClaimPrincipal(httpContext.User);
-            return ApiResult<UserDto>.SuccessResult(new UserDto
+            return await ApiResult<UserDto>.SuccessResultAsync(new UserDto
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
