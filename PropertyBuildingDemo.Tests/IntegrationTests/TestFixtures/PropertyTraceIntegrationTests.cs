@@ -135,7 +135,7 @@ public class PropertyTraceIntegrationTests : GenericIntegrationTest<PropertyTrac
         int notExistentId = 3423442;
         var result = await HttpApiClient.MakeApiGetRequestAsync<PropertyTraceDto>($"{TestApiEndpoint.ById}/{notExistentId}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResult_ExpectedFailed(result);
+        Utilities.ValidateApiResult_ExpectedSuccessButNullData(result);
     }
 
     [Test()]

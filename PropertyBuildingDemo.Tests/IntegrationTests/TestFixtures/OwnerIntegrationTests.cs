@@ -147,7 +147,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         int notExistentId = 3423442;
         var result = await HttpApiClient.MakeApiGetRequestAsync<OwnerDto>($"{TestApiEndpoint.ById}/{notExistentId}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResult_ExpectedFailed(result);
+        Utilities.ValidateApiResult_ExpectedSuccessButNullData(result);
     }
 
     [Test()]
