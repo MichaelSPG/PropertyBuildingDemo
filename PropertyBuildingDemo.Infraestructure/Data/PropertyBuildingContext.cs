@@ -57,6 +57,33 @@ namespace PropertyBuildingDemo.Infrastructure.Data
                 .WithMany(p => p.PropertyTraces)
                 .HasForeignKey(i => i.IdProperty);
 
+            // INDICES
+
+            modelBuilder.Entity<Owner>()
+                .HasIndex(p => p.Name);
+            modelBuilder.Entity<Owner>()
+                .HasIndex(p => p.IdOwner);
+
+            modelBuilder.Entity<Property>()
+                .HasIndex(p => p.IdProperty);
+            modelBuilder.Entity<Property>()
+                .HasIndex(p => p.Name);
+            modelBuilder.Entity<Property>()
+                .HasIndex(p => p.IdOwner);
+
+            modelBuilder.Entity<PropertyTrace>()
+                .HasIndex(p => p.Name);
+            modelBuilder.Entity<PropertyTrace>()
+                .HasIndex(p => p.IdPropertyTrace);
+            modelBuilder.Entity<PropertyTrace>()
+                .HasIndex(p => p.IdProperty);
+
+            modelBuilder.Entity<PropertyImage>()
+                .HasIndex(p => p.IdPropertyImage);
+            modelBuilder.Entity<PropertyImage>()
+                .HasIndex(p => p.IdProperty);
+
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
