@@ -137,11 +137,10 @@ All controllers in the PropertyBuilding Demo project use JWT (JSON Web Token) au
 
 You can authenticate with the API using the default test user credentials:
 
-```json
 {
   "username": "christopher92@stwnet.com",
   "password": "@1234#"
-}```
+}
 
 ## 17. Clean Architecture, Caching, and Performance
 
