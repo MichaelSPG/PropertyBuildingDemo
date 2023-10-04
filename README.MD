@@ -13,7 +13,7 @@
 9. [Performance Management](#performance-management)
 10. [Integration Testing](#integration-testing)
 11. [Security](#security)
-12. [Development Tools] Development Tools
+12. [Development_Tools] Development Tools
 13. [API Services](#api-services)
     a. [Create Property Building](#create-property-building)
     b. [Add Image to Property](#add-image-to-property)
@@ -102,7 +102,7 @@ Integration testing is performed instead of unit testing to validate the interac
 
 Security considerations are taken seriously. The API implements authentication and authorization mechanisms to protect sensitive data and ensure that only authorized users can access certain endpoints.
 
-## 12. Development Tools
+## Development_Tools
 
 In the PropertyBuilding Demo project, we make use of various development tools to streamline the development process and ensure code quality. One such tool is ReSharper for Visual Studio. Here's how ReSharper contributes to our development environment:
 
