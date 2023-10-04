@@ -97,6 +97,15 @@ Performance is a key aspect, and the project includes mechanisms like caching to
 
 ## 10. Integration Testing
 
+I have implemented integrtion test for the API, there are a lot of test to do I focused on the most important:
+
+Here I have the status of the tests, are around 140 tests.
+
+![Test Case 1](PropertyBuildingDemo.Tests/testREsults.PNG)
+
+Also includes performance test liske this one
+
+![Test Case 1](PropertyBuildingDemo.Tests/performaceTest.PNG)
 
 
 ## 11. Security Measures
