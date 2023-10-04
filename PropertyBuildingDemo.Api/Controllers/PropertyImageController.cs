@@ -1,11 +1,12 @@
-﻿// <copyright file="PropertyImagesController.cs" company="@Michael.PatinoDemos">
-// Copyright (c) 
+﻿// <copyright file="PropertyImagesController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 using PropertyBuildingDemo.Application.Dto;
 
 namespace PropertyBuildingDemo.Api.Controllers;
 
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Domain.Entities;

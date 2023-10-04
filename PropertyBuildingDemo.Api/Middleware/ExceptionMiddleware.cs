@@ -1,5 +1,5 @@
-﻿// <copyright file="ExceptionMiddleware.cs" company="@Michael.PatinoDemos">
-// Copyright (c) 
+﻿// <copyright file="ExceptionMiddleware.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace PropertyBuildingDemo.Api.Middleware;

@@ -1,7 +1,9 @@
-﻿// <copyright file="PropertyBuildingController.cs" company="@Michael.PatinoDemos">
-// Copyright (c) 
+﻿// <copyright file="PropertyBuildingController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using PropertyBuildingDemo.Application.IServices;
 
 namespace PropertyBuildingDemo.Api.Controllers;

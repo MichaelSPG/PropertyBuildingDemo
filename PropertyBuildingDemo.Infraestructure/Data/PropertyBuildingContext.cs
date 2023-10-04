@@ -119,32 +119,5 @@ namespace PropertyBuildingDemo.Infrastructure.Data
             }
             return await base.SaveChangesAsync(cancellationToken);
         }
-        
-        ///// <summary>
-        ///// Retrieves the count of properties owned by a specific owner identified by their ID.
-        ///// </summary>
-        ///// <param name="ownerId">The ID of the owner for whom the property count is retrieved.</param>
-        ///// <returns>
-        ///// A list of tuples containing the owner's ID and the count of properties they own.
-        ///// Each tuple is represented as (IdOwner, PropertyCount).
-        ///// </returns>
-        //[DbFunction("dbo", "GetOwnersWithPropertyCounts")]
-        //public virtual List<(long IdOwner, int PropertyCount)> GetOwnersWithPropertyCounts(long ownerId)
-        //{
-        //    var ownersWithPropertyCounts = Property
-        //        .Where(p => p.IdOwner == ownerId)
-        //        .GroupBy(p => p.IdOwner)
-        //        .Select(g => new
-        //        {
-        //            IdOwner = g.Key,
-        //            PropertyCount = g.Count()
-        //        })
-        //        .ToList()
-        //        .Select(result => ((long)result.IdOwner, result.PropertyCount))
-        //        .ToList();
-
-        //    return ownersWithPropertyCounts;
-        //}
-        // commented, just to illustrate I'm able to create stores procedures, native in EFCore
     }
 }

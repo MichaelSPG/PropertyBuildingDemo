@@ -24,9 +24,6 @@ using StackExchange.Redis;
 using PropertyBuildingDemo.Application.IServices;
 using PropertyBuildingDemo.Infrastructure.Caching;
 using IdentityModel;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using PropertyBuildingDemo.Application.Mappings;
-using PropertyBuildingDemo.Application.Services;
 
 namespace PropertyBuildingDemo.Infrastructure
 {
@@ -243,34 +240,6 @@ namespace PropertyBuildingDemo.Infrastructure
         }
 
         /// <summary>
-        /// Adds application-specific services to the provided <see cref="IServiceCollection"/>.
-        /// </summary>
-        /// <param name="services">The service collection to configure.</param>
-        /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {
-            // Register HttpContextAccessor as a singleton service
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            // Register AutoMapper with profiles from the specified assembly (EntityAndDtoMapping)
-            services.AddAutoMapper(typeof(EntityAndDtoMapping));
-
-            // Register application services with their respective lifetimes
-            services.AddScoped<IPropertyBuildingService, PropertyService>();
-            services.AddScoped<IApiTokenService, TokenService>();
-            services.AddScoped<IUserAccountService, UserAccountService>();
-            services.AddScoped(typeof(IDbEntityServices<,>), typeof(DbEntityServices<,>));
-
-            // Register CurrentUserService as a transient service
-            services.AddTransient<ICurrentUserService, CurentUserService>();
-
-            // Register HttpContextAccessor again for the CurrentUserService
-            services.AddHttpContextAccessor();
-
-            return services;
-        }
-
-        /// <summary>
         /// Registers infrastructure services in the services collection.
         /// </summary>
         /// <param name="services">The service collection to configure.</param>
@@ -286,7 +255,7 @@ namespace PropertyBuildingDemo.Infrastructure
             AddInfrastuctureBase(services);
             AddJwtAuthentication(services, configuration);
             AddHttpClient(services, configuration);
-            AddApplicationServices(services);
+            
 
             return services;
         }

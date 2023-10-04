@@ -6,7 +6,6 @@ using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Specifications;
 using System.Linq.Expressions;
-using PropertyBuildingDemo.Domain.Interfaces;
 
 namespace PropertyBuildingDemo.Application.Services
 {
@@ -19,26 +18,18 @@ namespace PropertyBuildingDemo.Application.Services
         private readonly IDbEntityServices<Property, PropertyDto> _entityServices;
         private readonly IDbEntityServices<PropertyImage, PropertyImageDto> _propertyImageService;
         private readonly IDbEntityServices<PropertyImage, PropertyImageDto> _propertyTraceService;
-        private readonly ISystemLogger _systemLogger;
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyService"/> class.
         /// </summary>
-        /// <param name="entityServices">An instance of a service for managing <see cref="Property"/> entities and related operations.</param>
-        /// <param name="propertyImageService">An instance of a service for managing <see cref="PropertyImage"/> entities and related operations.</param>
-        /// <param name="propertyTraceService">An instance of a service for managing <see cref="PropertyTrace"/> entities and related operations (Note: The parameter name might be a typo).</param>
-        /// <param name="systemLogger">An instance of a logging service used for logging messages and events within the application.</param>
-        /// <param name="ownerEntityServices">An instance of a service for managing <see cref="Owner"/> entities and related operations.</param>
-        public PropertyService(IDbEntityServices<Property, PropertyDto> entityServices, IDbEntityServices<PropertyImage
-            , PropertyImageDto> propertyImageService
-            , IDbEntityServices<PropertyImage
-            , PropertyImageDto> propertyTraceService
-            , ISystemLogger systemLogger
-            , IDbEntityServices<Owner, OwnerDto> ownerEntityServices)
+        /// <param name="unitOfWork">The unit of work used for data access.</param>
+        /// <param name="mapper">The AutoMapper instance.</param>
+        /// <param name="inImageService">The property image service.</param>
+        /// <param name="inPropertyTraceService">The property trace service.</param>
+        public PropertyService(IDbEntityServices<Property, PropertyDto> entityServices, IDbEntityServices<PropertyImage, PropertyImageDto> propertyImageService, IDbEntityServices<PropertyImage, PropertyImageDto> propertyTraceService, IDbEntityServices<Owner, OwnerDto> ownerEntityServices)
         {
             _entityServices = entityServices;
             _propertyImageService = propertyImageService;
             _propertyTraceService = propertyTraceService;
-            _systemLogger = systemLogger;
             _ownerEntityServices = ownerEntityServices;
         }
 
@@ -147,7 +138,7 @@ namespace PropertyBuildingDemo.Application.Services
                 x => x.PropertyTraces,
             };
             
-            PropertySpecification propertySpecification = new PropertySpecification(FilteringValidationExpressions.GetSpecificationsFromFilters<Property>(inFilterArgs, _systemLogger), includes);
+            PropertySpecification propertySpecification = new PropertySpecification(ValidationExpressions.GetSpecificationsFromFilters<Property>(inFilterArgs), includes);
 
             if (inFilterArgs.PageSize > 0)
             {

@@ -1,5 +1,5 @@
-﻿// <copyright file="SwaggerExtensions.cs" company="@Michael.PatinoDemos">
-// Copyright (c) 
+﻿// <copyright file="SwaggerExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace PropertyBuildingDemo.Api.Extensions;

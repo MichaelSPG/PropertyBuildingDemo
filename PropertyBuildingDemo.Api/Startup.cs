@@ -1,5 +1,5 @@
-﻿// <copyright file="Startup.cs" company="@Michael.PatinoDemos">
-// Copyright (c) .
+﻿// <copyright file="Startup.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace PropertyBuildingDemo.Api;

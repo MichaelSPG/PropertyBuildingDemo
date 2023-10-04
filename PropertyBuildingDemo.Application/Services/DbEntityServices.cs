@@ -10,11 +10,6 @@ using PropertyBuildingDemo.Domain.Specifications;
 
 namespace PropertyBuildingDemo.Application.Services
 {
-    /// <summary>
-    /// Service class for managing operations on entities of type TEntity.
-    /// </summary>
-    /// <typeparam name="TEntity">The entity type to be managed.</typeparam>
-    /// <typeparam name="TEntityDto">The DTO (Data Transfer Object) type associated with TEntity.</typeparam>
     public class DbEntityServices<TEntity, TEntityDto> : IDbEntityServices<TEntity, TEntityDto> 
         where TEntity : BaseEntityDb
         where TEntityDto : class
@@ -25,15 +20,7 @@ namespace PropertyBuildingDemo.Application.Services
         private readonly ICacheService _cacheService;
         private readonly IOptions<ApplicationConfig> _appConfig;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbEntityServices{TEntity, TEntityDto}"/> class.
-        /// </summary>
-        /// <param name="unitOfWork">The unit of work for database operations.</param>
-        /// <param name="systemLogger">The system logger for logging.</param>
-        /// <param name="mapper">The mapper for mapping between TEntity and TEntityDto.</param>
-        /// <param name="cacheService">The cache service for caching data.</param>
-        /// <param name="appConfig">The application configuration options.</param>
-        public DbEntityServices(IUnitOfWork unitOfWork
+        public  DbEntityServices(IUnitOfWork unitOfWork
             , ISystemLogger systemLogger
             , IMapper mapper, ICacheService cacheService
             , IOptions<ApplicationConfig> appConfig)
@@ -45,13 +32,6 @@ namespace PropertyBuildingDemo.Application.Services
             _appConfig = appConfig;
         }
 
-        /// <summary>
-        /// Retrieves an entity by its unique identifier asynchronously.
-        /// </summary>
-        /// <param name="id">The unique identifier of the entity.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns the retrieved entity or null if not found.
-        /// </returns>
         public async Task<TEntityDto> GetByIdAsync(long id)
         {
             var cacheData = await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
@@ -71,12 +51,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<TEntityDto>(result);
         }
 
-        /// <summary>
-        /// Retrieves all entities of type TEntity asynchronously.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns a list of TEntityDto objects.
-        /// </returns>
         public async Task<List<TEntityDto>> GetAllAsync()
         {
             var cacheData = _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name).Result;
@@ -97,13 +71,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<List<TEntityDto>>(result);
         }
 
-        /// <summary>
-        /// Retrieves entities that match the specified criteria defined by the <paramref name="specifications"/> asynchronously.
-        /// </summary>
-        /// <param name="specifications">The specifications to filter entities.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns a list of TEntityDto objects.
-        /// </returns>
         public async Task<List<TEntityDto>> GetByAsync(ISpecifications<TEntity> specifications)
         {
             var cacheData = await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
@@ -117,13 +84,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<List<TEntityDto>>(result);
         }
 
-        /// <summary>
-        /// Updates an entity asynchronously.
-        /// </summary>
-        /// <param name="entity">The entity to update.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns the updated entity.
-        /// </returns>
         public async Task<TEntityDto> UpdateAsync(TEntityDto entity)
         {
             var result = await this._unitOfWork.GetRepository<TEntity>().UpdateAsync(_mapper.Map<TEntity>(entity));
@@ -133,13 +93,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<TEntityDto>(result);
         }
 
-        /// <summary>
-        /// Adds a new entity asynchronously.
-        /// </summary>
-        /// <param name="entity">The entity to add.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns the added entity.
-        /// </returns>
         public async Task<TEntityDto> AddAsync(TEntityDto entity)
         {
             var result = await this._unitOfWork.GetRepository<TEntity>().AddAsync(_mapper.Map<TEntity>(entity));
@@ -149,13 +102,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<TEntityDto>(result);
         }
 
-        /// <summary>
-        /// Adds a list of entities asynchronously.
-        /// </summary>
-        /// <param name="entity">The list of entities to add.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns a list of added entities.
-        /// </returns>
         public async Task<List<TEntityDto>> AddListAsync(List<TEntityDto> entity)
         {
             var result = await this._unitOfWork.GetRepository<TEntity>().AddRangeAsync(_mapper.Map<List<TEntity>>(entity));
@@ -166,13 +112,6 @@ namespace PropertyBuildingDemo.Application.Services
             return _mapper.Map<List<TEntityDto>>(result);
         }
 
-        /// <summary>
-        /// Deletes an entity asynchronously.
-        /// </summary>
-        /// <param name="entity">The entity to delete.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation that returns the deleted entity.
-        /// </returns>
         public async Task<TEntityDto> DeleteAsync(TEntityDto entity)
         {
             if (entity == null)

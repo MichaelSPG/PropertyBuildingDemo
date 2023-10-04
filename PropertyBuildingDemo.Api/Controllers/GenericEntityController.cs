@@ -1,9 +1,12 @@
-﻿// <copyright file="GenericEntityController.cs" company="@Michael.PatinoDemos">
-// Copyright (c) 
+﻿// <copyright file="GenericEntityController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace PropertyBuildingDemo.Api.Controllers;
+using AutoMapper;
 using PropertyBuildingDemo.Application.IServices;
+
+namespace PropertyBuildingDemo.Api.Controllers;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Domain.Common;
@@ -14,7 +17,7 @@ using PropertyBuildingDemo.Domain.Interfaces;
 /// Base controller for handling CRUD operations for generic entities of type TEntity.
 /// </summary>
 /// <typeparam name="TEntity">The entity type this controller operates on.</typeparam>
-/// <typeparam name="TEntityDto">The DTO entity to map out</typeparam>
+/// <typeparam name="TEntityDto"></typeparam>
 [Authorize(AuthenticationSchemes = "JwtClient")]
 public class GenericEntityController<TEntity, TEntityDto> : BaseController
     where TEntity : BaseEntityDb
@@ -26,8 +29,9 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericEntityController{TEntity}"/> class.
     /// </summary>
+    /// <param name="unitOfWork">The unit of work for database operations.</param>
     /// <param name="systemLogger">The system logger for logging exceptions.</param>
-    /// <param name="dbEntityServices">The entity services</param>
+    /// <param name="mapper">The system mapper the TEntity.</param>
     public GenericEntityController(ISystemLogger systemLogger, IDbEntityServices<TEntity, TEntityDto> dbEntityServices)
     {
         this._systemLogger = systemLogger;
@@ -37,6 +41,7 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
     /// <summary>
     /// Gets a list of entities with optional filtering for deleted entities.
     /// </summary>
+    /// <param name="filterDeleted">A boolean indicating whether to include deleted entities in the list.</param>
     /// <returns>A list of entities.</returns>
     [HttpGet("List")]
     public async Task<IActionResult> Index()
@@ -45,7 +50,9 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
         try
         {
             var result = await this._dbEntityServices.GetAllAsync();
-            apiResult = await ApiResult<IEnumerable<TEntityDto>>.SuccessResultAsync(result);
+            apiResult = await ApiResult<IEnumerable<TEntityDto>>.SuccessResultAsync(
+                result
+                );
         }
         catch (Exception ex)
         {
@@ -145,7 +152,7 @@ public class GenericEntityController<TEntity, TEntityDto> : BaseController
     /// <returns>An IActionResult indicating success or failure.</returns>
     [HttpDelete("Delete/{id}")]
 
-    public async Task<IActionResult> Delete(long id)
+    public async Task<IActionResult> Delete( long id)
     {
         ApiResult<TEntityDto> apiResult = null;
         try
