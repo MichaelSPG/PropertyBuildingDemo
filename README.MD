@@ -13,7 +13,8 @@
 9. [Performance Management](#performance-management)
 10. [Integration Testing](#integration-testing)
 11. [Security](#security)
-12. [API Services](#api-services)
+12. [Development Tools] Development Tools
+13. [API Services](#api-services)
     a. [Create Property Building](#create-property-building)
     b. [Add Image to Property](#add-image-to-property)
     c. [Change Property Price](#change-property-price)
@@ -22,7 +23,7 @@
 
 ## Introduction
 
-The PropertyBuilding Demo is a .NET 6-based project designed to meet the requirements of a large Real Estate company. It provides a set of API services for managing property information in the United States. This documentation outlines the project's architecture, structure, coding practices, testing, and security considerations.
+The PropertyBuilding Demo is a .NET 6-based project designed to meet the requirements of a large Real Estate company. This documentation outlines the project's architecture, structure, coding practices, testing, and security considerations.
 
 ## Prerequisites
 
@@ -100,6 +101,40 @@ Integration testing is performed instead of unit testing to validate the interac
 ## Security
 
 Security considerations are taken seriously. The API implements authentication and authorization mechanisms to protect sensitive data and ensure that only authorized users can access certain endpoints.
+
+## 12. Development Tools
+
+In the PropertyBuilding Demo project, we make use of various development tools to streamline the development process and ensure code quality. One such tool is ReSharper for Visual Studio. Here's how ReSharper contributes to our development environment:
+
+## Additional Components for Clean Code
+
+In the PropertyBuilding Demo project, we emphasize the importance of clean, maintainable code. To help achieve this goal, we use additional development tools, such as ReSharper for Visual Studio. ReSharper is a powerful extension that enhances code quality, readability, and productivity. Here's how ReSharper contributes to clean code in our project:
+
+### Code Analysis and Inspections
+
+ReSharper performs static code analysis and provides real-time code inspections. It highlights code issues, suggests improvements, and enforces coding standards. This helps our development team identify and address potential problems before they become critical.
+
+### Code Refactoring
+
+ReSharper offers a wide range of code refactoring options, making it easy to restructure and optimize code. It simplifies complex code blocks, extracts methods, renames variables, and eliminates code smells. This ensures that our codebase remains clean and maintainable over time.
+
+### Code Navigation and Exploration
+
+ReSharper enhances code navigation and exploration within Visual Studio. It provides intelligent code search, quick navigation to related code elements, and a powerful code explorer. This accelerates development and makes it easier to understand and modify code.
+
+### Code Documentation
+
+ReSharper assists in generating XML documentation comments and keeping them up to date. Proper documentation ensures that our codebase is well-documented, making it easier for developers to understand the purpose and usage of classes, methods, and properties.
+
+### Unit Testing Support
+
+ReSharper offers excellent support for unit testing, including test creation, execution, and result visualization. This helps us maintain a robust suite of unit tests to validate our code's correctness and reliability.
+
+### Code Formatting and Style
+
+ReSharper enforces code formatting and coding style rules based on industry best practices and custom configurations. Consistent code formatting enhances code readability and maintainability.
+
+By using ReSharper alongside Visual Studio, we aim to maintain a clean and high-quality codebase throughout the development process. This tool empowers our development team to write code that is more efficient, reliable, and easier to maintain, ultimately delivering a better product to our clients.
 
 ## API Services
 
