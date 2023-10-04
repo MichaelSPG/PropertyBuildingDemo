@@ -20,10 +20,6 @@ Welcome to the PropertyBuilding Demo project! This project showcases the develop
 15. [JWT Authentication](#jwt-authentication)
 16. [Test User for Authentication](#test-user-for-authentication)
 17. [Clean Architecture](#clean-architecture)
-18. [Integration Testing with NUnit](#integration-testing-with-nunit)
-19. [Performance Management](#performance-management)
-20. [Conclusion](#conclusion)
-21. [Appendix](#appendix)
 
 ## 1. Introduction
 
@@ -97,7 +93,7 @@ Performance is a key aspect, and the project includes mechanisms like caching to
 
 ## 10. Integration Testing
 
-I have implemented integrtion test for the API, there are a lot of test to do I focused on the most important:
+Integration Testing is done with NUnit for the API, there are a lot of test to do I focused on the most important:
 
 Here I have the status of the tests, are around 140 tests.
 
@@ -106,6 +102,8 @@ Here I have the status of the tests, are around 140 tests.
 Also includes performance test liske this one
 
 ![Test Case 1](PropertyBuildingDemo.Tests/performaceTest.PNG)
+
+That helps with Performance Management
 
 
 ## 11. Security Measures
