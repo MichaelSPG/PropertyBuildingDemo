@@ -97,7 +97,7 @@ Performance is a key aspect, and the project includes mechanisms like caching to
 
 ## 10. Integration Testing
 
-Integration tests are provided to verify the functionality of the API endpoints.
+
 
 ## 11. Security Measures
 
@@ -133,11 +133,12 @@ You can authenticate with the API using the default test user credentials:
   "username": "christopher92@stwnet.com",
   "password": "@1234#"
 }
+
 ## 17. Clean Architecture, Caching, and Performance
 
 The PropertyBuilding Demo project follows a Clean Architecture pattern, which is a software architectural style that separates concerns into distinct layers, making the codebase highly maintainable and testable. The architecture consists of the following layers:
 
-### Domain Layer
+## Domain Layer
 
 The Domain Layer represents the core business logic of the application. It includes entities, value objects, and business rules. In this layer, you'll find:
 
@@ -145,7 +146,7 @@ The Domain Layer represents the core business logic of the application. It inclu
 - **Value Objects**: Represent immutable objects that hold values but have no distinct identity.
 - **Business Rules**: Define the constraints and logic that govern the behavior of the domain.
 
-### Application Layer
+## Application Layer
 
 The Application Layer contains the application-specific logic and use cases. It acts as an intermediary between the Domain Layer and the Infrastructure Layer. Key components in this layer include:
 
@@ -163,7 +164,7 @@ The Infrastructure Layer is responsible for handling external concerns such as d
 - **Caching (Redis)**: Utilizes Redis caching mechanisms to improve application performance by reducing database queries.
 - **External Services**: Interact with external services or APIs.
 
-### API Layer
+## API Layer
 
 The API Layer represents the presentation layer, providing HTTP endpoints to interact with the application. It includes controllers, models, and routing. Controllers define API endpoints, while models define request and response structures.
 
