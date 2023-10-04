@@ -132,7 +132,7 @@ You can authenticate with the API using the default test user credentials:
 {
   "username": "christopher92@stwnet.com",
   "password": "@1234#"
-}
+}```
 
 ## 17. Clean Architecture, Caching, and Performance
 
@@ -155,7 +155,7 @@ The Application Layer contains the application-specific logic and use cases. It 
 - **Mappers**: Transform entities to DTOs and vice versa.
 - **Interfaces**: Define contracts for services that the Infrastructure Layer will implement.
 
-### Infrastructure Layer
+## Infrastructure Layer
 
 The Infrastructure Layer is responsible for handling external concerns such as databases, caching, and external services. This layer includes:
 
