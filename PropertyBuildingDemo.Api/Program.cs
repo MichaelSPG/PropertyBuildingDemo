@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using PropertyBuildingDemo.Infrastructure.Data.Seed;
+
 namespace PropertyBuildingDemo.Api;
 
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +12,6 @@ using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Infrastructure.Data;
-using PropertyBuildingDemo.Infrastructure.Data.Identity;
 
 /// <summary>
 /// The entry point class for the application.
@@ -51,6 +52,7 @@ public class Program
                 // Seed user data using UserManager
                 var userManager = services.GetRequiredService<UserManager<AppUser>>();
                 await SeedIdentityDbContext.SeedUserData(userManager);
+                await SeedPropertyDbContext.SeedPropertyBuildingData(context);
             }
             catch (Exception ex)
             {

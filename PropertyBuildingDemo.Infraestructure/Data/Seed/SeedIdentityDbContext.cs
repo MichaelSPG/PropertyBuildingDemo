@@ -2,7 +2,7 @@
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Entities.Identity;
 
-namespace PropertyBuildingDemo.Infrastructure.Data.Identity
+namespace PropertyBuildingDemo.Infrastructure.Data.Seed
 {
     /// <summary>
     /// Class responsible for seeding user data in the Identity database.
