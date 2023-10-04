@@ -1,17 +1,18 @@
 ﻿using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Tests.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 
 namespace PropertyBuildingDemo.Tests.Factories
 {
+    /// <summary>
+    /// Factory class for generating user-related data for testing purposes.
+    /// </summary>
     public static class AccountUserDataFactory
     {
+        /// <summary>
+        /// Creates a valid test user registration DTO with predefined values.
+        /// </summary>
+        /// <returns>A UserRegisterDto instance with valid test data.</returns>
         public static UserRegisterDto CreateValidTestUserForRegister()
         {
             return new UserRegisterDto
@@ -23,6 +24,11 @@ namespace PropertyBuildingDemo.Tests.Factories
             };
         }
 
+        /// <summary>
+        /// Generates a list of valid test user registration DTOs with unique email addresses and identification numbers.
+        /// </summary>
+        /// <param name="count">The number of user registration DTOs to generate.</param>
+        /// <returns>A list of UserRegisterDto instances with valid test data.</returns>
         public static List<UserRegisterDto> GetValidTestUserForRegisterList(int count)
         {
             var random = new Random();
@@ -63,6 +69,11 @@ namespace PropertyBuildingDemo.Tests.Factories
             return userDtos;
         }
 
+        /// <summary>
+        /// Generates a list of invalid test user registration DTOs by changing passwords of valid users.
+        /// </summary>
+        /// <param name="count">The number of invalid user registration DTOs to generate.</param>
+        /// <returns>A list of UserRegisterDto instances with invalid passwords.</returns>
         public static List<UserRegisterDto> GetInvalidTestUserForRegisterList(int count)
         {
             var random = new Random();
@@ -74,6 +85,11 @@ namespace PropertyBuildingDemo.Tests.Factories
             return list;
         }
 
+        /// <summary>
+        /// Generates a random valid password based on predefined patterns.
+        /// </summary>
+        /// <param name="random">A Random instance for generating random data.</param>
+        /// <returns>A random valid password.</returns>
         public static string GenerateRandomValidPassword(Random random)
         {
             string password;
@@ -87,25 +103,47 @@ namespace PropertyBuildingDemo.Tests.Factories
             return password;
         }
 
+        /// <summary>
+        /// Checks if a given password matches a specified pattern.
+        /// </summary>
+        /// <param name="password">The password to check.</param>
+        /// <param name="pattern">The pattern to match against.</param>
+        /// <returns>True if the password matches the pattern; otherwise, false.</returns>
         public static bool IsValidPassword(string password, string pattern)
         {
             return Regex.IsMatch(password, pattern);
         }
 
+        /// <summary>
+        /// Gets a string containing all allowed characters for password generation.
+        /// </summary>
+        /// <returns>A string containing all allowed characters for password generation.</returns>
         public static string GetAllowedCharacters()
         {
             return TestConstants.UppercaseChars + TestConstants.LowercaseChars + TestConstants.DigitChars + TestConstants.SymbolChars;
         }
 
+        /// <summary>
+        /// Generates a random invalid password with only lowercase characters.
+        /// </summary>
+        /// <param name="random">A Random instance for generating random data.</param>
+        /// <returns>A random invalid password with only lowercase characters.</returns>
         public static string GenerateInvalidRandomPassword(Random random)
         {
-            int passwordLength = random.Next(6, 11); // Password length between 6 and 10
-            string password = new string(Enumerable.Repeat(TestConstants.LowercaseChars, passwordLength)
+            var passwordLength = random.Next(6, 11); // Password length between 6 and 10
+            var password = new string(Enumerable.Repeat(TestConstants.LowercaseChars, passwordLength)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
 
             return password;
         }
 
+        /// <summary>
+        /// Creates a UserDto instance with custom properties.
+        /// </summary>
+        /// <param name="id">The user's ID.</param>
+        /// <param name="username">The user's display name.</param>
+        /// <param name="email">The user's email address.</param>
+        /// <returns>A UserDto instance with custom properties.</returns>
         public static UserDto CreateUserWithCustomProperties(string id, string username, string email)
         {
             return new UserDto

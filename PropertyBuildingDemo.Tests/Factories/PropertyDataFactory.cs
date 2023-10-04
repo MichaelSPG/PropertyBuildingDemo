@@ -5,6 +5,10 @@ namespace PropertyBuildingDemo.Tests.Factories
 {
     public class PropertyDataFactory : IDataFactory<PropertyDto>
     {
+        /// <summary>
+        /// Creates a valid PropertyDto instance with random data.
+        /// </summary>
+        /// <returns>A valid PropertyDto instance.</returns>
         public PropertyDto CreateValidEntityDto()
         {
             var buffer = new byte[201];
@@ -18,23 +22,29 @@ namespace PropertyBuildingDemo.Tests.Factories
             };
         }
 
-        public IEnumerable<PropertyDto> CreateValidEntityDtoList(int count, long ownerId)
+        /// <summary>
+        /// Creates a list of valid PropertyDto instances with random data.
+        /// </summary>
+        /// <param name="count">The number of PropertyDto instances to generate.</param>
+        /// <param name="ownerId">The owner ID to assign to properties.</param>
+        /// <param name="param">An unused parameter.</param>
+        /// <returns>A list of valid PropertyDto instances.</returns>
+        public IEnumerable<PropertyDto> CreateValidEntityDtoList(int count, long ownerId, int param)
         {
-            var ownerDtos = new List<PropertyDto>();
-
+            var propertyDtos = new List<PropertyDto>();
             var usedNames = new HashSet<string>();
 
-            while (ownerDtos.Count < count)
+            while (propertyDtos.Count < count)
             {
                 var displayName = Utilities.RandomGenerators.GenerateUniqueRandomName();
 
-                // Ensure email and identification number are unique
+                // Ensure property names are unique
                 if (usedNames.Contains(displayName))
                 {
                     continue;
                 }
 
-                var owner = new PropertyDto
+                var property = new PropertyDto
                 {
                     Name = displayName,
                     Year = Utilities.RandomGenerators.GenerateRandomDateInPast().Year,
@@ -43,11 +53,12 @@ namespace PropertyBuildingDemo.Tests.Factories
                     IdOwner = ownerId
                 };
 
-                ownerDtos.Add(owner);
+                propertyDtos.Add(property);
                 usedNames.Add(displayName);
             }
+
             usedNames.Clear();
-            return ownerDtos;
+            return propertyDtos;
         }
     }
 }

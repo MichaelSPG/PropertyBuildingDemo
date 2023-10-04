@@ -1,17 +1,14 @@
 using PropertyBuildingDemo.Application.Dto;
+using PropertyBuildingDemo.Domain.Entities;
 using PropertyBuildingDemo.Tests.Factories;
 using PropertyBuildingDemo.Tests.Helpers;
 using System.Net;
-using Microsoft.Extensions.DependencyInjection;
-using PropertyBuildingDemo.Domain.Entities.Identity;
-using PropertyBuildingDemo.Infrastructure.Data;
-using NUnit.Framework.Constraints;
-using PropertyBuildingDemo.Domain.Entities;
-using PropertyBuildingDemo.Domain.Interfaces;
-using IdentityModel;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 
+/// <summary>
+/// Represents a test fixture for Property Images integration tests.
+/// </summary>
 [TestFixture]
 public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyImage, PropertyImageDto>
 {
@@ -53,7 +50,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
         var result = await HttpApiClient.MakeApiGetRequestAsync<List<PropertyImageDto>>($"{TestApiEndpoint.List}",
             expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
         if (expectsOkResult)
-            Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            Utilities.ValidateApiResult_ExpectedSuccess(result);
         else
             Utilities.ValidateApiResult_ExpectedFailed(result);
         return result.Data;
@@ -104,7 +101,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
         PropertyImageDto entity = ValidEntityList[index];
         var result = await HttpApiClient.MakeApiPostRequestAsync<PropertyImageDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.OK), entity);
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
 
         Assert.That(GetEntityId(result.Data), Is.Not.Negative.And.GreaterThan(0));
         var resultEntityDto = await GetEntityDto<PropertyImage, PropertyImageDto>(GetEntityId(result.Data));
@@ -127,7 +124,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
 
         var result = await HttpApiClient.MakeApiPutRequestAsync<PropertyImageDto>($"{TestApiEndpoint.Update}", Is.EqualTo(HttpStatusCode.OK), expectedPropertyImageDto);
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
 
         Assert.That(result.Data.IdPropertyImage, Is.EqualTo(expectedPropertyImageDto.IdPropertyImage));
 
@@ -148,7 +145,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
         var result = await HttpApiClient.MakeApiGetRequestAsync<PropertyImageDto>($"{TestApiEndpoint.ById}/{id}",
             expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
         if (expectsOkResult)
-            Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            Utilities.ValidateApiResult_ExpectedSuccess(result);
         else
             Utilities.ValidateApiResult_ExpectedFailed(result);
         return result.Data;
@@ -171,7 +168,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
 
         var result = await HttpApiClient.MakeApiGetRequestAsync<PropertyImageDto>($"{TestApiEndpoint.ById}/{expectedPropertyImageDto.IdPropertyImage}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
         Assert.That(result.Data.IdPropertyImage, Is.EqualTo(expectedPropertyImageDto.IdPropertyImage));
     }
 
@@ -232,7 +229,7 @@ public class PropertyImagesIntegrationTests : GenericIntegrationTest<PropertyIma
         long idToDelete = origintList[Utilities.Random.Next(origintList.Count)].IdPropertyImage;
         var result = await HttpApiClient.MakeApiDeleteRequestAsync<PropertyImageDto>($"{TestApiEndpoint.Delete}/{idToDelete}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
         var resultList = await GetPropertyImageListWithApi();
         Assert.IsNull(resultList.Find(x => x.IdPropertyImage == idToDelete));
 

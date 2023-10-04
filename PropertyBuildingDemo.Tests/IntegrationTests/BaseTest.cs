@@ -235,34 +235,66 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return await GetDbEntityServices<TEntity, TEntityDto>().AddAsync(entityDto);
         }
 
+        /// <summary>
+        /// Inserts an entity DTO into an API endpoint asynchronously.
+        /// </summary>
+        /// <typeparam name="TEntityDto">The DTO type representing the entity, typically a class.</typeparam>
+        /// <param name="endpointUrl">The URL of the API endpoint to insert the entity into.</param>
+        /// <param name="entityDto">The entity DTO to be inserted.</param>
+        /// <param name="expectsOkResult">
+        ///     A flag indicating whether an HTTP status code of OK (200) is expected as a result.
+        ///     If set to true, the method will validate for a successful result; otherwise, it will validate for a failed result.
+        /// </param>
+        /// <returns>The entity DTO obtained from the API response after insertion.</returns>
+        /// <remarks>
+        /// If expectsOkResult is set to true, the method will validate the API result for a successful response using Utilities.ValidateApiResult_ExpectedSuccess.
+        /// If expectsOkResult is set to false, the method will validate the API result for a failed response using Utilities.ValidateApiResult_ExpectedFailed.
+        /// </remarks>
         protected async Task<TEntityDto> InsertEntityDtoWithApi<TEntityDto>(string endpointUrl, TEntityDto entityDto, bool expectsOkResult = true)
         {
-            var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>($"{endpointUrl}",
+            var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>(
+                $"{endpointUrl}",
                 expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK), entityDto);
 
             if (expectsOkResult)
-                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+                Utilities.ValidateApiResult_ExpectedSuccess(result);
             else
                 Utilities.ValidateApiResult_ExpectedFailed(result);
 
             return result.Data;
         }
 
+        /// <summary>
+        /// Inserts a list of entity DTOs into an API endpoint asynchronously.
+        /// </summary>
+        /// <typeparam name="TEntityDto">The DTO type representing the entity, typically a class.</typeparam>
+        /// <param name="endpointUrl">The URL of the API endpoint to insert the entities into.</param>
+        /// <param name="entitiesDto">The list of entity DTOs to be inserted.</param>
+        /// <param name="expectsOkResult">
+        ///     A flag indicating whether an HTTP status code of OK (200) is expected as a result for each insertion.
+        ///     If set to true, the method will validate for a successful result for each insertion; otherwise, it will validate for a failed result.
+        /// </param>
+        /// <returns>The list of entity DTOs obtained from the API response after insertion.</returns>
+        /// <remarks>
+        /// If expectsOkResult is set to true, the method will validate the API result for a successful response using Utilities.ValidateApiResult_ExpectedSuccess for each insertion.
+        /// If expectsOkResult is set to false, the method will validate the API result for a failed response using Utilities.ValidateApiResult_ExpectedFailed for each insertion.
+        /// </remarks>
         protected async Task<List<TEntityDto>> InsertEntityDtoListWithApi<TEntityDto>(string endpointUrl, List<TEntityDto> entitiesDto, bool expectsOkResult = true)
         {
             for (int i = 0; i < entitiesDto.Count(); i++)
             {
-                var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>($"{endpointUrl}",
+                var result = await HttpApiClient.MakeApiPostRequestAsync<TEntityDto>(
+                    $"{endpointUrl}",
                     expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK), entitiesDto[i]);
 
                 if (expectsOkResult)
-                    Utilities.ValidateApiResultData_ExpectedSuccess(result);
+                    Utilities.ValidateApiResult_ExpectedSuccess(result);
                 else
                     Utilities.ValidateApiResult_ExpectedFailed(result);
 
                 entitiesDto[i] = result.Data;
             }
-            
+
             return entitiesDto;
         }
 
@@ -308,13 +340,19 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
                 expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
 
             if (expectsOkResult)
-                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+                Utilities.ValidateApiResult_ExpectedSuccess(result);
             else
                 Utilities.ValidateApiResult_ExpectedFailed(result);
 
             return result.Data;
         }
 
+        /// <summary>
+        /// Retrieves a service that provides database operations for a specific entity type and its associated DTO type.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type derived from BaseEntityDb.</typeparam>
+        /// <typeparam name="TEntityDto">The DTO type for the entity, typically a class.</typeparam>
+        /// <returns>An instance of IDbEntityServices<TEntity, TEntityDto> obtained from the service provider.</returns>
         public IDbEntityServices<TEntity, TEntityDto> GetDbEntityServices<TEntity, TEntityDto>()
             where TEntity : BaseEntityDb
             where TEntityDto : class
@@ -322,13 +360,28 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests
             return _serviceProvider.GetService<IDbEntityServices<TEntity, TEntityDto>>();
         }
 
+        /// <summary>
+        /// Makes an asynchronous API GET request to retrieve an entity using the provided endpoint URL.
+        /// </summary>
+        /// <typeparam name="TEntityDto">The DTO type representing the entity, typically a class.</typeparam>
+        /// <param name="endpointUrl">The URL of the API endpoint to fetch the entity from.</param>
+        /// <param name="expectsOkResult">
+        ///     A flag indicating whether an HTTP status code of OK (200) is expected as a result.
+        ///     If set to true, the method will validate for a successful result; otherwise, it will validate for a failed result.
+        /// </param>
+        /// <returns>The entity DTO obtained from the API response.</returns>
+        /// <remarks>
+        /// If expectsOkResult is set to true, the method will validate the API result for a successful response using Utilities.ValidateApiResult_ExpectedSuccess.
+        /// If expectsOkResult is set to false, the method will validate the API result for a failed response using Utilities.ValidateApiResult_ExpectedFailed.
+        /// </remarks>
         public async Task<TEntityDto> GetEntityWithApi<TEntityDto>(string endpointUrl, bool expectsOkResult = true)
         {
-            var result = await HttpApiClient.MakeApiGetRequestAsync<TEntityDto>($"{endpointUrl}",
+            var result = await HttpApiClient.MakeApiGetRequestAsync<TEntityDto>(
+                $"{endpointUrl}",
                 expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
 
             if (expectsOkResult)
-                Utilities.ValidateApiResultData_ExpectedSuccess(result);
+                Utilities.ValidateApiResult_ExpectedSuccess(result);
             else
                 Utilities.ValidateApiResult_ExpectedFailed(result);
 

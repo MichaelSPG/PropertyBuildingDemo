@@ -50,7 +50,7 @@ namespace PropertyBuildingDemo.Application.Services
         /// Retrieves cached data of the specified entity type.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{TEntity}"/> containing the cached data.</returns>
-        async Task<IEnumerable<TEntity>> GetCacheData()
+        private async Task<IEnumerable<TEntity>> GetCacheData()
         {
             return await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
         }
@@ -60,7 +60,7 @@ namespace PropertyBuildingDemo.Application.Services
         /// </summary>
         /// <param name="entities">The data to cache.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Returns <c>true</c> if the data was successfully cached, otherwise <c>false</c>.</returns>
-        async Task<bool> SetCacheData(IEnumerable<TEntity> entities)
+        private async Task<bool> SetCacheData(IEnumerable<TEntity> entities)
         {
             var expirationTime = DateTimeOffset.Now.AddMinutes(_appConfig.Value.ExpireInMinutes);
             return await _cacheService.SetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name, entities, expirationTime);

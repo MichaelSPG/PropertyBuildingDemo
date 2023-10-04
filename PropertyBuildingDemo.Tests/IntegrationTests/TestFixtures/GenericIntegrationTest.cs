@@ -1,9 +1,7 @@
-﻿using PropertyBuildingDemo.Application.Dto;
-using PropertyBuildingDemo.Domain.Common;
+﻿using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Tests.Factories;
 using PropertyBuildingDemo.Tests.Helpers;
-using System.Net;
-using static PropertyBuildingDemo.Tests.Helpers.Helpers;
+using PropertyBuildingDemo.Tests.Helpers.Config;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
 {
@@ -38,7 +36,7 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures
         /// <summary>
         /// The API endpoint URL for the entity being tested.
         /// </summary>
-        protected TestConstants.IEndpointUrl TestApiEndpoint;
+        protected IEndpointUrl TestApiEndpoint;
 
         /// <summary>
         /// Sets the ID of an entity in its DTO.

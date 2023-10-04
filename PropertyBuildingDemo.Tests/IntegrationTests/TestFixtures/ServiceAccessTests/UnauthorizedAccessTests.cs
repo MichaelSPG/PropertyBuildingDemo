@@ -3,44 +3,47 @@ using PropertyBuildingDemo.Domain.Entities.Identity;
 using PropertyBuildingDemo.Tests.Factories;
 using PropertyBuildingDemo.Tests.Helpers;
 using System.Net;
+using PropertyBuildingDemo.Tests.Helpers.Config;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures.ServiceAccessTests
 {
+    /// <summary>
+    /// Represents a test fixture for unauthorized access scenarios.
+    /// </summary>
     [TestFixture]
     public class UnauthorizedAccessTests : BaseTest
     {
-        private UserRegisterDto _userRegisterDto;
-
-        // SECURITY TESTS
-
-        //[Test(Description = "Test if we don't have access to any endpoint")]
-        //[TestCase(TestConstants.OwnerEnpoint.List)]
-        //[TestCase(TestConstants.PropertyImageEnpoint.List)]
-        //[TestCase(TestConstants.PropertyBuildingEnpoint.ListBy)]
-        //[TestCase(TestConstants.AccountEnpoint.CurrentUser)]
-        //public async Task Should_ReturnUnauthorizedResponse_When_AnonymousUserConnectsToService(string url)
-        //{
-        //    await httpApiClient.MakeApiGetRequestAsync<object>($"{url}", Is.EqualTo(HttpStatusCode.Unauthorized));
-        //}
-
-        [Test()]
+        /// <summary>
+        /// Test to verify that a bad request response is returned when a user logs in with null data.
+        /// </summary>
+        [Test]
         public async Task Should_ReturnBadRequestResponse_When_UserLoginsWithNullData()
         {
-            await HttpApiClient.MakeApiPostRequestAsync<TokenResponse>($"{TestConstants.AccountEndpoint.Login}",  Is.EqualTo(HttpStatusCode.BadRequest));
+            await HttpApiClient.MakeApiPostRequestAsync<TokenResponse>($"{AccountEndpoint.Login}", Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
-        [Test()]
+        /// <summary>
+        /// Test to verify that an unauthorized response is returned when using an expired token.
+        /// </summary>
+        [Test]
         public async Task Should_ReturnUnauthorizedResponse_When_UsingExpiredToken()
         {
+            // Arrange: Set the authorization header with an expired token
             await HttpApiClient.SetTokenAuthorizationHeader(TokenDataFactory.CreateExpiredTokenResponse());
-            await HttpApiClient.MakeApiGetRequestAsync<TokenResponse>($"{TestConstants.AccountEndpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
+
+            // Act: Make the HTTP request with the expired token
+            await HttpApiClient.MakeApiGetRequestAsync<TokenResponse>($"{AccountEndpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
         }
+
+        /// <summary>
+        /// Test to verify that an unauthorized response is returned when using invalid token data.
+        /// </summary>
         [Test]
         public async Task Should_ReturnUnauthorizedResponse_When_UsingInvalidTokenData()
         {
             // Act: Make the HTTP request with an invalid access token
             await HttpApiClient.SetTokenAuthorizationHeader(TokenDataFactory.CreateCorruptedTokenResponse());
-            await HttpApiClient.MakeApiGetRequestAsync<TokenResponse>($"{TestConstants.AccountEndpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
+            await HttpApiClient.MakeApiGetRequestAsync<TokenResponse>($"{AccountEndpoint.CurrentUser}", Is.EqualTo(HttpStatusCode.Unauthorized));
         }
     }
 }

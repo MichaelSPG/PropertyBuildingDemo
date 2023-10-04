@@ -5,6 +5,9 @@ using System.Net;
 
 namespace PropertyBuildingDemo.Tests.IntegrationTests.TestFixtures;
 
+/// <summary>
+/// Represents a test fixture for owner integration tests.
+/// </summary>
 [TestFixture]
 public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 {
@@ -19,7 +22,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         var result = await HttpApiClient.MakeApiGetRequestAsync<List<OwnerDto>>($"{TestApiEndpoint.List}",
             expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
         if (expectsOkResult)
-            Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            Utilities.ValidateApiResult_ExpectedSuccess(result);
         else
             Utilities.ValidateApiResult_ExpectedFailed(result);
         return result.Data;
@@ -27,6 +30,9 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 
     #region INSERT_TESTS
 
+    /// <summary>
+    /// Test to verify that an OK response with entity data is returned when inserting an entity with a custom ID.
+    /// </summary>
     [Test()]
     public async Task Should_ReturnOkResponseWithEntityDataDifferentId_When_InsertEntityWithCustomId()
     {
@@ -47,7 +53,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         var entity = ValidEntityList[index];
         var result = await HttpApiClient.MakeApiPostRequestAsync<OwnerDto>($"{TestApiEndpoint.Insert}", Is.EqualTo(HttpStatusCode.OK), entity);
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
 
         Assert.That(GetEntityId(result.Data), Is.Not.Negative.And.GreaterThan(0));
         var resultEntityDto = await GetEntityDto<Owner, OwnerDto>(GetEntityId(result.Data));
@@ -113,7 +119,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 
         var result = await HttpApiClient.MakeApiPutRequestAsync<OwnerDto>($"{TestApiEndpoint.Update}", Is.EqualTo(HttpStatusCode.OK), expectedOwnerDto);
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
 
         Assert.That(result.Data.IdOwner, Is.EqualTo(expectedOwnerDto.IdOwner));
 
@@ -135,7 +141,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         var result = await HttpApiClient.MakeApiGetRequestAsync<OwnerDto>($"{TestApiEndpoint.ById}/{id}",
             expectsOkResult ? Is.EqualTo(HttpStatusCode.OK) : Is.Not.EqualTo(HttpStatusCode.OK));
         if (expectsOkResult)
-            Utilities.ValidateApiResultData_ExpectedSuccess(result);
+            Utilities.ValidateApiResult_ExpectedSuccess(result);
         else
             Utilities.ValidateApiResult_ExpectedFailed(result);
         return result.Data;
@@ -158,7 +164,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
 
         var result = await HttpApiClient.MakeApiGetRequestAsync<OwnerDto>($"{TestApiEndpoint.ById}/{expectedOwnerDto.IdOwner}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
         Assert.That(result.Data.Name, Is.EqualTo(expectedOwnerDto.Name));
     }
 
@@ -219,7 +225,7 @@ public class OwnerIntegrationTests : GenericIntegrationTest<Owner, OwnerDto>
         long idToDelete = origintList[Utilities.Random.Next(origintList.Count)].IdOwner;
         var result = await HttpApiClient.MakeApiDeleteRequestAsync<OwnerDto>($"{TestApiEndpoint.Delete}/{idToDelete}", Is.EqualTo(HttpStatusCode.OK));
 
-        Utilities.ValidateApiResultData_ExpectedSuccess(result);
+        Utilities.ValidateApiResult_ExpectedSuccess(result);
         var resultList = await GetOwnerListWithApi();
         Assert.IsNull(resultList.Find(x => x.IdOwner == idToDelete));
 

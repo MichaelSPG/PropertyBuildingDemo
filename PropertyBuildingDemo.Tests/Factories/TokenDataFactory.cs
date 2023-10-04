@@ -1,26 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PropertyBuildingDemo.Application.Dto;
+﻿using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Domain.Entities.Identity;
+using PropertyBuildingDemo.Tests.Helpers;
 
 namespace PropertyBuildingDemo.Tests.Factories
 {
+    /// <summary>
+    /// Factory class for creating token-related objects for testing purposes.
+    /// </summary>
     public static class TokenDataFactory
     {
+        /// <summary>
+        /// Creates an expired <see cref="TokenResponse"/>.
+        /// </summary>
+        /// <returns>An expired <see cref="TokenResponse"/>.</returns>
         public static TokenResponse CreateExpiredTokenResponse()
         {
             return new TokenResponse()
             {
                 RefreshToken = Guid.NewGuid().ToString(),
-                Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjU5YWUxOGVmLWNjNDEtNDc1YS04MDM3LTE2Mjg5NjYyOTk5ZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImNocmlzdG9waGVyOTJAc3R3bmV0LmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6IjEyMzU5MjMzIiwiZXhwIjoxNjk1OTc2NTI1LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MTQwLyIsImF1ZCI6ImNocmlzdG9waGVyOTJAc3R3bmV0LmNvbSJ9.HoS0bvsoiOtYaIpcmTEGQlnXQam9e3VpulGKGPxmY8E",
+                Token = TestConstants.ValidExpiredToken,
                 TokenExpiryTime = DateTime.UtcNow,
             };
         }
 
-        public static TokenResponse CreateCorruptedTokenResponse() 
+        /// <summary>
+        /// Creates a corrupted <see cref="TokenResponse"/>.
+        /// </summary>
+        /// <returns>A corrupted <see cref="TokenResponse"/>.</returns>
+        public static TokenResponse CreateCorruptedTokenResponse()
         {
             return new TokenResponse()
             {
@@ -29,6 +36,13 @@ namespace PropertyBuildingDemo.Tests.Factories
                 TokenExpiryTime = null,
             };
         }
+
+        /// <summary>
+        /// Creates a custom <see cref="TokenRequest"/> with the specified username and password.
+        /// </summary>
+        /// <param name="userName">The username for the token request.</param>
+        /// <param name="password">The password for the token request.</param>
+        /// <returns>A custom <see cref="TokenRequest"/>.</returns>
         public static TokenRequest CreateTokenRequestCustom(string userName = "", string password = "")
         {
             return new TokenRequest()
@@ -37,6 +51,12 @@ namespace PropertyBuildingDemo.Tests.Factories
                 Password = password
             };
         }
+
+        /// <summary>
+        /// Creates a <see cref="TokenRequest"/> from user registration data.
+        /// </summary>
+        /// <param name="user">The user registration data.</param>
+        /// <returns>A <see cref="TokenRequest"/> created from the user registration data.</returns>
         public static TokenRequest CreateTokenRequestFromUserData(UserRegisterDto user)
         {
             return new TokenRequest()
