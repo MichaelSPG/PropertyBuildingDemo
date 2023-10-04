@@ -7,11 +7,21 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Metadata;
+using PropertyBuildingDemo.Domain.Interfaces;
 
 namespace PropertyBuildingDemo.Application.Helpers
 {
-    public class ValidationExpressions
+    /// <summary>
+    /// Provides methods for generating filtering expressions based on filtering parameters.
+    /// </summary>
+    public class FilteringValidationExpressions
     {
+        /// <summary>
+        /// Gets the comparison operator method based on the provided filtering parameters.
+        /// </summary>
+        /// <param name="filteringParameters">The filtering parameters.</param>
+        /// <param name="property">The expression representing the property to filter on.</param>
+        /// <returns>An expression representing the comparison between the property and the filtering value.</returns>
         private static Expression GetComparisonOperatorMethod(FilteringParameters filteringParameters, Expression property)
         {
             Expression constant;
@@ -101,7 +111,13 @@ namespace PropertyBuildingDemo.Application.Helpers
             return comparison;
         }
 
-        public static Expression<Func<T, bool>> GetSpecificationsFromFilters<T>(DefaultQueryFilterArgs inFilterArgs) where T : BaseEntityDb
+        /// <summary>
+        /// Generates a composite expression for filtering entities based on filtering parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of entity being filtered.</typeparam>
+        /// <param name="inFilterArgs">The filtering arguments containing filtering parameters.</param>
+        /// <returns>An expression representing the combined filtering criteria.</returns>
+        public static Expression<Func<T, bool>> GetSpecificationsFromFilters<T>(DefaultQueryFilterArgs inFilterArgs, ISystemLogger logger) where T : BaseEntityDb
         {
             var allProps = typeof(T).GetProperties().ToList();
             if (inFilterArgs.FilteringParameters == null || !inFilterArgs.FilteringParameters.Any())
@@ -142,10 +158,10 @@ namespace PropertyBuildingDemo.Application.Helpers
 
                     combinedCriteria = combinedCriteria == null ? comparison : Expression.AndAlso(combinedCriteria, comparison);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    // Element not added to filtering process
+                    logger.LogExceptionMessage(ELoggingLevel.Warn, $"Column '{filter.TargetField}' is not mapped/added to specifications", ex);
                 }
 
             }

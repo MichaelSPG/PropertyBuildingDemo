@@ -20,9 +20,11 @@ namespace PropertyBuildingDemo.Domain.Interfaces
         IQueryable<TEntity> GetAll();
 
         /// <summary>
-        /// Gets all entities.
+        /// Retrieves all entities of type <typeparamref name="TEntity"/> from the database without change tracking.
         /// </summary>
-        /// <returns>A queryable collection of all entities.</returns>
+        /// <returns>
+        /// An <see cref="IQueryable{TEntity}"/> representing all entities of type <typeparamref name="TEntity"/> without change tracking.
+        /// </returns>
         IQueryable<TEntity> GetAllAsNoTracking();
 
         /// <summary>
@@ -59,12 +61,5 @@ namespace PropertyBuildingDemo.Domain.Interfaces
         /// <param name="entity">The entity to delete.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task DeleteAsync(TEntity entity);
-        
-        ///// <summary>
-        ///// Counts entities based on a specification asynchronously.
-        ///// </summary>
-        ///// <param name="specifications">The specification to filter the entities.</param>
-        ///// <returns>The count of entities that match the specification.</returns>
-        //Task<int> CountAsync(ISpecifications<TEntity> specifications);
     }
 }
