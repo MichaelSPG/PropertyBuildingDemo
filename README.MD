@@ -110,7 +110,7 @@ Also includes performance test liske this one
 
 ## 11. Security Measures
 
-Security is a top priority, and measures are taken to protect sensitive data and prevent common security vulnerabilities.
+Security is a top priority, and measures are taken to protect. All done with Identity and JWT implementations
 
 ## 12. Development Tools
 
@@ -128,6 +128,8 @@ The PropertyBuilding API offers the following services:
 - Change Property Price
 - Update Property Information
 - List Properties with Filters
+- Add/Update Owners
+- Add/Update Property Traces
 
 ## 15. JWT Authentication
 
