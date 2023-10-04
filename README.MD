@@ -50,7 +50,7 @@ For maintaining code quality and adhering to coding standards, we recommend usin
 To install and run the PropertyBuilding Demo project, follow these steps:
 
 1. Clone this repository to your local machine.
-git clone https://github.com/your-username/PropertyBuilding-Demo.git
+git clone https://github.com/MichaelSPG/PropertyBuildingDemo.git
 
 
 2. Open the solution in Visual Studio or your preferred code editor.
