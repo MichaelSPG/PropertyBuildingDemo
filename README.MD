@@ -1,6 +1,6 @@
 # PropertyBuilding Demo Documentation
 
-Welcome to the PropertyBuilding Demo project! This project showcases the development of an API for a Real Estate company to manage property information in the United States.
+Welcome to the PropertyBuilding Demo project! This project showcases the development of an API with best practices with clean architecture and more tools.
 
 ## Table of Contents
 1. [Introduction](#introduction)
