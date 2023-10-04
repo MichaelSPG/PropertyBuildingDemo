@@ -217,8 +217,8 @@ namespace PropertyBuildingDemo.Tests.IntegrationTests.PerformanceFixtures
         /// </summary>
         /// <param name="iterations">The number of iterations to perform.</param>
         [Test]
-        [TestCase(10)]
         [TestCase(20)]
+        [TestCase(30)]
         [TestCase(40)]
         [TestCase(100)]
         public async Task Measure_Property_GetByPerformance(int iterations)

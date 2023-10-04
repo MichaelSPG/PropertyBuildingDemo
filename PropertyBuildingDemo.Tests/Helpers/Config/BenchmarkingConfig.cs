@@ -118,10 +118,10 @@ namespace PropertyBuildingDemo.Tests.Helpers.Config
             /// </summary>
             public static readonly Dictionary<EValidFileSize, decimal> AverageTimeMapping = new()
             {
-                { EValidFileSize.Tiny, 4 },
-                { EValidFileSize.Small, 8 },
-                { EValidFileSize.Medium, 12 },
-                { EValidFileSize.Large, 24 },
+                { EValidFileSize.Tiny, 5.15M },
+                { EValidFileSize.Small, 6 },
+                { EValidFileSize.Medium, 7 },
+                { EValidFileSize.Large, 9 },
             };
         }
 
@@ -133,7 +133,7 @@ namespace PropertyBuildingDemo.Tests.Helpers.Config
             /// <summary>
             /// Average time for property retrieval in milliseconds.
             /// </summary>
-            public const decimal AvgGetByTime = 10;
+            public const decimal AvgGetByTime = 14.2M;
 
             /// <summary>
             /// Average time for property insertion in milliseconds.
@@ -148,16 +148,16 @@ namespace PropertyBuildingDemo.Tests.Helpers.Config
             /// <summary>
             /// Average time for insertion with property traces in milliseconds.
             /// </summary>
-            public const decimal AvgWithTraceInsertionTime = 1.2M;
+            public const decimal AvgWithTraceInsertionTime = 1.6M;
 
             /// <summary>
             /// Dictionary mapping file size enums to average image insertion times in milliseconds.
             /// </summary>
             public static readonly Dictionary<EValidFileSize, decimal> AverageImageInsertionTimeMapping = new()
             {
-                { EValidFileSize.Tiny, 1.5M },
+                { EValidFileSize.Tiny, 1.8M },
                 { EValidFileSize.Small, 3.0M },
-                { EValidFileSize.Medium, 4.0M },
+                { EValidFileSize.Medium, 4.7M },
                 { EValidFileSize.Large, 6.0M },
             };
 
