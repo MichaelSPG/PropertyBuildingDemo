@@ -1,176 +1,182 @@
 # PropertyBuilding Demo Documentation
 
-## Table of Contents
+Welcome to the PropertyBuilding Demo project! This project showcases the development of an API for a Real Estate company to manage property information in the United States.
 
+## Table of Contents
 1. [Introduction](#introduction)
 2. [Prerequisites](#prerequisites)
-3. [Installing Redis](#installing-redis)
-4. [Project Overview](#project-overview)
-5. [Architecture](#architecture)
-6. [Project Structure](#project-structure)
-7. [Documentation and Code Comments](#documentation-and-code-comments)
+3. [Installation](#installation)
+4. [Building and Running the Project](#building-and-running-the-project)
+5. [Project Architecture](#project-architecture)
+6. [Code Structure](#code-structure)
+7. [Documentation Guidelines](#documentation-guidelines)
 8. [Best Practices](#best-practices)
-9. [Performance Management](#performance-management)
+9. [Performance Optimization](#performance-optimization)
 10. [Integration Testing](#integration-testing)
-11. [Security](#security)
-12. [Development_Tools](#Development Tools)
-13. [API Services](#api-services)
-    a. [Create Property Building](#create-property-building)
-    b. [Add Image to Property](#add-image-to-property)
-    c. [Change Property Price](#change-property-price)
-    d. [Update Property](#update-property)
-    e. [List Properties with Filters](#list-properties-with-filters)
+11. [Security Measures](#security-measures)
+12. [Development Tools](#development-tools)
+13. [Additional Components](#additional-components)
+14. [API Services](#api-services)
+15. [JWT Authentication](#jwt-authentication)
+16. [Test User for Authentication](#test-user-for-authentication)
+17. [Clean Architecture](#clean-architecture)
+18. [Integration Testing with NUnit](#integration-testing-with-nunit)
+19. [Performance Management](#performance-management)
+20. [Conclusion](#conclusion)
+21. [Appendix](#appendix)
 
-## Introduction
+## 1. Introduction
 
-The PropertyBuilding Demo is a .NET 6-based project designed to meet the requirements of a large Real Estate company. This documentation outlines the project's architecture, structure, coding practices, testing, and security considerations.
+The PropertyBuilding Demo project is aimed at developing a comprehensive API to manage property information. This API provides services to create property buildings, add images, change prices, update properties, and list properties with various filters.
 
-## Prerequisites
+## 2. Prerequisites
 
-To run the PropertyBuilding Demo project, you must have the following prerequisites:
+Before you can run the PropertyBuilding Demo project, ensure you have the following prerequisites installed:
 
-- .NET 6 or higher installed in Visual Studio.
-- SQL Server.
-- C#.
-- NUnit (for integration testing).
-- Redis (for caching).
+- .NET 6 or higher
+- SQL Server
+- C#
+- NUnit
+- Redis (for caching, optional)
 
-## Installing Redis
+### Additional Components
 
-Redis is used for caching in the PropertyBuilding Demo project. To install Redis, follow these steps:
+For maintaining code quality and adhering to coding standards, we recommend using the following development tools:
 
-1. Download the latest Redis MSI installer for Windows from the [official Redis website](https://redis.io/download).
+- [ReSharper](https://www.jetbrains.com/resharper/) for Visual Studio (Optional)
 
-2. Run the Redis MSI installer and follow the installation instructions.
+## 3. Installation
 
-3. After the installation is complete, start the Redis server.
+To install and run the PropertyBuilding Demo project, follow these steps:
 
-4. Verify that Redis is running by opening a command prompt and running the following command:
+1. Clone this repository to your local machine.
+git clone https://github.com/your-username/PropertyBuilding-Demo.git
 
-redis-cli ping
+
+2. Open the solution in Visual Studio or your preferred code editor.
+
+3. Restore NuGet packages and build the solution.
+
+4. Configure your database connection string in the `appsettings.json` file.
+
+5. Apply database migrations to create the required tables.
+
+dotnet ef database update
+
+## 4. Building and Running the Project
+
+To build and run the PropertyBuilding Demo project, follow these steps:
+
+1. Build the project.
+
+dotnet build
 
 
-If Redis is running, it will respond with "PONG."
+2. Run the project.
 
-## Project Overview
 
-The PropertyBuilding Demo project aims to create a robust API that allows users to interact with property information. It includes the following key features:
+## 5. Project Architecture
 
-- Create Property Building: Add new property information to the database.
-- Add Image to Property: Attach images to existing property listings.
-- Change Property Price: Update the price of a property listing.
-- Update Property: Modify property details and attributes.
-- List Properties with Filters: Retrieve property listings based on specific criteria.
+The PropertyBuilding Demo project follows a well-structured architecture to ensure maintainability and scalability. It includes components such as controllers, services, repositories, models, and integration tests.
 
-## Architecture
+## 6. Code Structure
 
-The project follows a clean and scalable architecture, separating concerns into layers:
+Our codebase adheres to clean code principles, including naming conventions, SOLID principles, and design patterns.
 
-- **Presentation Layer**: Contains the API controllers and handles user requests.
-- **Application Layer**: Contains application services that orchestrate business logic.
-- **Domain Layer**: Defines domain models and entities.
-- **Persistence Layer**: Manages data access to SQL Server through Entity Framework.
-- **Infrastructure Layer**: Provides cross-cutting concerns such as logging and caching.
+## 7. Documentation Guidelines
 
-## Project Structure
+We follow thorough code documentation practices to make the codebase easily understandable for other developers.
 
-The project structure is organized as follows:
+## 8. Best Practices
 
-- `PropertyBuilding.Api`: API controllers and endpoints.
-- `PropertyBuilding.Application`: Application services and DTOs.
-- `PropertyBuilding.Domain`: Domain models and entities.
-- `PropertyBuilding.Persistence`: Data access using Entity Framework.
-- `PropertyBuilding.Infrastructure`: Cross-cutting concerns.
+The project incorporates best practices for .NET development to ensure code quality and reliability.
 
-## Documentation and Code Comments
+## 9. Performance Optimization
 
-The codebase is well-documented using inline comments and XML documentation comments. This ensures that developers can understand the code's functionality, inputs, and outputs.
+Performance is a key aspect, and the project includes mechanisms like caching to improve response times.
 
-## Best Practices
+## 10. Integration Testing
 
-The project adheres to best practices, including SOLID principles and design patterns to ensure maintainability and scalability.
+Integration tests are provided to verify the functionality of the API endpoints.
 
-## Performance Management
+## 11. Security Measures
 
-Efforts have been made to optimize database queries, and caching strategies are implemented to enhance performance.
+Security is a top priority, and measures are taken to protect sensitive data and prevent common security vulnerabilities.
 
-## Integration Testing
+## 12. Development Tools
 
-Integration testing is performed instead of unit testing to validate the interactions between different components and ensure the system's overall functionality.
+In the PropertyBuilding Demo project, we make use of various development tools to streamline the development process and ensure code quality. One such tool is ReSharper for Visual Studio.
 
-## Security
+## 13. Additional Components
 
-Security considerations are taken seriously. The API implements authentication and authorization mechanisms to protect sensitive data and ensure that only authorized users can access certain endpoints.
+ReSharper for Visual Studio is recommended for enhanced coding assistance and code analysis.
 
-## Development_Tools
+## 14. API Services
 
-In the PropertyBuilding Demo project, we make use of various development tools to streamline the development process and ensure code quality. One such tool is ReSharper for Visual Studio. Here's how ReSharper contributes to our development environment:
+The PropertyBuilding API offers the following services:
+- Create Property Building
+- Add Image to Property
+- Change Property Price
+- Update Property Information
+- List Properties with Filters
 
-## Additional Components for Clean Code
+## 15. JWT Authentication
 
-In the PropertyBuilding Demo project, we emphasize the importance of clean, maintainable code. To help achieve this goal, we use additional development tools, such as ReSharper for Visual Studio. ReSharper is a powerful extension that enhances code quality, readability, and productivity. Here's how ReSharper contributes to clean code in our project:
+All controllers in the PropertyBuilding Demo project use JWT (JSON Web Token) authentication to secure API endpoints.
 
-### Code Analysis and Inspections
+## 16. Test User for Authentication
 
-ReSharper performs static code analysis and provides real-time code inspections. It highlights code issues, suggests improvements, and enforces coding standards. This helps our development team identify and address potential problems before they become critical.
+You can authenticate with the API using the default test user credentials:
 
-### Code Refactoring
+```json
+{
+  "username": "christopher92@stwnet.com",
+  "password": "@1234#"
+}
+## 17. Clean Architecture, Caching, and Performance
 
-ReSharper offers a wide range of code refactoring options, making it easy to restructure and optimize code. It simplifies complex code blocks, extracts methods, renames variables, and eliminates code smells. This ensures that our codebase remains clean and maintainable over time.
+The PropertyBuilding Demo project follows a Clean Architecture pattern, which is a software architectural style that separates concerns into distinct layers, making the codebase highly maintainable and testable. The architecture consists of the following layers:
 
-### Code Navigation and Exploration
+### Domain Layer
 
-ReSharper enhances code navigation and exploration within Visual Studio. It provides intelligent code search, quick navigation to related code elements, and a powerful code explorer. This accelerates development and makes it easier to understand and modify code.
+The Domain Layer represents the core business logic of the application. It includes entities, value objects, and business rules. In this layer, you'll find:
 
-### Code Documentation
+- **Entities**: Represent core business objects like properties, owners, images, and more.
+- **Value Objects**: Represent immutable objects that hold values but have no distinct identity.
+- **Business Rules**: Define the constraints and logic that govern the behavior of the domain.
 
-ReSharper assists in generating XML documentation comments and keeping them up to date. Proper documentation ensures that our codebase is well-documented, making it easier for developers to understand the purpose and usage of classes, methods, and properties.
+### Application Layer
 
-### Unit Testing Support
+The Application Layer contains the application-specific logic and use cases. It acts as an intermediary between the Domain Layer and the Infrastructure Layer. Key components in this layer include:
 
-ReSharper offers excellent support for unit testing, including test creation, execution, and result visualization. This helps us maintain a robust suite of unit tests to validate our code's correctness and reliability.
+- **Use Cases**: Implement specific application functionality, such as creating property buildings, updating property information, and more.
+- **DTOs (Data Transfer Objects)**: Define data structures used for communication between layers.
+- **Mappers**: Transform entities to DTOs and vice versa.
+- **Interfaces**: Define contracts for services that the Infrastructure Layer will implement.
 
-### Code Formatting and Style
+### Infrastructure Layer
 
-ReSharper enforces code formatting and coding style rules based on industry best practices and custom configurations. Consistent code formatting enhances code readability and maintainability.
+The Infrastructure Layer is responsible for handling external concerns such as databases, caching, and external services. This layer includes:
 
-By using ReSharper alongside Visual Studio, we aim to maintain a clean and high-quality codebase throughout the development process. This tool empowers our development team to write code that is more efficient, reliable, and easier to maintain, ultimately delivering a better product to our clients.
+- **Data Access**: Implement database repositories and data access logic.
+- **Persistence**: Configure database contexts and migrations.
+- **Caching (Redis)**: Utilizes Redis caching mechanisms to improve application performance by reducing database queries.
+- **External Services**: Interact with external services or APIs.
 
-## API Services
+### API Layer
 
-### Create Property Building
+The API Layer represents the presentation layer, providing HTTP endpoints to interact with the application. It includes controllers, models, and routing. Controllers define API endpoints, while models define request and response structures.
 
-- **Endpoint**: `/api/property/create`
-- **Description**: Adds a new property listing to the database.
-- **Request**: Property details in JSON format.
-- **Response**: Confirmation message or error message.
+**Performance Management**
 
-### Add Image to Property
+To ensure optimal performance, the PropertyBuilding Demo project incorporates caching with Redis. Redis is used to store frequently accessed data, reducing the need for expensive database queries and enhancing overall application speed.
 
-- **Endpoint**: `/api/property/add-image/{propertyId}`
-- **Description**: Attaches images to an existing property listing.
-- **Request**: Image file(s) to upload.
-- **Response**: Confirmation message or error message.
+The Clean Architecture promotes the following benefits:
 
-### Change Property Price
+- **Testability**: Each layer can be tested independently, allowing for robust unit and integration tests.
+- **Maintainability**: Clear separation of concerns makes it easier to modify or extend the application.
+- **Scalability**: The architecture can accommodate changes in business logic and scaling requirements.
 
-- **Endpoint**: `/api/property/change-price/{propertyId}`
-- **Description**: Updates the price of a property listing.
-- **Request**: New price value.
-- **Response**: Confirmation message or error message.
+The PropertyBuilding Demo project demonstrates the advantages of Clean Architecture while leveraging Redis for efficient caching and improved performance.
 
-### Update Property
 
-- **Endpoint**: `/api/property/update/{propertyId}`
-- **Description**: Modifies property details and attributes.
-- **Request**: Updated property details in JSON format.
-- **Response**: Confirmation message or error message.
-
-### List Properties with Filters
-
-- **Endpoint**: `/api/property/list`
-- **Description**: Retrieves property listings based on specific criteria.
-- **Request**: Filtering parameters in JSON format.
-- **Response**: List of property listings that match the criteria.
-
-This documentation provides an overview of the PropertyBuilding Demo project, its architecture, structure, and the services it offers. Developers can refer to this documentation for insights into the project's functionality, implementation details, Redis installation instructions, and integration testing practices.
