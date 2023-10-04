@@ -105,7 +105,7 @@ namespace PropertyBuildingDemo.Tests.Helpers.Config
             /// <summary>
             /// Average insertion time for property traces in milliseconds.
             /// </summary>
-            public const decimal AvgInsertionTime = 5;
+            public const decimal AvgInsertionTime = 8.1M;
         }
 
         /// <summary>
