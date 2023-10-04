@@ -63,6 +63,10 @@ namespace PropertyBuildingDemo.Domain.Entities
         [NotMapped]
         public virtual ICollection<PropertyTrace> PropertyTraces { get; set; }
 
+        //  RowVersion property for optimistic concurrency
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         /// <summary>
         /// Implementation of the GetId() method, considering the different column name ([Key]) for this entity.
         /// </summary>

@@ -1,9 +1,8 @@
-﻿// <copyright file="AccountController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="AccountController.cs" company="@Michael.PatinoDemos">
+// Copyright (c) 
 // </copyright>
 namespace PropertyBuildingDemo.Api.Controllers;
 
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Api.Filters;

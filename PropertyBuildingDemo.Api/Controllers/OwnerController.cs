@@ -1,8 +1,7 @@
-﻿// <copyright file="OwnerController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="OwnerController.cs" company="@Michael.PatinoDemos">
+// Copyright (c) 
 // </copyright>
 
-using AutoMapper;
 using PropertyBuildingDemo.Application.Dto;
 
 namespace PropertyBuildingDemo.Api.Controllers;

@@ -1,11 +1,9 @@
-﻿// <copyright file="PropertyTraceController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="PropertyTraceController.cs" company="@Michael.PatinoDemos">
+// Copyright (c) 
 // </copyright>
 
 namespace PropertyBuildingDemo.Api.Controllers;
 
-using AutoMapper;
-using IdentityModel;
 using Microsoft.AspNetCore.Mvc;
 using PropertyBuildingDemo.Application.Dto;
 using PropertyBuildingDemo.Application.IServices;

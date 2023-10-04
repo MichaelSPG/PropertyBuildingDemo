@@ -37,6 +37,10 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
             return Entities;
         }
 
+        /// <summary>
+        /// Gets all entities of type <typeparamref name="TEntity"/> without enabling change tracking.
+        /// </summary>
+        /// <returns>An <see cref="IQueryable{TEntity}"/> representing the entities.</returns>
         public IQueryable<TEntity> GetAllAsNoTracking()
         {
             return Entities.AsNoTracking();
@@ -52,22 +56,6 @@ namespace PropertyBuildingDemo.Infrastructure.Repositories
             return await _context.Set<TEntity>().FindAsync(id);
         }
       
-        ///// <summary>
-        ///// Counts entities based on the provided specification.
-        ///// </summary>
-        ///// <param name="specifications">The specification to apply.</param>
-        ///// <returns>The count of matching entities.</returns>
-        //public async Task<int> CountAsync(ISpecifications<TEntity> specifications)
-        //{
-        //    return await ApplySpecification(specifications).CountAsync();
-        //}
-
-        //private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> specifications)
-        //{
-        //    var query = _context.Set<TEntity>().AsQueryable();
-        //    return Application.Helpers.SpecificationEvaluator.ApplyToQuery(query, specifications);
-        //}
-
         /// <summary>
         /// Adds a new entity to the repository.
         /// </summary>
