@@ -7,6 +7,7 @@ using PropertyBuildingDemo.Domain.Common;
 using PropertyBuildingDemo.Domain.Entities.Enums;
 using PropertyBuildingDemo.Domain.Interfaces;
 using PropertyBuildingDemo.Domain.Specifications;
+using static PropertyBuildingDemo.Application.Helpers.SpecificationEvaluator;
 
 namespace PropertyBuildingDemo.Application.Services
 {
@@ -46,6 +47,25 @@ namespace PropertyBuildingDemo.Application.Services
         }
 
         /// <summary>
+        /// Retrieves cached data of the specified entity type.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{TEntity}"/> containing the cached data.</returns>
+        async Task<IEnumerable<TEntity>> GetCacheData()
+        {
+            return await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
+        }
+
+        /// <summary>
+        /// Sets cached data for the specified entity type with an expiration time.
+        /// </summary>
+        /// <param name="entities">The data to cache.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Returns <c>true</c> if the data was successfully cached, otherwise <c>false</c>.</returns>
+        async Task<bool> SetCacheData(IEnumerable<TEntity> entities)
+        {
+            var expirationTime = DateTimeOffset.Now.AddMinutes(_appConfig.Value.ExpireInMinutes);
+            return await _cacheService.SetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name, entities, expirationTime);
+        }
+        /// <summary>
         /// Retrieves an entity by its unique identifier asynchronously.
         /// </summary>
         /// <param name="id">The unique identifier of the entity.</param>
@@ -54,7 +74,7 @@ namespace PropertyBuildingDemo.Application.Services
         /// </returns>
         public async Task<TEntityDto> GetByIdAsync(long id)
         {
-            var cacheData = await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
+            var cacheData = await GetCacheData();
 
             if (cacheData != null)
             {
@@ -90,10 +110,10 @@ namespace PropertyBuildingDemo.Application.Services
             // Apply where clause to query, we don want deleted fields
             query = query.Where(x => x.IsDeleted == false);
             // Executes the query
-            var result = await EntityFrameworkQueryableExtensions.ToListAsync(query); 
+            var result = await query.ToListAsync();
 
-            var expirationTime = DateTimeOffset.Now.AddMinutes(_appConfig.Value.ExpireInMinutes);
-            await _cacheService.SetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name, result, expirationTime).ConfigureAwait(false);
+            await SetCacheData(result);
+
             return _mapper.Map<List<TEntityDto>>(result);
         }
 
@@ -106,11 +126,11 @@ namespace PropertyBuildingDemo.Application.Services
         /// </returns>
         public async Task<List<TEntityDto>> GetByAsync(ISpecifications<TEntity> specifications)
         {
-            var cacheData = await _cacheService.GetDataAsync<IEnumerable<TEntity>>(typeof(TEntity).Name);
-
+            var cacheData = await GetCacheData();
+            
             var query = cacheData != null ? cacheData.AsQueryable() : this._unitOfWork.GetRepository<TEntity>().GetAllAsNoTracking();
 
-            query = Application.Helpers.SpecificationEvaluator.ApplyToQuery(query, specifications);
+            query = ApplyToQuery(query, specifications);
 
             var result = await query.ToListAsync();
 
